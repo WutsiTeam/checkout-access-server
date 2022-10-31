@@ -13,9 +13,6 @@ public class CreatePaymentMethodController(
     public val `delegate`: CreatePaymentMethodDelegate
 ) {
     @PostMapping("/v1/payment-methods")
-    public fun invoke(
-        @Valid @RequestBody
-        request: CreatePaymentMethodRequest
-    ):
+    public fun invoke(@Valid @RequestBody request: CreatePaymentMethodRequest):
         CreatePaymentMethodResponse = delegate.invoke(request)
 }

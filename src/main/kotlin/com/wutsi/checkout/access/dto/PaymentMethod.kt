@@ -10,8 +10,7 @@ public data class PaymentMethod(
     public val token: String = "",
     public val type: String = "",
     public val ownerName: String = "",
-    public val maskedNumber: String = "",
-    public val bankCode: String? = null,
+    public val number: String = "",
     public val country: String = "",
     public val status: String = "",
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")

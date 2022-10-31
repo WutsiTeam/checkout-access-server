@@ -1,12 +1,17 @@
 package com.wutsi.checkout.access.`delegate`
 
 import com.wutsi.checkout.access.dto.GetPaymentMethodResponse
+import com.wutsi.checkout.access.service.PaymentMethodService
 import org.springframework.stereotype.Service
-import kotlin.String
 
 @Service
-public class GetPaymentMethodDelegate() {
+public class GetPaymentMethodDelegate(
+    private val service: PaymentMethodService
+) {
     public fun invoke(token: String): GetPaymentMethodResponse {
-        TODO()
+        val payment = service.findByToken(token)
+        return GetPaymentMethodResponse(
+            paymentMethod = service.toPaymentMethod(payment)
+        )
     }
 }
