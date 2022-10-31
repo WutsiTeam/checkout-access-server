@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+  <appender name="SLACK" class="com.wutsi.platform.core.logging.SlackAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+      <Pattern>%d app=checkout-access type=%level logger=%class{20} thread=%thread %m%n</Pattern>
+    </layout>
+  </appender>
+
+  <appender name="SLACK_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+    <appender-ref ref="SLACK"/>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>ERROR</level>
+    </filter>
+  </appender>
+
+  <root>
+    <appender-ref ref="CONSOLE"/>
+  </root>
+  <logger name="com.wutsi.platform.core.logging.DefaultKVLogger">
+    <appender-ref ref="SLACK_ASYNC"/>
+  </logger>
+</configuration>
+
+
