@@ -2,7 +2,6 @@ package com.wutsi.checkout.access.dto
 
 import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
-import kotlin.Double
 import kotlin.Long
 import kotlin.String
 import kotlin.collections.List
@@ -17,8 +16,8 @@ public data class Order(
     public val storeId: Long = 0,
     public val status: String = "",
     public val subTotalPrice: Long = 0,
-    public val totalDiscount: Double = 0.0,
-    public val totalPrice: Double = 0.0,
+    public val totalDiscount: Long = 0,
+    public val totalPrice: Long = 0,
     public val currency: String = "",
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val created: OffsetDateTime = OffsetDateTime.now(),
@@ -29,7 +28,7 @@ public data class Order(
     public val cancellationReason: String? = null,
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val closed: OffsetDateTime? = null,
-    public val notes: String = "",
+    public val notes: String? = null,
     public val customerId: Long = 0,
     public val customerName: String = "",
     public val customerEmail: String? = null,

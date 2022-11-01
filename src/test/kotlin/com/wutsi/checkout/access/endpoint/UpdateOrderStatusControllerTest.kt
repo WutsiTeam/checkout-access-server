@@ -60,6 +60,20 @@ class UpdateOrderStatusControllerTest {
     }
 
     @Test
+    fun sameStatus() {
+        val request = UpdateOrderStatusRequest(
+            status = OrderStatus.OPENED.name,
+            reason = "Yeauuurk"
+        )
+        val response = rest.postForEntity(url("102"), request, Any::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val order = dao.findById("102").get()
+        assertEquals(OrderStatus.OPENED, order.status)
+    }
+
+    @Test
     fun alreadyClosed() {
         val request = UpdateOrderStatusRequest(
             status = OrderStatus.OPENED.name

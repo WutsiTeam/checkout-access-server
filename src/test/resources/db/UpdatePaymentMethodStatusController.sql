@@ -6,3 +6,4 @@ INSERT INTO T_PAYMENT_METHOD(id, token, account_id, number, country, owner_name,
         (301, 'token-301', 300, '+237690000301', 'CM', 'Roger Milla', 1, 1, null),
         (399, 'token-399', 300, '+237690000300', 'CM', 'Roger Milla', 1, 2, now())
     ;
+

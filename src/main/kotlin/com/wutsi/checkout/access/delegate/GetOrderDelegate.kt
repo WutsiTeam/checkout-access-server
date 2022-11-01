@@ -1,12 +1,15 @@
 package com.wutsi.checkout.access.`delegate`
 
 import com.wutsi.checkout.access.dto.GetOrderResponse
+import com.wutsi.checkout.access.service.OrderService
 import org.springframework.stereotype.Service
-import kotlin.String
 
 @Service
-public class GetOrderDelegate() {
+public class GetOrderDelegate(val service: OrderService) {
     public fun invoke(id: String): GetOrderResponse {
-        TODO()
+        val order = service.findById(id)
+        return GetOrderResponse(
+            order = service.toOrder(order)
+        )
     }
 }

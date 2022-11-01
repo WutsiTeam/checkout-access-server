@@ -18,6 +18,6 @@ public data class CreateOrderItemRequest(
     public val quantity: Int = 0,
     public val pictureUrl: String? = null,
     @get:Min(0)
-    public val price: Long = 0,
+    public val unitPrice: Long = 0,
     public val discounts: List<CreateOrderDiscountRequest> = emptyList()
 )

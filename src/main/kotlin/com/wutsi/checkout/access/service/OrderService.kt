@@ -7,6 +7,9 @@ import com.wutsi.checkout.access.dao.OrderRepository
 import com.wutsi.checkout.access.dto.CreateOrderDiscountRequest
 import com.wutsi.checkout.access.dto.CreateOrderItemRequest
 import com.wutsi.checkout.access.dto.CreateOrderRequest
+import com.wutsi.checkout.access.dto.Discount
+import com.wutsi.checkout.access.dto.Order
+import com.wutsi.checkout.access.dto.OrderItem
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.access.entity.OrderDiscountEntity
 import com.wutsi.checkout.access.entity.OrderEntity
@@ -26,6 +29,7 @@ import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.stereotype.Service
 import java.lang.Long.max
+import java.time.ZoneOffset
 import java.util.Date
 import java.util.UUID
 
@@ -131,6 +135,65 @@ class OrderService(
                 )
             }
 
+    fun toOrder(order: OrderEntity) = Order(
+        id = order.id ?: "",
+        shortId = toShortId(order.id),
+        currency = order.currency,
+        customerEmail = order.customerEmail,
+        customerName = order.customerName,
+        customerId = order.customerId,
+        deviceId = order.deviceId,
+        deviceType = order.deviceType?.name,
+        deviceIp = order.deviceIp,
+        channelType = order.channelType?.name,
+        notes = order.notes,
+        storeId = order.storeId,
+        totalPrice = order.totalPrice,
+        totalDiscount = order.totalDiscount,
+        subTotalPrice = order.subTotalPrice,
+        status = order.status.name,
+        created = order.created.toInstant().atOffset(ZoneOffset.UTC),
+        updated = order.updated.toInstant().atOffset(ZoneOffset.UTC),
+        cancelled = order.cancelled?.toInstant()?.atOffset(ZoneOffset.UTC),
+        closed = order.closed?.toInstant()?.atOffset(ZoneOffset.UTC),
+        cancellationReason = order.cancellationReason,
+        items = order.items.map { toOrderItem(it) },
+        discounts = order.discounts.map { toOrderDiscount(order, it) }
+    )
+
+    private fun toOrderItem(item: OrderItemEntity) = OrderItem(
+        offerId = item.offerId,
+        offerType = item.offerType.name,
+        title = item.title,
+        quantity = item.quantity,
+        pictureUrl = item.pictureUrl,
+        unitPrice = item.unitPrice,
+        totalPrice = item.totalPrice,
+        totalDiscount = item.totalDiscount,
+        subTotalPrice = item.subTotalPrice,
+        discounts = item.discounts.map { toOrderItemDiscount(item, it) }
+    )
+
+    private fun toOrderDiscount(order: OrderEntity, discount: OrderDiscountEntity) = Discount(
+        code = discount.code,
+        type = discount.type.name,
+        amount = discount.amount,
+        rate = toRate(discount.amount, order.subTotalPrice)
+    )
+
+    private fun toOrderItemDiscount(item: OrderItemEntity, discount: OrderItemDiscountEntity) = Discount(
+        code = discount.code,
+        type = discount.type.name,
+        amount = discount.amount,
+        rate = toRate(discount.amount, item.order.subTotalPrice)
+    )
+
+    private fun toRate(value: Long, total: Long): Int =
+        if (total == 0L) 0 else (100.0 * value / total).toInt()
+
+    private fun toShortId(id: String?): String =
+        id?.takeLast(4)?.uppercase() ?: ""
+
     private fun create(order: OrderEntity, request: CreateOrderDiscountRequest): OrderDiscountEntity =
         discountDao.save(
             OrderDiscountEntity(
@@ -142,7 +205,7 @@ class OrderService(
         )
 
     private fun create(order: OrderEntity, request: CreateOrderItemRequest): OrderItemEntity {
-        val subTotalPrice = request.price * request.quantity
+        val subTotalPrice = request.unitPrice * request.quantity
         val totalDiscount = computeTotalDiscount(request)
         val item = itemDao.save(
             OrderItemEntity(
@@ -151,14 +214,13 @@ class OrderService(
                 offerType = OfferType.valueOf(request.offerType),
                 title = request.title,
                 quantity = request.quantity,
-                unitPrice = request.price,
+                unitPrice = request.unitPrice,
                 subTotalPrice = subTotalPrice,
                 totalDiscount = totalDiscount,
                 totalPrice = max(0, subTotalPrice - totalDiscount),
                 pictureUrl = request.pictureUrl
             )
         )
-
         request.discounts.forEach {
             create(item, it)
         }
@@ -180,7 +242,7 @@ class OrderService(
             request.items.sumOf { computeTotalDiscount(it) }
 
     private fun computeSubTotalPrice(request: CreateOrderRequest): Long =
-        request.items.sumOf { it.quantity * it.price }
+        request.items.sumOf { it.quantity * it.unitPrice }
 
     private fun computeTotalDiscount(request: CreateOrderItemRequest): Long =
         request.discounts.sumOf { it.amount }

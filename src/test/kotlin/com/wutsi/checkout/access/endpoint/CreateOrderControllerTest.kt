@@ -64,7 +64,7 @@ public class CreateOrderControllerTest {
                 CreateOrderItemRequest(
                     offerType = OfferType.PRODUCT.name,
                     offerId = 111,
-                    price = 15000,
+                    unitPrice = 15000,
                     title = "Chemise",
                     pictureUrl = "https://www.img.1/111.png",
                     quantity = 3
@@ -72,7 +72,7 @@ public class CreateOrderControllerTest {
                 CreateOrderItemRequest(
                     offerType = OfferType.PRODUCT.name,
                     offerId = 222,
-                    price = 10000,
+                    unitPrice = 10000,
                     title = "Chemise",
                     quantity = 1,
                     discounts = listOf(
@@ -117,7 +117,7 @@ public class CreateOrderControllerTest {
         assertEquals(request.items[0].quantity, items[0].quantity)
         assertEquals(request.items[0].offerId, items[0].offerId)
         assertEquals(OfferType.valueOf(request.items[0].offerType), items[0].offerType)
-        assertEquals(request.items[0].price, items[0].unitPrice)
+        assertEquals(request.items[0].unitPrice, items[0].unitPrice)
         assertEquals(request.items[0].title, items[0].title)
         assertEquals(request.items[0].pictureUrl, items[0].pictureUrl)
         assertEquals(45000L, items[0].subTotalPrice)
@@ -127,7 +127,7 @@ public class CreateOrderControllerTest {
         assertEquals(request.items[1].quantity, items[1].quantity)
         assertEquals(request.items[1].offerId, items[1].offerId)
         assertEquals(OfferType.valueOf(request.items[1].offerType), items[1].offerType)
-        assertEquals(request.items[1].price, items[1].unitPrice)
+        assertEquals(request.items[1].unitPrice, items[1].unitPrice)
         assertEquals(request.items[1].title, items[1].title)
         assertEquals(request.items[1].pictureUrl, items[1].pictureUrl)
         assertEquals(10000L, items[1].subTotalPrice)
