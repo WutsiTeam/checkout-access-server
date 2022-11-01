@@ -10,6 +10,8 @@ import com.wutsi.checkout.access.dto.CreateOrderRequest
 import com.wutsi.checkout.access.dto.Discount
 import com.wutsi.checkout.access.dto.Order
 import com.wutsi.checkout.access.dto.OrderItem
+import com.wutsi.checkout.access.dto.OrderSummary
+import com.wutsi.checkout.access.dto.SearchOrderRequest
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.access.entity.OrderDiscountEntity
 import com.wutsi.checkout.access.entity.OrderEntity
@@ -32,13 +34,16 @@ import java.lang.Long.max
 import java.time.ZoneOffset
 import java.util.Date
 import java.util.UUID
+import javax.persistence.EntityManager
+import javax.persistence.Query
 
 @Service
 class OrderService(
     private val dao: OrderRepository,
     private val itemDao: OrderItemRepository,
     private val discountDao: OrderDiscountRepository,
-    private val itemDiscountDao: OrderItemDiscountRepository
+    private val itemDiscountDao: OrderItemDiscountRepository,
+    private val em: EntityManager
 ) {
     fun create(request: CreateOrderRequest): OrderEntity {
         // Order
@@ -160,6 +165,85 @@ class OrderService(
         items = order.items.map { toOrderItem(it) },
         discounts = order.discounts.map { toOrderDiscount(order, it) }
     )
+
+    fun toOrderSummary(order: OrderEntity) = OrderSummary(
+        id = order.id ?: "",
+        shortId = toShortId(order.id),
+        currency = order.currency,
+        customerEmail = order.customerEmail,
+        customerName = order.customerName,
+        customerId = order.customerId,
+        storeId = order.storeId,
+        totalPrice = order.totalPrice,
+        totalDiscount = order.totalDiscount,
+        subTotalPrice = order.subTotalPrice,
+        status = order.status.name,
+        created = order.created.toInstant().atOffset(ZoneOffset.UTC),
+        updated = order.updated.toInstant().atOffset(ZoneOffset.UTC),
+        cancelled = order.cancelled?.toInstant()?.atOffset(ZoneOffset.UTC),
+        closed = order.closed?.toInstant()?.atOffset(ZoneOffset.UTC)
+    )
+
+    fun search(request: SearchOrderRequest): List<OrderEntity> {
+        val query = em.createQuery(sql(request))
+        parameters(request, query)
+        return query
+            .setFirstResult(request.offset)
+            .setMaxResults(request.limit)
+            .resultList as List<OrderEntity>
+    }
+
+    private fun sql(request: SearchOrderRequest): String {
+        val select = select()
+        val where = where(request)
+        return if (where.isNullOrEmpty()) {
+            select
+        } else {
+            "$select WHERE $where ORDER BY O.created DESC"
+        }
+    }
+
+    private fun select(): String =
+        "SELECT O FROM OrderEntity O"
+
+    private fun where(request: SearchOrderRequest): String {
+        val criteria = mutableListOf<String>()
+
+        if (request.customerId != null) {
+            criteria.add("O.customerId = :customer_id")
+        }
+        if (request.storeId != null) {
+            criteria.add("O.storeId = :store_id")
+        }
+        if (request.status.isNotEmpty()) {
+            criteria.add("O.status IN :status")
+        }
+        if (request.createdFrom != null) {
+            criteria.add("O.created >= :created_from")
+        }
+        if (request.createdTo != null) {
+            criteria.add("O.created <= :created_to")
+        }
+        return criteria.joinToString(separator = " AND ")
+    }
+
+    private fun parameters(request: SearchOrderRequest, query: Query) {
+        if (request.customerId != null) {
+            query.setParameter("customer_id", request.customerId)
+        }
+        if (request.storeId != null) {
+            query.setParameter("store_id", request.storeId)
+        }
+        if (request.status.isNotEmpty()) {
+            query.setParameter("status", request.status.map { OrderStatus.valueOf(it) })
+        }
+        if (request.createdFrom != null) {
+            query.setParameter("created_from", Date.from(request.createdFrom.toInstant()))
+        }
+        if (request.createdTo != null) {
+            query.setParameter("created_to", Date.from(request.createdTo.toInstant()))
+        }
+    }
 
     private fun toOrderItem(item: OrderItemEntity) = OrderItem(
         offerId = item.offerId,

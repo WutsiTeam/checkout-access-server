@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
 @Service
-public class UpdateOrderStatusDelegate(private val service: OrderService) {
+class UpdateOrderStatusDelegate(private val service: OrderService) {
     @Transactional
-    public fun invoke(id: String, request: UpdateOrderStatusRequest) {
+    fun invoke(id: String, request: UpdateOrderStatusRequest) {
         service.updateStatus(id, request)
     }
 }

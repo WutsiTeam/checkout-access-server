@@ -18,6 +18,10 @@ public data class OrderSummary(
     public val created: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val updated: OffsetDateTime = OffsetDateTime.now(),
+    @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+    public val cancelled: OffsetDateTime? = null,
+    @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+    public val closed: OffsetDateTime? = null,
     public val customerId: Long = 0,
     public val customerName: String = "",
     public val customerEmail: String? = null

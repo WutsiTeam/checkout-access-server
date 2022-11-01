@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
 @Service
-public class CreateOrderDelegate(
+class CreateOrderDelegate(
     private val service: OrderService,
     private val logger: KVLogger
 ) {
     @Transactional
-    public fun invoke(request: CreateOrderRequest): CreateOrderResponse {
+    fun invoke(request: CreateOrderRequest): CreateOrderResponse {
         val order = service.create(request)
         logger.add("order_id", order.id)
 
