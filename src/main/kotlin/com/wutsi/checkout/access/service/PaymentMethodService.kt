@@ -3,6 +3,9 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dao.PaymentMethodRepository
 import com.wutsi.checkout.access.dto.CreatePaymentMethodRequest
 import com.wutsi.checkout.access.dto.PaymentMethod
+import com.wutsi.checkout.access.dto.PaymentMethodSummary
+import com.wutsi.checkout.access.dto.SearchPaymentMethodRequest
+import com.wutsi.checkout.access.dto.UpdatePaymentMethodStatusRequest
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.enums.PaymentMethodStatus
 import com.wutsi.checkout.access.enums.PaymentMethodType
@@ -10,10 +13,13 @@ import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
+import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.ZoneOffset
+import java.util.Date
 import java.util.UUID
 
 @Service
@@ -67,6 +73,43 @@ class PaymentMethodService(private val dao: PaymentMethodRepository) {
     fun mask(number: String): String =
         "xxxx" + number.takeLast(4)
 
+    fun search(request: SearchPaymentMethodRequest): List<PaymentMethodEntity> {
+        val pagination = PageRequest.of(request.offset / request.limit, request.limit)
+        return if (request.status == null) {
+            dao.findByAccountId(request.accountId, pagination)
+        } else {
+            val status = PaymentMethodStatus.valueOf(request.status.uppercase())
+            dao.findByAccountIdAndStatus(request.accountId, status, pagination)
+        }
+    }
+
+    fun updateStatus(token: String, request: UpdatePaymentMethodStatusRequest) {
+        val paymentMethod = findByToken(token)
+        val status = PaymentMethodStatus.valueOf(request.status.uppercase())
+        when (status) {
+            PaymentMethodStatus.ACTIVE -> if (paymentMethod.status != status) {
+                paymentMethod.status = status
+                paymentMethod.deactivated = null
+                dao.save(paymentMethod)
+            }
+            PaymentMethodStatus.INACTIVE -> if (paymentMethod.status != status) {
+                paymentMethod.status = status
+                paymentMethod.deactivated = Date()
+                dao.save(paymentMethod)
+            }
+            else -> BadRequestException(
+                error = Error(
+                    code = ErrorURN.STATUS_NOT_VALID.urn,
+                    parameter = Parameter(
+                        name = "status",
+                        value = request.status,
+                        type = ParameterType.PARAMETER_TYPE_PAYLOAD
+                    )
+                )
+            )
+        }
+    }
+
     fun toPaymentMethod(payment: PaymentMethodEntity) = PaymentMethod(
         accountId = payment.accountId,
         token = payment.token,
@@ -75,6 +118,17 @@ class PaymentMethodService(private val dao: PaymentMethodRepository) {
         number = mask(payment.number),
         ownerName = payment.ownerName,
         country = payment.country,
+        created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
+        updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
+        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC)
+    )
+
+    fun toPaymentMethodSummary(payment: PaymentMethodEntity) = PaymentMethodSummary(
+        accountId = payment.accountId,
+        token = payment.token,
+        type = payment.type.name,
+        status = payment.status.name,
+        number = mask(payment.number),
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
         deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC)

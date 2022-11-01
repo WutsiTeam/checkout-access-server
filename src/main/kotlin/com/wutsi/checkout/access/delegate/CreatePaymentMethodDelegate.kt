@@ -5,12 +5,14 @@ import com.wutsi.checkout.access.dto.CreatePaymentMethodResponse
 import com.wutsi.checkout.access.service.PaymentMethodService
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Service
+import javax.transaction.Transactional
 
 @Service
 class CreatePaymentMethodDelegate(
     private val service: PaymentMethodService,
     private val logger: KVLogger
 ) {
+    @Transactional
     fun invoke(request: CreatePaymentMethodRequest): CreatePaymentMethodResponse {
         logger.add("request_country", request.country)
         logger.add("request_owner_name", request.ownerName)
