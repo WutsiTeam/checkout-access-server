@@ -26,6 +26,7 @@ public data class Order(
     public val updated: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val cancelled: OffsetDateTime? = null,
+    public val cancellationReason: String? = null,
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val closed: OffsetDateTime? = null,
     public val notes: String = "",

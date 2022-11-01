@@ -1,6 +1,8 @@
 package com.wutsi.checkout.access.dto
 
+import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.Size
 import kotlin.Int
 import kotlin.Long
 import kotlin.String
@@ -11,9 +13,11 @@ public data class CreateOrderItemRequest(
     @get:NotBlank
     public val offerType: String = "",
     @get:NotBlank
+    @get:Size(max = 100)
     public val title: String = "",
     public val quantity: Int = 0,
     public val pictureUrl: String? = null,
+    @get:Min(0)
     public val price: Long = 0,
     public val discounts: List<CreateOrderDiscountRequest> = emptyList()
 )

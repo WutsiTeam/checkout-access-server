@@ -86,17 +86,14 @@ class PaymentMethodService(private val dao: PaymentMethodRepository) {
     fun updateStatus(token: String, request: UpdatePaymentMethodStatusRequest) {
         val paymentMethod = findByToken(token)
         val status = PaymentMethodStatus.valueOf(request.status.uppercase())
+        if (status == paymentMethod.status) {
+            return
+        }
+
+        paymentMethod.status = status
         when (status) {
-            PaymentMethodStatus.ACTIVE -> if (paymentMethod.status != status) {
-                paymentMethod.status = status
-                paymentMethod.deactivated = null
-                dao.save(paymentMethod)
-            }
-            PaymentMethodStatus.INACTIVE -> if (paymentMethod.status != status) {
-                paymentMethod.status = status
-                paymentMethod.deactivated = Date()
-                dao.save(paymentMethod)
-            }
+            PaymentMethodStatus.ACTIVE -> paymentMethod.deactivated = null
+            PaymentMethodStatus.INACTIVE -> paymentMethod.deactivated = Date()
             else -> BadRequestException(
                 error = Error(
                     code = ErrorURN.STATUS_NOT_VALID.urn,
@@ -108,6 +105,7 @@ class PaymentMethodService(private val dao: PaymentMethodRepository) {
                 )
             )
         }
+        dao.save(paymentMethod)
     }
 
     fun toPaymentMethod(payment: PaymentMethodEntity) = PaymentMethod(

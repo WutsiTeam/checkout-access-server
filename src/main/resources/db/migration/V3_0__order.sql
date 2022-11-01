@@ -21,6 +21,7 @@ CREATE TABLE T_ORDER(
     updated         DATETIME NOT NULL DEFAULT now() ON UPDATE now(),
     cancelled       DATETIME,
     closed          DATETIME,
+    cancellation_reason TEXT,
 
     PRIMARY KEY (id)
 );

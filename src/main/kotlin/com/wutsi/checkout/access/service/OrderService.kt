@@ -7,6 +7,7 @@ import com.wutsi.checkout.access.dao.OrderRepository
 import com.wutsi.checkout.access.dto.CreateOrderDiscountRequest
 import com.wutsi.checkout.access.dto.CreateOrderItemRequest
 import com.wutsi.checkout.access.dto.CreateOrderRequest
+import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.access.entity.OrderDiscountEntity
 import com.wutsi.checkout.access.entity.OrderEntity
 import com.wutsi.checkout.access.entity.OrderItemDiscountEntity
@@ -16,8 +17,16 @@ import com.wutsi.checkout.access.enums.DeviceType
 import com.wutsi.checkout.access.enums.DiscountType
 import com.wutsi.checkout.access.enums.OfferType
 import com.wutsi.checkout.access.enums.OrderStatus
+import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.Parameter
+import com.wutsi.platform.core.error.ParameterType
+import com.wutsi.platform.core.error.exception.BadRequestException
+import com.wutsi.platform.core.error.exception.ConflictException
+import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.stereotype.Service
 import java.lang.Long.max
+import java.util.Date
 import java.util.UUID
 
 @Service
@@ -62,6 +71,65 @@ class OrderService(
         }
         return order
     }
+
+    fun updateStatus(id: String, request: UpdateOrderStatusRequest) {
+        val order = findById(id)
+
+        // Never update an order closed
+        if (order.status == OrderStatus.CANCELLED || order.status == OrderStatus.CLOSED) {
+            throw ConflictException(
+                error = Error(
+                    code = ErrorURN.ORDER_CLOSED.urn,
+                    parameter = Parameter(
+                        name = "status",
+                        value = request.status,
+                        type = ParameterType.PARAMETER_TYPE_PAYLOAD
+                    )
+                )
+            )
+        }
+
+        // Change status
+        val status = OrderStatus.valueOf(request.status.uppercase())
+        if (status == order.status) {
+            return
+        }
+        order.status = status
+        when (status) {
+            OrderStatus.CLOSED -> order.closed = Date()
+
+            OrderStatus.CANCELLED -> {
+                order.cancelled = Date()
+                order.cancellationReason = request.reason
+            }
+            else -> BadRequestException(
+                error = Error(
+                    code = ErrorURN.STATUS_NOT_VALID.urn,
+                    parameter = Parameter(
+                        name = "status",
+                        value = request.status,
+                        type = ParameterType.PARAMETER_TYPE_PAYLOAD
+                    )
+                )
+            )
+        }
+        dao.save(order)
+    }
+
+    fun findById(id: String): OrderEntity =
+        dao.findById(id)
+            .orElseThrow {
+                NotFoundException(
+                    error = Error(
+                        code = ErrorURN.ORDER_NOT_FOUND.urn,
+                        parameter = Parameter(
+                            name = "id",
+                            value = id,
+                            type = ParameterType.PARAMETER_TYPE_PATH
+                        )
+                    )
+                )
+            }
 
     private fun create(order: OrderEntity, request: CreateOrderDiscountRequest): OrderDiscountEntity =
         discountDao.save(

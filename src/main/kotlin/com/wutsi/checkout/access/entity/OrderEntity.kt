@@ -39,6 +39,7 @@ data class OrderEntity(
 
     val created: Date = Date(),
     val updated: Date = Date(),
-    val cancelled: Date? = null,
-    val closed: Date? = null
+    var cancelled: Date? = null,
+    var closed: Date? = null,
+    var cancellationReason: String? = null
 )
