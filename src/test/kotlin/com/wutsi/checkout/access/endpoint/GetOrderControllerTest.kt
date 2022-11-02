@@ -38,7 +38,7 @@ public class GetOrderControllerTest {
 
         val order = response.body!!.order
         assertEquals("1111", order.shortId)
-        assertEquals(1L, order.storeId)
+        assertEquals(1L, order.businessId)
         assertEquals(11L, order.customerId)
         assertEquals("Ray Sponsible", order.customerName)
         assertEquals("ray.sponsible@gmail.com", order.customerEmail)

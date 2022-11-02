@@ -32,6 +32,8 @@ class GetBusinessControllerTest {
         val business = response.body!!.business
         assertEquals(100L, business.accountId)
         assertEquals(BusinessStatus.ACTIVE.name, business.status)
+        assertEquals("XAF", business.currency)
+        assertEquals(100000L, business.balance)
     }
 
     @Test

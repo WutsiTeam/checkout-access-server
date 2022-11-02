@@ -29,7 +29,9 @@ class BusinessService(
         return dao.save(
             BusinessEntity(
                 accountId = request.accountId,
-                status = BusinessStatus.ACTIVE
+                status = BusinessStatus.ACTIVE,
+                currency = request.currency,
+                balance = 0
             )
         )
     }
@@ -44,7 +46,9 @@ class BusinessService(
         business.status = status
         when (status) {
             BusinessStatus.SUSPENDED -> business.suspended = Date()
-            else -> BadRequestException(
+            BusinessStatus.UNDER_REVIEW -> business.suspended = null
+            BusinessStatus.ACTIVE -> business.suspended = null
+            else -> throw BadRequestException(
                 error = Error(
                     code = ErrorURN.STATUS_NOT_VALID.urn,
                     parameter = Parameter(
@@ -77,6 +81,8 @@ class BusinessService(
         id = business.id ?: -1,
         accountId = business.accountId,
         status = business.status.name,
+        balance = business.balance,
+        currency = business.currency,
         created = business.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = business.updated.toInstant().atOffset(ZoneOffset.UTC),
         suspended = business.suspended?.toInstant()?.atOffset(ZoneOffset.UTC)

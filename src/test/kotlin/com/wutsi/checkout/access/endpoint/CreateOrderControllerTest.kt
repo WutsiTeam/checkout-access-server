@@ -17,14 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.web.client.RestTemplate
 import java.util.UUID
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CreateOrderControllerTest {
+@Sql(value = ["/db/clean.sql", "/db/CreateOrderController.sql"])
+class CreateOrderControllerTest {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     private val rest = RestTemplate()
 
@@ -41,9 +43,9 @@ public class CreateOrderControllerTest {
     private lateinit var itemDiscountDao: OrderItemDiscountRepository
 
     @Test
-    public fun create() {
+    fun create() {
         val request = CreateOrderRequest(
-            storeId = 11,
+            businessId = 1,
             customerId = 22,
             customerName = "Ray Sponsible",
             customerEmail = "ray.sponsible@gmail.com",
@@ -92,7 +94,7 @@ public class CreateOrderControllerTest {
         val orderId = response.body!!.orderId
         val order = dao.findById(orderId).get()
 
-        assertEquals(request.storeId, order.storeId)
+        assertEquals(request.businessId, order.business.id)
         assertEquals(request.customerId, order.customerId)
         assertEquals(request.customerEmail, order.customerEmail)
         assertEquals(request.customerName, order.customerName)

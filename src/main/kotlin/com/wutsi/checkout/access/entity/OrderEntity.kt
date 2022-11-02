@@ -7,6 +7,8 @@ import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
@@ -16,7 +18,10 @@ data class OrderEntity(
     @Id
     val id: String? = null,
 
-    val storeId: Long = -1,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_fk")
+    val business: BusinessEntity = BusinessEntity(),
+
     val customerId: Long = -1,
     val customerName: String = "",
     val customerEmail: String? = null,

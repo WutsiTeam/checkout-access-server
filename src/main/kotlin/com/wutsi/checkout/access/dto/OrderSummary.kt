@@ -8,7 +8,7 @@ import kotlin.String
 public data class OrderSummary(
     public val id: String = "",
     public val shortId: String = "",
-    public val storeId: Long = 0,
+    public val businessId: Long = 0,
     public val status: String = "",
     public val subTotalPrice: Long = 0,
     public val totalDiscount: Long = 0,

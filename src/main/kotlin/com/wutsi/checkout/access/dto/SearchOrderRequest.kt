@@ -8,7 +8,7 @@ import kotlin.String
 import kotlin.collections.List
 
 public data class SearchOrderRequest(
-    public val storeId: Long? = null,
+    public val businessId: Long? = null,
     public val customerId: Long? = null,
     public val status: List<String> = emptyList(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")

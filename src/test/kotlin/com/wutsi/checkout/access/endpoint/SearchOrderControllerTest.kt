@@ -34,9 +34,9 @@ public class SearchOrderControllerTest {
     }
 
     @Test
-    fun searchByStore() {
+    fun byBusiness() {
         val request = SearchOrderRequest(
-            storeId = 2
+            businessId = 2
         )
         val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
 

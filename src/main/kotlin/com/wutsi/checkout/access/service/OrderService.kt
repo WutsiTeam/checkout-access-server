@@ -13,6 +13,7 @@ import com.wutsi.checkout.access.dto.OrderItem
 import com.wutsi.checkout.access.dto.OrderSummary
 import com.wutsi.checkout.access.dto.SearchOrderRequest
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
+import com.wutsi.checkout.access.entity.BusinessEntity
 import com.wutsi.checkout.access.entity.OrderDiscountEntity
 import com.wutsi.checkout.access.entity.OrderEntity
 import com.wutsi.checkout.access.entity.OrderItemDiscountEntity
@@ -44,14 +45,14 @@ class OrderService(
     private val itemDiscountDao: OrderItemDiscountRepository,
     private val em: EntityManager
 ) {
-    fun create(request: CreateOrderRequest): OrderEntity {
+    fun create(business: BusinessEntity, request: CreateOrderRequest): OrderEntity {
         // Order
         val subTotalPrice = computeSubTotalPrice(request)
         val totalDiscount = computeTotalDiscount(request)
         val order = dao.save(
             OrderEntity(
                 id = UUID.randomUUID().toString(),
-                storeId = request.storeId,
+                business = business,
                 customerId = request.customerId,
                 customerEmail = request.customerEmail,
                 customerName = request.customerName,
@@ -136,7 +137,7 @@ class OrderService(
         deviceIp = order.deviceIp,
         channelType = order.channelType?.name,
         notes = order.notes,
-        storeId = order.storeId,
+        businessId = order.business.id ?: -1,
         totalPrice = order.totalPrice,
         totalDiscount = order.totalDiscount,
         subTotalPrice = order.subTotalPrice,
@@ -157,7 +158,7 @@ class OrderService(
         customerEmail = order.customerEmail,
         customerName = order.customerName,
         customerId = order.customerId,
-        storeId = order.storeId,
+        businessId = order.business.id ?: -1,
         totalPrice = order.totalPrice,
         totalDiscount = order.totalDiscount,
         subTotalPrice = order.subTotalPrice,
@@ -196,8 +197,8 @@ class OrderService(
         if (request.customerId != null) {
             criteria.add("O.customerId = :customer_id")
         }
-        if (request.storeId != null) {
-            criteria.add("O.storeId = :store_id")
+        if (request.businessId != null) {
+            criteria.add("O.business.id = :business_id")
         }
         if (request.status.isNotEmpty()) {
             criteria.add("O.status IN :status")
@@ -215,8 +216,8 @@ class OrderService(
         if (request.customerId != null) {
             query.setParameter("customer_id", request.customerId)
         }
-        if (request.storeId != null) {
-            query.setParameter("store_id", request.storeId)
+        if (request.businessId != null) {
+            query.setParameter("business_id", request.businessId)
         }
         if (request.status.isNotEmpty()) {
             query.setParameter("status", request.status.map { OrderStatus.valueOf(it) })

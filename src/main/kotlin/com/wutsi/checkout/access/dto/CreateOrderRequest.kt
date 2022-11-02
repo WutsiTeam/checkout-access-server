@@ -12,7 +12,7 @@ public data class CreateOrderRequest(
     public val deviceIp: String? = null,
     public val deviceType: String? = null,
     public val channelType: String? = null,
-    public val storeId: Long = 0,
+    public val businessId: Long = 0,
     public val notes: String? = null,
     @get:NotBlank
     public val currency: String = "",
