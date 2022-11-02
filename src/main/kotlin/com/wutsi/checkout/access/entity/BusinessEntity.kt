@@ -1,0 +1,24 @@
+package com.wutsi.checkout.access.entity
+
+import com.wutsi.checkout.access.enums.BusinessStatus
+import java.util.Date
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+import javax.persistence.Table
+
+@Entity
+@Table(name = "T_BUSINESS")
+data class BusinessEntity(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long? = null,
+
+    val accountId: Long = -1,
+    var status: BusinessStatus = BusinessStatus.UNKNOWN,
+
+    val created: Date = Date(),
+    val updated: Date = Date(),
+    var suspended: Date? = null
+)

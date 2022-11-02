@@ -27,7 +27,6 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
-import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.stereotype.Service
 import java.lang.Long.max
@@ -83,26 +82,11 @@ class OrderService(
 
     fun updateStatus(id: String, request: UpdateOrderStatusRequest) {
         val order = findById(id)
-
-        // Never update an order closed
-        if (order.status == OrderStatus.CANCELLED || order.status == OrderStatus.CLOSED) {
-            throw ConflictException(
-                error = Error(
-                    code = ErrorURN.ORDER_CLOSED.urn,
-                    parameter = Parameter(
-                        name = "status",
-                        value = request.status,
-                        type = ParameterType.PARAMETER_TYPE_PAYLOAD
-                    )
-                )
-            )
-        }
-
-        // Change status
         val status = OrderStatus.valueOf(request.status.uppercase())
         if (status == order.status) {
             return
         }
+
         order.status = status
         when (status) {
             OrderStatus.CLOSED -> order.closed = Date()

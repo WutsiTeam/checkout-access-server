@@ -1,22 +1,19 @@
 package com.wutsi.checkout.access.endpoint
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.checkout.access.dao.OrderRepository
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.access.enums.OrderStatus
-import com.wutsi.checkout.access.error.ErrorURN
-import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
+import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/UpdateOrderStatusController.sql"])
@@ -61,6 +58,9 @@ class UpdateOrderStatusControllerTest {
 
     @Test
     fun sameStatus() {
+        val now = System.currentTimeMillis()
+        Thread.sleep(1000)
+
         val request = UpdateOrderStatusRequest(
             status = OrderStatus.OPENED.name,
             reason = "Yeauuurk"
@@ -71,36 +71,7 @@ class UpdateOrderStatusControllerTest {
 
         val order = dao.findById("102").get()
         assertEquals(OrderStatus.OPENED, order.status)
-    }
-
-    @Test
-    fun alreadyClosed() {
-        val request = UpdateOrderStatusRequest(
-            status = OrderStatus.OPENED.name
-        )
-        val ex = assertThrows<HttpClientErrorException> {
-            rest.postForEntity(url("200"), request, Any::class.java)
-        }
-
-        assertEquals(HttpStatus.CONFLICT, ex.statusCode)
-
-        val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
-        assertEquals(ErrorURN.ORDER_CLOSED.urn, response.error.code)
-    }
-
-    @Test
-    fun alreadyCancelled() {
-        val request = UpdateOrderStatusRequest(
-            status = OrderStatus.OPENED.name
-        )
-        val ex = assertThrows<HttpClientErrorException> {
-            rest.postForEntity(url("300"), request, Any::class.java)
-        }
-
-        assertEquals(HttpStatus.CONFLICT, ex.statusCode)
-
-        val response = ObjectMapper().readValue(ex.responseBodyAsString, ErrorResponse::class.java)
-        assertEquals(ErrorURN.ORDER_CLOSED.urn, response.error.code)
+        assertTrue(order.updated.before(Date(now)))
     }
 
     private fun url(id: String) = "http://localhost:$port/v1/orders/$id/status"
