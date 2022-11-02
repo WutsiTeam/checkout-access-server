@@ -19,8 +19,8 @@
   </parent>
 
   <properties>
-    <jacoco.threshold.line>0.96</jacoco.threshold.line>
-    <jacoco.threshold.class>0.96</jacoco.threshold.class>
+    <jacoco.threshold.line>0.97</jacoco.threshold.line>
+    <jacoco.threshold.class>0.97</jacoco.threshold.class>
     <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     <jdk.version>11</jdk.version>
 
@@ -34,6 +34,7 @@
     <mysql.version>8.0.31</mysql.version>
     <flyway.version>9.3.0</flyway.version>
     <wutsi-platform-core.version>0.0.175</wutsi-platform-core.version>
+    <wutsi-platform-payment.version>0.0.105</wutsi-platform-payment.version>
   </properties>
 
   <dependencies>
@@ -42,6 +43,12 @@
       <artifactId>wutsi-platform-core</artifactId>
       <version>${wutsi-platform-core.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.wutsi</groupId>
+      <artifactId>wutsi-platform-payment</artifactId>
+      <version>${wutsi-platform-payment.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib</artifactId>

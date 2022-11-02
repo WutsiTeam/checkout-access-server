@@ -1,0 +1,51 @@
+package com.wutsi.checkout.access.entity
+
+import com.wutsi.checkout.access.enums.TransactionType
+import com.wutsi.platform.payment.GatewayType
+import com.wutsi.platform.payment.core.Status
+import java.util.Date
+import javax.persistence.Entity
+import javax.persistence.FetchType
+import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
+import javax.persistence.Table
+
+@Entity
+@Table(name = "T_TRANSACTION")
+data class TransactionEntity(
+    @Id
+    val id: String? = null,
+    val idempotencyKey: String = "",
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_fk")
+    val business: BusinessEntity = BusinessEntity(),
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_fk")
+    val order: OrderEntity = OrderEntity(),
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_method_fk")
+    val paymentMethod: PaymentMethodEntity = PaymentMethodEntity(),
+
+    val type: TransactionType = TransactionType.UNKNOWN,
+    var status: Status = Status.UNKNOWN,
+    val gatewayType: GatewayType = GatewayType.UNKNOWN,
+
+    val customerId: Long = -1,
+    val description: String? = null,
+    var amount: Long = 0L,
+    var fees: Long = 0L,
+    var net: Long = 0L,
+    val currency: String = "",
+    var gatewayTransactionId: String? = null,
+    var financialTransactionId: String? = null,
+    var errorCode: String? = null,
+    var supplierErrorCode: String? = null,
+    var gatewayFees: Long = 0,
+
+    val created: Date = Date(),
+    val updated: Date = Date()
+)

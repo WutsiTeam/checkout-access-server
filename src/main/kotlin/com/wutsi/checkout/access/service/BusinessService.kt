@@ -11,7 +11,9 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
+import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.payment.core.ErrorCode
 import org.springframework.stereotype.Service
 import java.time.ZoneOffset
 import java.util.Date
@@ -87,4 +89,18 @@ class BusinessService(
         updated = business.updated.toInstant().atOffset(ZoneOffset.UTC),
         suspended = business.suspended?.toInstant()?.atOffset(ZoneOffset.UTC)
     )
+
+    fun updateBalance(business: BusinessEntity, amount: Long): BusinessEntity {
+        if (business.balance + amount < 0) {
+            throw ConflictException(
+                error = Error(
+                    code = ErrorURN.TRANSACTION_FAILED.urn,
+                    downstreamCode = ErrorCode.NOT_ENOUGH_FUNDS.name
+                )
+            )
+        }
+
+        business.balance += amount
+        return dao.save(business)
+    }
 }

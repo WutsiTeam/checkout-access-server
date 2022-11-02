@@ -63,6 +63,13 @@ wutsi:
   application:
     name: checkout-access
   platform:
+    payment:
+      flutterwave:
+        enabled: true
+        test-mode: true
+        secret-key: "-----"
+        secret-hash: "----"
+        encryption-key: "----"
     security:
       type: none
       api-key: "---- api-key ----"

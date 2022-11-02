@@ -1,12 +1,13 @@
 package com.wutsi.checkout.access
 
 import com.wutsi.platform.core.WutsiApplication
+import com.wutsi.platform.payment.EnableWutsiPayment
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.scheduling.`annotation`.EnableAsync
-import org.springframework.scheduling.`annotation`.EnableScheduling
-import kotlin.String
+import org.springframework.scheduling.annotation.EnableAsync
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @WutsiApplication
+@EnableWutsiPayment
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling
