@@ -1,19 +1,30 @@
 package com.wutsi.checkout.access.service
 
 import com.wutsi.checkout.access.dao.TransactionRepository
+import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateChargeRequest
+import com.wutsi.checkout.access.dto.Transaction
+import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.entity.TransactionEntity
 import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.checkout.access.error.InsuffisantFundsException
 import com.wutsi.checkout.access.error.TransactionException
 import com.wutsi.platform.core.error.Error
+import com.wutsi.platform.core.error.Parameter
+import com.wutsi.platform.core.error.ParameterType
+import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.payment.PaymentException
+import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
 import com.wutsi.platform.payment.core.Status
 import com.wutsi.platform.payment.model.CreatePaymentRequest
 import com.wutsi.platform.payment.model.CreatePaymentResponse
+import com.wutsi.platform.payment.model.CreateTransferRequest
+import com.wutsi.platform.payment.model.CreateTransferResponse
 import com.wutsi.platform.payment.model.Party
 import org.springframework.stereotype.Service
+import java.time.ZoneOffset
 import java.util.Optional
 import java.util.UUID
 
@@ -59,12 +70,7 @@ class TransactionService(
         try {
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
-                    payer = Party(
-                        fullName = paymentMethod.ownerName,
-                        country = paymentMethod.country,
-                        phoneNumber = paymentMethod.number,
-                        email = request.customerEmail
-                    ),
+                    payer = toParty(paymentMethod, request.customerEmail),
                     amount = Money(tx.amount.toDouble(), tx.currency),
                     externalId = tx.id!!,
                     description = request.description ?: "",
@@ -93,7 +99,113 @@ class TransactionService(
         return tx
     }
 
-    fun onSuccess(tx: TransactionEntity, response: CreatePaymentResponse) {
+    fun cashout(request: CreateCashoutRequest): TransactionEntity {
+        // Idempotency
+        val txOpt = findIdempotentTransaction(request.idempotencyKey)
+        if (txOpt.isPresent) {
+            return txOpt.get()
+        }
+
+        // Create Transaction
+        val business = businessService.findById(request.businessId)
+        val paymentMethod = paymentMethodService.findByToken(request.paymentMethodToken)
+        val gateway = gatewayProvider.get(paymentMethod.type)
+        val fees = calculator.computeFees(paymentMethod.type, request.amount)
+        val tx = TransactionEntity(
+            id = UUID.randomUUID().toString(),
+            business = business,
+            paymentMethod = paymentMethod,
+            type = TransactionType.CASHOUT,
+            currency = business.currency,
+            description = request.description,
+            idempotencyKey = request.idempotencyKey,
+            customerId = paymentMethod.accountId,
+            status = Status.UNKNOWN,
+            gatewayType = gateway.getType(),
+            amount = request.amount,
+            fees = fees,
+            net = request.amount - fees
+        )
+
+        // Remove the money from the business wallet
+        try {
+            businessService.updateBalance(business, -tx.net)
+        } catch (ex: InsuffisantFundsException) {
+            handleInsufisantFundsException(tx)
+            throw createTransactionException(tx, ErrorCode.NOT_ENOUGH_FUNDS, ex)
+        }
+
+        // Transfer the money to the account
+        try {
+            val response = gateway.createTransfer(
+                request = CreateTransferRequest(
+                    payee = toParty(paymentMethod, request.customerEmail),
+                    amount = Money(tx.amount.toDouble(), tx.currency),
+                    externalId = tx.id!!,
+                    description = request.description ?: "",
+                    payerMessage = ""
+                )
+            )
+            if (response.status == Status.SUCCESSFUL) {
+                onSuccess(tx, response)
+            } else if (response.status == Status.PENDING) {
+                onPending(tx, response)
+            }
+        } catch (ex: PaymentException) {
+            businessService.updateBalance(business, tx.net) // Rollback transfer
+            handlePaymentException(tx, ex)
+            throw createTransactionException(tx, ex.error.code, ex)
+        }
+
+        return tx
+    }
+
+    fun findById(id: String): TransactionEntity =
+        dao.findById(id)
+            .orElseThrow {
+                NotFoundException(
+                    error = Error(
+                        code = ErrorURN.TRANSACTION_NOT_FOUND.urn,
+                        parameter = Parameter(
+                            name = "id",
+                            value = id,
+                            type = ParameterType.PARAMETER_TYPE_PATH
+                        )
+                    )
+                )
+            }
+
+    fun toTransaction(tx: TransactionEntity) = Transaction(
+        id = tx.id ?: "",
+        financialTransactionId = tx.financialTransactionId,
+        amount = tx.amount,
+        businessId = tx.business.id ?: -1,
+        status = tx.status.name,
+        currency = tx.currency,
+        created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
+        updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
+        type = tx.type.name,
+        paymentMethodToken = tx.paymentMethod.token,
+        description = tx.description,
+        errorCode = tx.errorCode,
+        fees = tx.fees,
+        orderId = tx.order?.id,
+        gatewayFees = tx.gatewayFees,
+        supplierErrorCode = tx.supplierErrorCode,
+        net = tx.net,
+        gatewayTransactionId = tx.gatewayTransactionId,
+        customerId = tx.customerId,
+        gatewayType = tx.gatewayType.name
+    )
+
+    private fun toParty(paymentMethod: PaymentMethodEntity, email: String?) = Party(
+        fullName = paymentMethod.ownerName,
+        country = paymentMethod.country,
+        phoneNumber = paymentMethod.number,
+        email = email
+    )
+
+    private fun onSuccess(tx: TransactionEntity, response: CreatePaymentResponse) {
         if (tx.status == Status.SUCCESSFUL) {
             return
         }
@@ -103,15 +215,42 @@ class TransactionService(
         tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
         tx.financialTransactionId = response.financialTransactionId
         tx.gatewayFees = response.fees.value.toLong()
-        tx.fees = calculator.computeFees(tx)
+        tx.fees = calculator.computeFees(tx.paymentMethod.type, tx.amount)
         tx.net = tx.amount - tx.fees
         dao.save(tx)
 
         // Update the balance
-        businessService.updateBalance(tx.business, -tx.net)
+        businessService.updateBalance(tx.business, tx.net)
     }
 
-    fun onPending(tx: TransactionEntity, response: CreatePaymentResponse) {
+    private fun onPending(tx: TransactionEntity, response: CreatePaymentResponse) {
+        if (tx.status == Status.PENDING) {
+            return
+        }
+
+        // Update the transaction
+        tx.status = Status.PENDING
+        tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
+        tx.financialTransactionId = response.financialTransactionId
+        dao.save(tx)
+    }
+
+    private fun onSuccess(tx: TransactionEntity, response: CreateTransferResponse) {
+        if (tx.status == Status.SUCCESSFUL) {
+            return
+        }
+
+        // Update the transaction
+        tx.status = Status.SUCCESSFUL
+        tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
+        tx.financialTransactionId = response.financialTransactionId
+        tx.gatewayFees = response.fees.value.toLong()
+        tx.fees = calculator.computeFees(tx.paymentMethod.type, tx.amount)
+        tx.net = tx.amount - tx.fees
+        dao.save(tx)
+    }
+
+    private fun onPending(tx: TransactionEntity, response: CreateTransferResponse) {
         if (tx.status == Status.PENDING) {
             return
         }
@@ -131,6 +270,25 @@ class TransactionService(
         tx.gatewayFees = 0L
         dao.save(tx)
     }
+
+    private fun handleInsufisantFundsException(tx: TransactionEntity) {
+        tx.status = Status.FAILED
+        tx.errorCode = ErrorCode.NOT_ENOUGH_FUNDS.name
+        tx.gatewayFees = 0L
+        dao.save(tx)
+    }
+
+    private fun createTransactionException(tx: TransactionEntity, downstreamError: ErrorCode, cause: Throwable) =
+        TransactionException(
+            error = Error(
+                code = ErrorURN.TRANSACTION_FAILED.urn,
+                downstreamCode = downstreamError.name,
+                data = mapOf(
+                    "transaction-id" to tx.id!!
+                )
+            ),
+            cause
+        )
 
     private fun findIdempotentTransaction(idempotencyKey: String): Optional<TransactionEntity> {
         val opt = dao.findByIdempotencyKey(idempotencyKey)

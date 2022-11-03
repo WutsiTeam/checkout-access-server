@@ -25,6 +25,8 @@ public class CreateChargeDelegate(
         logger.add("device_id", request.deviceId)
 
         val tx = service.charge(request)
+        logger.add("transaction_id", tx.id)
+        logger.add("transaction_status", tx.status)
         return CreateChargeResponse(
             transactionId = tx.id ?: "",
             status = tx.status.name

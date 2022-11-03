@@ -1,12 +1,15 @@
 package com.wutsi.checkout.access.`delegate`
 
 import com.wutsi.checkout.access.dto.GetTransactionResponse
+import com.wutsi.checkout.access.service.TransactionService
 import org.springframework.stereotype.Service
-import kotlin.String
 
 @Service
-public class GetTransactionDelegate() {
+public class GetTransactionDelegate(private val service: TransactionService) {
     public fun invoke(id: String): GetTransactionResponse {
-        TODO()
+        val tx = service.findById(id)
+        return GetTransactionResponse(
+            transaction = service.toTransaction(tx)
+        )
     }
 }

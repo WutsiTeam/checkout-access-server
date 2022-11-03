@@ -24,7 +24,7 @@ data class TransactionEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_fk")
-    val order: OrderEntity = OrderEntity(),
+    val order: OrderEntity? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method_fk")

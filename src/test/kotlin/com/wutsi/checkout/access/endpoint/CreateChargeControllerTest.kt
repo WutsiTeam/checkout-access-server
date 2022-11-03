@@ -54,14 +54,14 @@ class CreateChargeControllerTest {
     @MockBean
     private lateinit var calculator: FeesCalculator
 
-    private val rest = RestTemplate()
-
     private val fees = 5000L
+
+    private val rest = RestTemplate()
 
     @BeforeEach
     fun setUp() {
         doReturn(GatewayType.FLUTTERWAVE).whenever(gateway).getType()
-        doReturn(fees).whenever(calculator).computeFees(any())
+        doReturn(fees).whenever(calculator).computeFees(any(), any())
     }
 
     @Test
@@ -89,7 +89,7 @@ class CreateChargeControllerTest {
 
         val tx = dao.findById(id).get()
         assertEquals(1L, tx.business.id)
-        assertEquals(request.orderId, tx.order.id)
+        assertEquals(request.orderId, tx.order?.id)
         assertEquals(100L, tx.customerId)
         assertEquals(1001L, tx.paymentMethod.id)
         assertEquals(request.amount, tx.amount)
@@ -107,8 +107,8 @@ class CreateChargeControllerTest {
         assertNull(tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
 
-        val business = businessDao.findById(tx.business.id).get()
-        assertEquals(120000 - tx.net, business.balance)
+        val business = businessDao.findById(tx.business.id!!).get()
+        assertEquals(120000 + tx.net, business.balance)
     }
 
     @Test
@@ -134,7 +134,7 @@ class CreateChargeControllerTest {
 
         val tx = dao.findById(id).get()
         assertEquals(1L, tx.business.id)
-        assertEquals(request.orderId, tx.order.id)
+        assertEquals(request.orderId, tx.order?.id)
         assertEquals(100L, tx.customerId)
         assertEquals(1001L, tx.paymentMethod.id)
         assertEquals(request.amount, tx.amount)
@@ -152,7 +152,7 @@ class CreateChargeControllerTest {
         assertNull(tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
 
-        val business = businessDao.findById(tx.business.id).get()
+        val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)
     }
 
@@ -183,9 +183,11 @@ class CreateChargeControllerTest {
         assertEquals(ErrorCode.NOT_ENOUGH_FUNDS.name, response.error.downstreamCode)
 
         val id = response.error.data?.get("transaction-id")?.toString()
+        assertNotNull(id)
+
         val tx = dao.findById(id).get()
         assertEquals(1L, tx.business.id)
-        assertEquals(request.orderId, tx.order.id)
+        assertEquals(request.orderId, tx.order?.id)
         assertEquals(100L, tx.customerId)
         assertEquals(1001L, tx.paymentMethod.id)
         assertEquals(request.amount, tx.amount)
@@ -203,7 +205,7 @@ class CreateChargeControllerTest {
         assertEquals(e.error.code.name, tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
 
-        val business = businessDao.findById(tx.business.id).get()
+        val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)
     }
 

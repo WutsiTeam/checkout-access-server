@@ -7,13 +7,12 @@ import com.wutsi.checkout.access.dto.UpdateBusinessStatusRequest
 import com.wutsi.checkout.access.entity.BusinessEntity
 import com.wutsi.checkout.access.enums.BusinessStatus
 import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.checkout.access.error.InsuffisantFundsException
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
-import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
-import com.wutsi.platform.payment.core.ErrorCode
 import org.springframework.stereotype.Service
 import java.time.ZoneOffset
 import java.util.Date
@@ -92,12 +91,7 @@ class BusinessService(
 
     fun updateBalance(business: BusinessEntity, amount: Long): BusinessEntity {
         if (business.balance + amount < 0) {
-            throw ConflictException(
-                error = Error(
-                    code = ErrorURN.TRANSACTION_FAILED.urn,
-                    downstreamCode = ErrorCode.NOT_ENOUGH_FUNDS.name
-                )
-            )
+            throw InsuffisantFundsException()
         }
 
         business.balance += amount

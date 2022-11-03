@@ -7,11 +7,15 @@ import kotlin.Long
 import kotlin.String
 
 public data class CreateCashoutRequest(
+    public val customerEmail: String = "",
+    public val deviceId: String = "",
     @get:NotBlank
     public val paymentMethodToken: String = "",
     public val businessId: Long = 0,
     @get:Min(0)
     public val amount: Long = 0,
+    @get:Size(max = 100)
+    public val description: String? = null,
     @get:NotBlank
     @get:Size(max = 36)
     public val idempotencyKey: String = ""
