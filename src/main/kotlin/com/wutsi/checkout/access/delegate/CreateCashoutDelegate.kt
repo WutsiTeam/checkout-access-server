@@ -24,6 +24,7 @@ class CreateCashoutDelegate(
         logger.add("request_device_id", request.deviceId)
 
         val tx = service.cashout(request)
+
         logger.add("transaction_id", tx.id)
         logger.add("transaction_status", tx.status)
         return CreateCashoutResponse(

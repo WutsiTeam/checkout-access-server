@@ -7,6 +7,7 @@ import kotlin.String
 
 public data class CreateBusinessRequest(
     public val accountId: Long = 0,
+    @get:NotBlank
     @get:Size(
         min = 2,
         max = 2

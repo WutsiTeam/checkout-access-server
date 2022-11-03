@@ -42,14 +42,13 @@ class TransactionService(
     private val calculator: FeesCalculator,
     private val em: EntityManager
 ) {
-    fun charge(request: CreateChargeRequest): TransactionEntity {
-        // Idempotency
-        val txOpt = findIdempotentTransaction(request.idempotencyKey)
-        if (txOpt.isPresent) {
-            return txOpt.get()
-        }
+    fun charge(request: CreateChargeRequest): TransactionEntity =
+        findByIdempotencyKey(request.idempotencyKey)
+            .orElseGet {
+                doCharge(request)
+            }
 
-        // Create Transaction
+    private fun doCharge(request: CreateChargeRequest): TransactionEntity {
         val business = businessService.findById(request.businessId)
         val paymentMethod = paymentMethodService.findByToken(request.paymentMethodToken)
         val gateway = gatewayProvider.get(paymentMethod.type)
@@ -104,14 +103,13 @@ class TransactionService(
         return tx
     }
 
-    fun cashout(request: CreateCashoutRequest): TransactionEntity {
-        // Idempotency
-        val txOpt = findIdempotentTransaction(request.idempotencyKey)
-        if (txOpt.isPresent) {
-            return txOpt.get()
-        }
+    fun cashout(request: CreateCashoutRequest): TransactionEntity =
+        findByIdempotencyKey(request.idempotencyKey)
+            .orElseGet {
+                doCashout(request)
+            }
 
-        // Create Transaction
+    private fun doCashout(request: CreateCashoutRequest): TransactionEntity {
         val business = businessService.findById(request.businessId)
         val paymentMethod = paymentMethodService.findByToken(request.paymentMethodToken)
         val gateway = gatewayProvider.get(paymentMethod.type)
@@ -157,7 +155,6 @@ class TransactionService(
                 onPending(tx, response)
             }
         } catch (ex: PaymentException) {
-            businessService.updateBalance(business, tx.net) // Rollback transfer
             handlePaymentException(tx, ex)
             throw createTransactionException(tx, ex.error.code, ex)
         }
@@ -179,6 +176,26 @@ class TransactionService(
                     )
                 )
             }
+
+    private fun findByIdempotencyKey(idempotencyKey: String): Optional<TransactionEntity> {
+        val opt = dao.findByIdempotencyKey(idempotencyKey)
+        if (opt.isPresent) {
+            val tx = opt.get()
+            if (tx.status == Status.FAILED) {
+                throw TransactionException(
+                    error = Error(
+                        code = ErrorURN.TRANSACTION_FAILED.urn,
+                        downstreamCode = tx.errorCode,
+                        data = mapOf(
+                            "transaction-id" to (tx.id ?: "")
+                        )
+                    )
+                )
+            }
+            return Optional.of(tx)
+        }
+        return Optional.empty()
+    }
 
     fun toTransaction(tx: TransactionEntity) = Transaction(
         id = tx.id ?: "",
@@ -220,6 +237,57 @@ class TransactionService(
         net = tx.net,
         customerId = tx.customerId
     )
+
+    fun syncStatus(id: String) {
+        val tx = findById(id)
+        if (tx.status == Status.PENDING) {
+            when (tx.type) {
+                TransactionType.CHARGE -> syncChargeStatus(tx)
+                TransactionType.CASHOUT -> syncCashoutStatus(tx)
+                else -> {}
+            }
+        }
+    }
+
+    private fun syncChargeStatus(tx: TransactionEntity) {
+        tx.gatewayTransactionId ?: return
+        try {
+            val response = gatewayProvider.get(tx.paymentMethod.type).getPayment(tx.gatewayTransactionId!!)
+            if (response.status == Status.SUCCESSFUL) {
+                onSuccess(
+                    tx = tx,
+                    response = CreatePaymentResponse(
+                        transactionId = tx.gatewayTransactionId!!,
+                        financialTransactionId = response.financialTransactionId,
+                        status = response.status,
+                        fees = response.fees
+                    )
+                )
+            }
+        } catch (ex: PaymentException) {
+            handlePaymentException(tx, ex)
+        }
+    }
+
+    private fun syncCashoutStatus(tx: TransactionEntity) {
+        tx.gatewayTransactionId ?: return
+        try {
+            val response = gatewayProvider.get(tx.paymentMethod.type).getTransfer(tx.gatewayTransactionId!!)
+            if (response.status == Status.SUCCESSFUL) {
+                onSuccess(
+                    tx = tx,
+                    response = CreateTransferResponse(
+                        transactionId = tx.gatewayTransactionId!!,
+                        financialTransactionId = response.financialTransactionId,
+                        status = response.status,
+                        fees = response.fees
+                    )
+                )
+            }
+        } catch (ex: PaymentException) {
+            handlePaymentException(tx, ex)
+        }
+    }
 
     fun search(request: SearchTransactionRequest): List<TransactionEntity> {
         val sql = sql(request)
@@ -330,8 +398,6 @@ class TransactionService(
         tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
         tx.financialTransactionId = response.financialTransactionId
         tx.gatewayFees = response.fees.value.toLong()
-        tx.fees = calculator.compute(tx.type, tx.paymentMethod.type, tx.business.country, tx.amount)
-        tx.net = tx.amount - tx.fees
         dao.save(tx)
     }
 
@@ -352,8 +418,11 @@ class TransactionService(
         tx.errorCode = ex.error.code.name
         tx.supplierErrorCode = ex.error.supplierErrorCode
         tx.gatewayTransactionId = ex.error.transactionId
-        tx.gatewayFees = 0L
         dao.save(tx)
+
+        if (tx.type == TransactionType.CASHOUT) {
+            businessService.updateBalance(tx.business, tx.net) // Rollback transfer
+        }
     }
 
     private fun handleInsufisantFundsException(tx: TransactionEntity) {
@@ -374,24 +443,4 @@ class TransactionService(
             ),
             cause
         )
-
-    private fun findIdempotentTransaction(idempotencyKey: String): Optional<TransactionEntity> {
-        val opt = dao.findByIdempotencyKey(idempotencyKey)
-        if (opt.isPresent) {
-            val tx = opt.get()
-            if (tx.status == Status.FAILED) {
-                throw TransactionException(
-                    error = Error(
-                        code = ErrorURN.TRANSACTION_FAILED.urn,
-                        downstreamCode = tx.errorCode,
-                        data = mapOf(
-                            "transaction-id" to (tx.id ?: "")
-                        )
-                    )
-                )
-            }
-            return Optional.of(tx)
-        }
-        return Optional.empty()
-    }
 }
