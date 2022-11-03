@@ -29,7 +29,8 @@ class CreateBusinessControllerTest {
     fun create() {
         val request = CreateBusinessRequest(
             accountId = 100,
-            currency = "XAF"
+            currency = "XAF",
+            country = "CM"
         )
         val response = rest.postForEntity(url(), request, CreateBusinessResponse::class.java)
 
@@ -40,14 +41,16 @@ class CreateBusinessControllerTest {
         assertTrue(business.isPresent)
         assertEquals(request.accountId, business.get().accountId)
         assertEquals(BusinessStatus.ACTIVE, business.get().status)
-        assertEquals("XAF", business.get().currency)
+        assertEquals(request.currency, business.get().currency)
+        assertEquals(request.country, business.get().country)
     }
 
     @Test
     fun createExistingBusiness() {
         val request = CreateBusinessRequest(
             accountId = 200,
-            currency = "XAF"
+            currency = "XAF",
+            country = "CM"
         )
         val response = rest.postForEntity(url(), request, CreateBusinessResponse::class.java)
 

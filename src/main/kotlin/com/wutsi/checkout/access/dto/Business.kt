@@ -1,10 +1,8 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.`annotation`.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.OffsetDateTime
 import javax.validation.constraints.Size
-import kotlin.Long
-import kotlin.String
 
 public data class Business(
     public val id: Long = 0,
@@ -21,5 +19,6 @@ public data class Business(
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val updated: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
-    public val suspended: OffsetDateTime? = null
+    public val suspended: OffsetDateTime? = null,
+    public val country: String = ""
 )

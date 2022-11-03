@@ -62,7 +62,7 @@ class CreateCashoutControllerTest {
     @BeforeEach
     fun setUp() {
         doReturn(GatewayType.FLUTTERWAVE).whenever(gateway).getType()
-        doReturn(fees).whenever(calculator).computeFees(any(), any())
+        doReturn(fees).whenever(calculator).compute(any(), any(), any(), any())
     }
 
     @Test

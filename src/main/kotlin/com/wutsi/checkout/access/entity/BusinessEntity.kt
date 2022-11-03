@@ -18,6 +18,7 @@ data class BusinessEntity(
     val accountId: Long = -1,
     var status: BusinessStatus = BusinessStatus.UNKNOWN,
     var balance: Long = 0,
+    val country: String = "",
     val currency: String = "",
 
     val created: Date = Date(),

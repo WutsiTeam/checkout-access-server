@@ -115,7 +115,7 @@ class TransactionService(
         val business = businessService.findById(request.businessId)
         val paymentMethod = paymentMethodService.findByToken(request.paymentMethodToken)
         val gateway = gatewayProvider.get(paymentMethod.type)
-        val fees = calculator.computeFees(paymentMethod.type, request.amount)
+        val fees = calculator.compute(TransactionType.CASHOUT, paymentMethod.type, business.country, request.amount)
         val tx = TransactionEntity(
             id = UUID.randomUUID().toString(),
             business = business,
@@ -300,7 +300,7 @@ class TransactionService(
         tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
         tx.financialTransactionId = response.financialTransactionId
         tx.gatewayFees = response.fees.value.toLong()
-        tx.fees = calculator.computeFees(tx.paymentMethod.type, tx.amount)
+        tx.fees = calculator.compute(tx.type, tx.paymentMethod.type, tx.business.country, tx.amount)
         tx.net = tx.amount - tx.fees
         dao.save(tx)
 
@@ -330,7 +330,7 @@ class TransactionService(
         tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
         tx.financialTransactionId = response.financialTransactionId
         tx.gatewayFees = response.fees.value.toLong()
-        tx.fees = calculator.computeFees(tx.paymentMethod.type, tx.amount)
+        tx.fees = calculator.compute(tx.type, tx.paymentMethod.type, tx.business.country, tx.amount)
         tx.net = tx.amount - tx.fees
         dao.save(tx)
     }

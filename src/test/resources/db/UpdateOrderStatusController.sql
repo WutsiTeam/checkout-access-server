@@ -1,6 +1,6 @@
-INSERT INTO T_BUSINESS(id, account_id, status, suspended, currency)
+INSERT INTO T_BUSINESS(id, account_id, status, suspended, currency, country)
     VALUES
-        (1, 1, 1, null, 'XAF');
+        (1, 1, 1, null, 'XAF', 'CM');
 
 INSERT INTO T_ORDER(id, business_fk, customer_id, customer_name, status, currency)
     VALUES

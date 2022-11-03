@@ -32,6 +32,7 @@ class BusinessService(
                 accountId = request.accountId,
                 status = BusinessStatus.ACTIVE,
                 currency = request.currency,
+                country = request.country,
                 balance = 0
             )
         )
@@ -84,6 +85,7 @@ class BusinessService(
         status = business.status.name,
         balance = business.balance,
         currency = business.currency,
+        country = business.country,
         created = business.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = business.updated.toInstant().atOffset(ZoneOffset.UTC),
         suspended = business.suspended?.toInstant()?.atOffset(ZoneOffset.UTC)
