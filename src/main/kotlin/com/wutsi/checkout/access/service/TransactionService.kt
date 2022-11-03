@@ -3,7 +3,9 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateChargeRequest
+import com.wutsi.checkout.access.dto.SearchTransactionRequest
 import com.wutsi.checkout.access.dto.Transaction
+import com.wutsi.checkout.access.dto.TransactionSummary
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.entity.TransactionEntity
 import com.wutsi.checkout.access.enums.TransactionType
@@ -27,6 +29,8 @@ import org.springframework.stereotype.Service
 import java.time.ZoneOffset
 import java.util.Optional
 import java.util.UUID
+import javax.persistence.EntityManager
+import javax.persistence.Query
 
 @Service
 class TransactionService(
@@ -35,7 +39,8 @@ class TransactionService(
     private val businessService: BusinessService,
     private val paymentMethodService: PaymentMethodService,
     private val orderService: OrderService,
-    private val calculator: FeesCalculator
+    private val calculator: FeesCalculator,
+    private val em: EntityManager
 ) {
     fun charge(request: CreateChargeRequest): TransactionEntity {
         // Idempotency
@@ -197,6 +202,86 @@ class TransactionService(
         customerId = tx.customerId,
         gatewayType = tx.gatewayType.name
     )
+
+    fun toTransactionSummary(tx: TransactionEntity) = TransactionSummary(
+        id = tx.id ?: "",
+        amount = tx.amount,
+        businessId = tx.business.id ?: -1,
+        status = tx.status.name,
+        currency = tx.currency,
+        created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
+        updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
+        type = tx.type.name,
+        paymentMethodToken = tx.paymentMethod.token,
+        description = tx.description,
+        fees = tx.fees,
+        orderId = tx.order?.id,
+        gatewayFees = tx.gatewayFees,
+        net = tx.net,
+        customerId = tx.customerId
+    )
+
+    fun search(request: SearchTransactionRequest): List<TransactionEntity> {
+        val sql = sql(request)
+        val query = em.createQuery(sql)
+        parameters(request, query)
+        return query
+            .setFirstResult(request.offset)
+            .setMaxResults(request.limit)
+            .resultList as List<TransactionEntity>
+    }
+
+    private fun sql(request: SearchTransactionRequest): String {
+        val select = select()
+        val where = where(request)
+        return if (where.isNullOrEmpty()) {
+            select
+        } else {
+            "$select WHERE $where ORDER BY a.created DESC"
+        }
+    }
+
+    private fun select(): String =
+        "SELECT a FROM TransactionEntity a"
+
+    private fun where(request: SearchTransactionRequest): String {
+        val criteria = mutableListOf<String>()
+
+        if (request.customerId != null) {
+            criteria.add("a.customerId=:customer_id")
+        }
+        if (request.businessId != null) {
+            criteria.add("a.business.id=:business_id")
+        }
+        if (request.status.isNotEmpty()) {
+            criteria.add("a.status IN :status")
+        }
+        if (request.type != null) {
+            criteria.add("a.type=:type")
+        }
+        if (request.orderId != null) {
+            criteria.add("a.order.id=:order_id")
+        }
+        return criteria.joinToString(separator = " AND ")
+    }
+
+    private fun parameters(request: SearchTransactionRequest, query: Query) {
+        if (request.customerId != null) {
+            query.setParameter("customer_id", request.customerId)
+        }
+        if (request.businessId != null) {
+            query.setParameter("business_id", request.businessId)
+        }
+        if (request.status.isNotEmpty()) {
+            query.setParameter("status", request.status.map { Status.valueOf(it.uppercase()) })
+        }
+        if (request.type != null) {
+            query.setParameter("type", TransactionType.valueOf(request.type.uppercase()))
+        }
+        if (request.orderId != null) {
+            query.setParameter("order_id", request.orderId)
+        }
+    }
 
     private fun toParty(paymentMethod: PaymentMethodEntity, email: String?) = Party(
         fullName = paymentMethod.ownerName,

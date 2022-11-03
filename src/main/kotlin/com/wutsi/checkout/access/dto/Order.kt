@@ -2,6 +2,7 @@ package com.wutsi.checkout.access.dto
 
 import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
+import kotlin.Double
 import kotlin.Long
 import kotlin.String
 import kotlin.collections.List
@@ -18,6 +19,7 @@ public data class Order(
     public val subTotalPrice: Long = 0,
     public val totalDiscount: Long = 0,
     public val totalPrice: Long = 0,
+    public val totalPaid: Double = 0.0,
     public val currency: String = "",
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val created: OffsetDateTime = OffsetDateTime.now(),

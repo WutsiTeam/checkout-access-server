@@ -16,6 +16,16 @@ class CreateOrderDelegate(
 ) {
     @Transactional
     fun invoke(request: CreateOrderRequest): CreateOrderResponse {
+        logger.add("request_customer_id", request.customerId)
+        logger.add("request_customer_email", request.customerEmail)
+        logger.add("request_customer_name", request.customerName)
+        logger.add("request_business_id", request.businessId)
+        logger.add("request_channel_type", request.channelType)
+        logger.add("request_currency", request.currency)
+        logger.add("request_device_id", request.deviceId)
+        logger.add("request_device_ip", request.deviceIp)
+        logger.add("request_device_type", request.deviceType)
+
         val business = businessService.findById(request.businessId)
         val order = service.create(business, request)
         logger.add("order_id", order.id)
