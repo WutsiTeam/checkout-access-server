@@ -207,7 +207,6 @@ class TransactionService(
         created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
         type = tx.type.name,
-        paymentMethodToken = tx.paymentMethod.token,
         description = tx.description,
         errorCode = tx.errorCode,
         fees = tx.fees,
@@ -217,7 +216,8 @@ class TransactionService(
         net = tx.net,
         gatewayTransactionId = tx.gatewayTransactionId,
         customerId = tx.customerId,
-        gatewayType = tx.gatewayType.name
+        gatewayType = tx.gatewayType.name,
+        paymentMethod = paymentMethodService.toPaymentMethodSummary(tx.paymentMethod)
     )
 
     fun toTransactionSummary(tx: TransactionEntity) = TransactionSummary(

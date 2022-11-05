@@ -5,7 +5,7 @@ import javax.validation.constraints.Size
 
 public data class CreatePaymentMethodRequest(
     public val accountId: Long = 0,
-    public val paymentProviderId: Long = 0,
+    public val providerId: Long = 0,
     @get:NotBlank
     public val type: String = "",
     @get:NotBlank

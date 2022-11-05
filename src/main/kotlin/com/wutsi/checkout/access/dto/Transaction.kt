@@ -10,7 +10,6 @@ public data class Transaction(
     public val customerId: Long? = null,
     public val businessId: Long = 0,
     public val type: String = "",
-    public val paymentMethodToken: String? = null,
     public val description: String? = null,
     public val amount: Long = 0,
     public val fees: Long = 0,
@@ -27,5 +26,6 @@ public data class Transaction(
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val updated: OffsetDateTime = OffsetDateTime.now(),
     public val orderId: String? = null,
-    public val gatewayType: String = ""
+    public val gatewayType: String = "",
+    public val paymentMethod: PaymentMethodSummary = PaymentMethodSummary()
 )

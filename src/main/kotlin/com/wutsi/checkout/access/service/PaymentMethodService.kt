@@ -48,7 +48,7 @@ class PaymentMethodService(
         return dao.save(
             PaymentMethodEntity(
                 accountId = request.accountId,
-                provider = paymentProviderService.findById(request.paymentProviderId),
+                provider = paymentProviderService.findById(request.providerId),
                 type = type,
                 number = number,
                 status = PaymentMethodStatus.ACTIVE,
@@ -75,7 +75,7 @@ class PaymentMethodService(
             }
 
     fun mask(number: String): String =
-        "xxxx" + number.takeLast(4)
+        "....${number.takeLast(4)}"
 
     fun search(request: SearchPaymentMethodRequest): List<PaymentMethodEntity> {
         val pagination = PageRequest.of(request.offset / request.limit, request.limit)

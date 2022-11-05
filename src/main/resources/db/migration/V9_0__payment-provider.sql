@@ -9,7 +9,7 @@ CREATE TABLE T_PAYMENT_PROVIDER(
     PRIMARY KEY (id)
 );
 
-CREATE TABLE T_PAYMENT_PREFIX(
+CREATE TABLE T_PAYMENT_PROVIDER_PREFIX(
     id                  SERIAL NOT NULL,
 
     payment_provider_fk BIGINT REFERENCES T_PAYMENT_PREFIX(id),
@@ -25,7 +25,7 @@ INSERT INTO T_PAYMENT_PROVIDER(id, code, name, logo_url, type)
         (1001, 'Orange', 'Orange', 'https://prod-wutsi.s3.amazonaws.com/static/checkout-access-server/logos/mtn.png', 1)
     ;
 
-INSERT INTO T_PAYMENT_PREFIX(payment_provider_fk, country, number_prefix)
+INSERT INTO T_PAYMENT_PROVIDER_PREFIX(payment_provider_fk, country, number_prefix)
     VALUES
         (1000, 'CM', '+23767'),
         (1000, 'CM', '+237650'),

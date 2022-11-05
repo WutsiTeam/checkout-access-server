@@ -1,16 +1,70 @@
 package com.wutsi.checkout.access.endpoint
 
+import com.wutsi.checkout.access.dto.SearchPaymentProviderRequest
+import com.wutsi.checkout.access.dto.SearchPaymentProviderResponse
+import com.wutsi.checkout.access.enums.PaymentMethodType
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import kotlin.Int
+import org.springframework.http.HttpStatus
+import org.springframework.web.client.RestTemplate
+import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SearchPaymentProviderControllerTest {
+class SearchPaymentProviderControllerTest {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
+
+    private val rest = RestTemplate()
 
     @Test
-    public fun invoke() {
+    fun byType() {
+        val request = SearchPaymentProviderRequest(
+            country = "CM",
+            type = PaymentMethodType.MOBILE_MONEY.name
+        )
+        val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val providers = response.body!!.paymentProviders
+        assertEquals(2, providers.size)
+
+        assertEquals("MTN", providers[0].code)
+        assertEquals("Orange", providers[1].code)
     }
+
+    @Test
+    fun byTypeAndNumber() {
+        val request = SearchPaymentProviderRequest(
+            country = "CM",
+            type = PaymentMethodType.MOBILE_MONEY.name,
+            number = "+237690000010"
+        )
+        val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val providers = response.body!!.paymentProviders
+        assertEquals(1, providers.size)
+
+        assertEquals("Orange", providers[0].code)
+    }
+
+    @Test
+    fun byTypeAndNumberNotFound() {
+        val request = SearchPaymentProviderRequest(
+            country = "CM",
+            type = PaymentMethodType.MOBILE_MONEY.name,
+            number = "+000690000010"
+        )
+        val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val providers = response.body!!.paymentProviders
+        assertEquals(0, providers.size)
+    }
+
+    private fun url() = "http://localhost:$port/v1/payment-providers/search"
 }

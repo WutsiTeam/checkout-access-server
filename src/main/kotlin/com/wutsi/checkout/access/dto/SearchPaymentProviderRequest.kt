@@ -6,5 +6,6 @@ import kotlin.String
 public data class SearchPaymentProviderRequest(
     @get:NotBlank
     public val country: String = "",
-    public val number: String = ""
+    public val number: String? = null,
+    public val type: String? = null
 )

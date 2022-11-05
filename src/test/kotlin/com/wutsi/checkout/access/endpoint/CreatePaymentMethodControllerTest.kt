@@ -37,7 +37,7 @@ class CreatePaymentMethodControllerTest {
     fun create() {
         val request = CreatePaymentMethodRequest(
             type = PaymentMethodType.MOBILE_MONEY.name,
-            paymentProviderId = 1001,
+            providerId = 1001,
             number = "+237670000111",
             country = "CM",
             ownerName = "RAY SPONSIBLE",
@@ -56,7 +56,7 @@ class CreatePaymentMethodControllerTest {
         assertEquals(request.ownerName, payment.get().ownerName)
         assertEquals(request.country, payment.get().country)
         assertEquals(request.number, payment.get().number)
-        assertEquals(request.paymentProviderId, payment.get().provider.id)
+        assertEquals(request.providerId, payment.get().provider.id)
         assertNotNull(payment.get().created)
         assertNotNull(payment.get().updated)
         assertNull(payment.get().deactivated)
@@ -66,7 +66,7 @@ class CreatePaymentMethodControllerTest {
     fun idempotency() {
         val request = CreatePaymentMethodRequest(
             type = PaymentMethodType.MOBILE_MONEY.name,
-            paymentProviderId = 1001,
+            providerId = 1001,
             number = "+237690000300",
             country = "CM",
             ownerName = "RAY SPONSIBLE",
@@ -83,7 +83,7 @@ class CreatePaymentMethodControllerTest {
     @Test
     fun recycle() {
         val request = CreatePaymentMethodRequest(
-            paymentProviderId = 1001,
+            providerId = 1001,
             type = PaymentMethodType.MOBILE_MONEY.name,
             number = "+237690000200",
             country = "CM",
@@ -103,7 +103,7 @@ class CreatePaymentMethodControllerTest {
         assertEquals(request.ownerName, payment.get().ownerName)
         assertEquals(request.country, payment.get().country)
         assertEquals(request.number, payment.get().number)
-        assertEquals(request.paymentProviderId, payment.get().provider.id)
+        assertEquals(request.providerId, payment.get().provider.id)
         assertNotNull(payment.get().created)
         assertNotNull(payment.get().updated)
         assertNull(payment.get().deactivated)
@@ -114,7 +114,7 @@ class CreatePaymentMethodControllerTest {
         val request = CreatePaymentMethodRequest(
             type = PaymentMethodType.MOBILE_MONEY.name,
             number = "+237690000300",
-            paymentProviderId = 1000,
+            providerId = 1000,
             country = "CM",
             ownerName = "RAY SPONSIBLE",
             accountId = 3333

@@ -2,6 +2,8 @@ package com.wutsi.checkout.access.endpoint
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.checkout.access.dto.GetTransactionResponse
+import com.wutsi.checkout.access.enums.PaymentMethodStatus
+import com.wutsi.checkout.access.enums.PaymentMethodType
 import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.platform.core.error.ErrorResponse
@@ -36,7 +38,6 @@ class GetTransactionControllerTest {
         assertEquals(1L, tx.businessId)
         assertEquals("order-200", tx.orderId)
         assertEquals(200L, tx.customerId)
-        assertEquals("token-200", tx.paymentMethodToken)
         assertEquals(500, tx.amount)
         assertEquals(5L, tx.fees)
         assertEquals(10L, tx.gatewayFees)
@@ -50,6 +51,14 @@ class GetTransactionControllerTest {
         assertEquals("00000", tx.supplierErrorCode)
         assertEquals("Hello world", tx.description)
         assertEquals(ErrorCode.NOT_ENOUGH_FUNDS.name, tx.errorCode)
+
+        assertEquals("token-200", tx.paymentMethod.token)
+        assertEquals(PaymentMethodType.MOBILE_MONEY.name, tx.paymentMethod.type)
+        assertEquals(PaymentMethodStatus.ACTIVE.name, tx.paymentMethod.status)
+        assertEquals("....0200", tx.paymentMethod.number)
+        assertEquals(tx.customerId, tx.paymentMethod.accountId)
+        assertEquals("MTN", tx.paymentMethod.provider.name)
+        assertEquals("MTN", tx.paymentMethod.provider.code)
     }
 
     @Test
