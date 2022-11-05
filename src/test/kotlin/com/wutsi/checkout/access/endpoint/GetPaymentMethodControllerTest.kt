@@ -42,6 +42,14 @@ class GetPaymentMethodControllerTest {
         assertNotNull(payment.created)
         assertNotNull(payment.updated)
         assertNull(payment.deactivated)
+
+        assertEquals("MTN", payment.provider.code)
+        assertEquals("MTN", payment.provider.name)
+        assertEquals(PaymentMethodType.MOBILE_MONEY.name, payment.provider.type)
+        assertEquals(
+            "https://prod-wutsi.s3.amazonaws.com/static/checkout-access-server/logos/mtn.png",
+            payment.provider.logoUrl
+        )
     }
 
     @Test

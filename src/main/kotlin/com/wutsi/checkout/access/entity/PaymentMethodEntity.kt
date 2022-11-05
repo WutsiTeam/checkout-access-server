@@ -5,9 +5,12 @@ import com.wutsi.checkout.access.enums.PaymentMethodType
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.JoinColumn
+import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
@@ -31,5 +34,9 @@ data class PaymentMethodEntity(
 
     val created: Date = Date(),
     val updated: Date = Date(),
-    var deactivated: Date? = null
+    var deactivated: Date? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_provider_fk")
+    val provider: PaymentProviderEntity = PaymentProviderEntity()
 )

@@ -23,7 +23,10 @@ import java.util.Date
 import java.util.UUID
 
 @Service
-class PaymentMethodService(private val dao: PaymentMethodRepository) {
+class PaymentMethodService(
+    private val dao: PaymentMethodRepository,
+    private val paymentProviderService: PaymentProviderService
+) {
     fun create(request: CreatePaymentMethodRequest): PaymentMethodEntity {
         val type = PaymentMethodType.valueOf(request.type.uppercase())
         val number = request.number.uppercase()
@@ -45,6 +48,7 @@ class PaymentMethodService(private val dao: PaymentMethodRepository) {
         return dao.save(
             PaymentMethodEntity(
                 accountId = request.accountId,
+                provider = paymentProviderService.findById(request.paymentProviderId),
                 type = type,
                 number = number,
                 status = PaymentMethodStatus.ACTIVE,
@@ -118,7 +122,8 @@ class PaymentMethodService(private val dao: PaymentMethodRepository) {
         country = payment.country,
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
-        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC)
+        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
+        provider = paymentProviderService.toPaymentProviderSummary(payment.provider)
     )
 
     fun toPaymentMethodSummary(payment: PaymentMethodEntity) = PaymentMethodSummary(
@@ -129,7 +134,8 @@ class PaymentMethodService(private val dao: PaymentMethodRepository) {
         number = mask(payment.number),
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
-        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC)
+        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
+        provider = paymentProviderService.toPaymentProviderSummary(payment.provider)
     )
 
     private fun hash(): String =

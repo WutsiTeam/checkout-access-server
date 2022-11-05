@@ -3,10 +3,10 @@ INSERT INTO T_BUSINESS(id, account_id, status, suspended, balance, currency, cou
         (1, 1, 2, null, 120000, 'XAF', 'CM')
     ;
 
-INSERT INTO T_PAYMENT_METHOD(id, token, account_id, number, country, owner_name, type, status, deactivated)
+INSERT INTO T_PAYMENT_METHOD(id, payment_provider_fk, token, account_id, number, country, owner_name, type, status, deactivated)
     VALUES
-        (1001, 'token-100', 100, '+237690000100', 'CM', 'Roger Milla', 1, 1, null),
-        (2001, 'token-200', 200, '+237690000200', 'CM', 'Omam Biyick', 1, 1, null)
+        (1001, 1000, 'token-100', 100, '+237690000100', 'CM', 'Roger Milla', 1, 1, null),
+        (2001, 1000, 'token-200', 200, '+237690000200', 'CM', 'Omam Biyick', 1, 1, null)
     ;
 
 INSERT INTO T_ORDER(id, business_fk, customer_id, customer_name, status, currency, total_price)
