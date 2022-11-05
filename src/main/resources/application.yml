@@ -91,7 +91,6 @@ wutsi:
         encryption-key: "----"
     security:
       type: none
-      api-key: "---- api-key ----"
     cache:
       name: ${wutsi.application.name}
       type: local
