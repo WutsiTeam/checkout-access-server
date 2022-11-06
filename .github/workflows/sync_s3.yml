@@ -1,0 +1,34 @@
+name: sync-s3
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: S3-Deploy-Test
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          aws s3 sync \
+            --acl public-read \
+            --region us-east-1 \
+            src/main/resources/static/ s3://int-wutsi/static/checkout-access-server
+
+      - name: S3-Deploy-Prod
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+        run: |
+          aws s3 sync \
+            --acl public-read \
+            --region us-east-1 \
+            src/main/resources/static/ s3://prod-wutsi/static/checkout-access-server
