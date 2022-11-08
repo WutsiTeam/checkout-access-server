@@ -32,3 +32,4 @@ jobs:
             --acl public-read \
             --region us-east-1 \
             src/main/resources/static/ s3://prod-wutsi/static/checkout-access-server
+
