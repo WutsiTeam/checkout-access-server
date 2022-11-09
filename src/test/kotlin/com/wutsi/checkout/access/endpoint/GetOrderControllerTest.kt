@@ -24,9 +24,9 @@ import kotlin.test.assertTrue
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/GetOrderController.sql"])
-public class GetOrderControllerTest {
+class GetOrderControllerTest {
     @LocalServerPort
-    public val port: Int = 0
+    val port: Int = 0
 
     private val rest = RestTemplate()
 
@@ -50,6 +50,8 @@ public class GetOrderControllerTest {
         assertEquals(5000L, order.subTotalPrice)
         assertEquals(1000, order.totalDiscount)
         assertEquals(4000L, order.totalPrice)
+        assertEquals(1500, order.totalPaid)
+        assertEquals(2500, order.balance)
         assertEquals("Thanks", order.notes)
         assertEquals("Not available", order.cancellationReason)
         assertNotNull(order.cancelled)

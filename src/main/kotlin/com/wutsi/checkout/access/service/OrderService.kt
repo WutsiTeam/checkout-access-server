@@ -4,6 +4,7 @@ import com.wutsi.checkout.access.dao.OrderDiscountRepository
 import com.wutsi.checkout.access.dao.OrderItemDiscountRepository
 import com.wutsi.checkout.access.dao.OrderItemRepository
 import com.wutsi.checkout.access.dao.OrderRepository
+import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateOrderDiscountRequest
 import com.wutsi.checkout.access.dto.CreateOrderItemRequest
 import com.wutsi.checkout.access.dto.CreateOrderRequest
@@ -23,12 +24,14 @@ import com.wutsi.checkout.access.enums.DeviceType
 import com.wutsi.checkout.access.enums.DiscountType
 import com.wutsi.checkout.access.enums.OfferType
 import com.wutsi.checkout.access.enums.OrderStatus
+import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Service
 import java.lang.Long.max
 import java.time.ZoneOffset
@@ -43,6 +46,7 @@ class OrderService(
     private val itemDao: OrderItemRepository,
     private val discountDao: OrderDiscountRepository,
     private val itemDiscountDao: OrderItemDiscountRepository,
+    private val transactionDao: TransactionRepository,
     private val em: EntityManager
 ) {
     fun create(business: BusinessEntity, request: CreateOrderRequest): OrderEntity {
@@ -125,6 +129,14 @@ class OrderService(
                 )
             }
 
+    fun updateBalance(id: String) {
+        val order = findById(id)
+        order.totalPaid = transactionDao.findByOrderIdAndStatus(id, Status.SUCCESSFUL)
+            .filter { it.type == TransactionType.CHARGE }
+            .sumOf { it.net }
+        dao.save(order)
+    }
+
     fun toOrder(order: OrderEntity) = Order(
         id = order.id ?: "",
         shortId = toShortId(order.id),
@@ -139,6 +151,8 @@ class OrderService(
         notes = order.notes,
         businessId = order.business.id ?: -1,
         totalPrice = order.totalPrice,
+        totalPaid = order.totalPaid,
+        balance = max(0, order.totalPrice - order.totalPaid),
         totalDiscount = order.totalDiscount,
         subTotalPrice = order.subTotalPrice,
         status = order.status.name,
@@ -162,6 +176,8 @@ class OrderService(
         totalPrice = order.totalPrice,
         totalDiscount = order.totalDiscount,
         subTotalPrice = order.subTotalPrice,
+        totalPaid = order.totalPaid,
+        balance = max(0, order.totalPrice - order.totalPaid),
         status = order.status.name,
         created = order.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = order.updated.toInstant().atOffset(ZoneOffset.UTC),

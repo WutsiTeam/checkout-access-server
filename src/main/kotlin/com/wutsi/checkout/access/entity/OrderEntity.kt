@@ -33,6 +33,7 @@ data class OrderEntity(
     var totalPrice: Long = 0L,
     val subTotalPrice: Long = 0L,
     val totalDiscount: Long = 0L,
+    var totalPaid: Long = 0L,
     val currency: String = "",
     val notes: String? = null,
 

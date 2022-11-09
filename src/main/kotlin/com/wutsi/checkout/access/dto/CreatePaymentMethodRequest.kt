@@ -2,6 +2,8 @@ package com.wutsi.checkout.access.dto
 
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
+import kotlin.Long
+import kotlin.String
 
 public data class CreatePaymentMethodRequest(
     public val accountId: Long = 0,
