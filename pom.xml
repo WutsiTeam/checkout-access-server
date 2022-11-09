@@ -33,7 +33,7 @@
     <hikari-cp.version>5.0.1</hikari-cp.version>
     <mysql.version>8.0.31</mysql.version>
     <flyway.version>9.3.0</flyway.version>
-    <wutsi-platform-core.version>0.0.181</wutsi-platform-core.version>
+    <wutsi-platform-core.version>0.0.186</wutsi-platform-core.version>
     <wutsi-platform-payment.version>0.0.105</wutsi-platform-payment.version>
   </properties>
 
