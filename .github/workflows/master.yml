@@ -63,7 +63,7 @@ jobs:
       - name: Heroku-Deploy-Test
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
-          HEROKU_APP: checkout-access-server-test
+          HEROKU_APP: checkout-access-test
           MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_TEST}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_TEST}}
           MYSQL_URL: ${{secrets.MYSQL_URL_TEST}}
@@ -82,7 +82,7 @@ jobs:
 
       - name: Health check
         env:
-          HEROKU_APP: checkout-access-server-test
+          HEROKU_APP: checkout-access-test
         run: |
           sleep 90
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
@@ -92,7 +92,7 @@ jobs:
         if: ${{always()}}
         env:
           SLACK_COLOR: ${{job.status}}
-          SLACK_TITLE: checkout-access-server-test
+          SLACK_TITLE: checkout-access-test
           SLACK_MESSAGE: Heroku Deployment in TEST
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}
@@ -123,7 +123,7 @@ jobs:
       - name: Heroku-Deploy-Prod
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
-          HEROKU_APP: checkout-access-server-prod
+          HEROKU_APP: checkout-access-prod
           MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_PROD}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_PROD}}
           MYSQL_URL: ${{secrets.MYSQL_URL_PROD}}
@@ -142,7 +142,7 @@ jobs:
 
       - name: Health check
         env:
-          HEROKU_APP: checkout-access-server-prod
+          HEROKU_APP: checkout-access-prod
         run: |
           sleep 90
           curl -sSf https://${HEROKU_APP}.herokuapp.com/actuator/health >> /dev/null
@@ -152,7 +152,7 @@ jobs:
         if: ${{always()}}
         env:
           SLACK_COLOR: ${{job.status}}
-          SLACK_TITLE: checkout-access-server-prod
+          SLACK_TITLE: checkout-access-prod
           SLACK_MESSAGE: Heroku Deployment in PROD
           MSG_MINIMAL: true
           SLACK_WEBHOOK: ${{secrets.SLACK_WEBHOOK_URL}}

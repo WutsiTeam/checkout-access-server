@@ -82,6 +82,9 @@ wutsi:
             amount: 3500
 
   platform:
+    cache:
+      name: ${wutsi.application.name}
+      type: local
     payment:
       flutterwave:
         enabled: true
@@ -91,9 +94,6 @@ wutsi:
         encryption-key: "----"
     security:
       type: none
-    cache:
-      name: ${wutsi.application.name}
-      type: local
     tracing:
       client-id: ${wutsi.application.name}
       device-id-provider:

@@ -15,7 +15,7 @@ java -jar ${CODEGEN_JAR} server \
     -jdk 11 \
     -github_user ${GITHUB_USER} \
     -github_project ${API_NAME}-server \
-    -heroku ${API_NAME}-server \
+    -heroku ${API_NAME} \
     -service_aws_mysql \
     -service_logger \
     -service_slack
