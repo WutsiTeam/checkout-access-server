@@ -93,7 +93,7 @@ class CreateCashoutControllerTest {
         assertEquals(1L, tx.business.id)
         assertNull(tx.order)
         assertEquals(100L, tx.customerId)
-        assertEquals(1001L, tx.paymentMethod.id)
+        assertEquals(1001L, tx.paymentMethod?.id)
         assertEquals(request.amount, tx.amount)
         assertEquals(fees, tx.fees)
         assertEquals(paymentResponse.fees.value.toLong(), tx.gatewayFees)
@@ -146,7 +146,7 @@ class CreateCashoutControllerTest {
         assertEquals(1L, tx.business.id)
         assertNull(tx.order)
         assertEquals(100L, tx.customerId)
-        assertEquals(1001L, tx.paymentMethod.id)
+        assertEquals(1001L, tx.paymentMethod?.id)
         assertEquals(request.amount, tx.amount)
         assertEquals(fees, tx.fees)
         assertEquals(0, tx.gatewayFees)
@@ -205,7 +205,7 @@ class CreateCashoutControllerTest {
         assertEquals(1L, tx.business.id)
         assertNull(tx.order)
         assertEquals(100L, tx.customerId)
-        assertEquals(1001L, tx.paymentMethod.id)
+        assertEquals(1001L, tx.paymentMethod?.id)
         assertEquals(request.amount, tx.amount)
         assertEquals(fees, tx.fees)
         assertEquals(0L, tx.gatewayFees)
@@ -253,7 +253,7 @@ class CreateCashoutControllerTest {
         assertEquals(1L, tx.business.id)
         assertNull(tx.order)
         assertEquals(100L, tx.customerId)
-        assertEquals(1001L, tx.paymentMethod.id)
+        assertEquals(1001L, tx.paymentMethod?.id)
         assertEquals(request.amount, tx.amount)
         assertEquals(fees, tx.fees)
         assertEquals(0L, tx.gatewayFees)
@@ -306,7 +306,8 @@ class CreateCashoutControllerTest {
         businessId = businessId,
         amount = amount,
         description = "Hello world",
-        idempotencyKey = idempotencyKey
+        idempotencyKey = idempotencyKey,
+        email = "ray.sponsible@gmail.com"
     )
 
     private fun url() = "http://localhost:$port/v1/transactions/cashout"

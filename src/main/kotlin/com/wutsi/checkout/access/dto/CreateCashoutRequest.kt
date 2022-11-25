@@ -3,8 +3,11 @@ package com.wutsi.checkout.access.dto
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
+import kotlin.Long
+import kotlin.String
 
 public data class CreateCashoutRequest(
+    @get:NotBlank
     public val email: String = "",
     @get:NotBlank
     public val paymentMethodToken: String = "",

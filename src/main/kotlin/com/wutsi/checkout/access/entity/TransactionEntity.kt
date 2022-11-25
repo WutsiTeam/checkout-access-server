@@ -29,7 +29,7 @@ data class TransactionEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method_fk")
-    val paymentMethod: PaymentMethodEntity = PaymentMethodEntity(),
+    val paymentMethod: PaymentMethodEntity? = null,
 
     val type: TransactionType = TransactionType.UNKNOWN,
     var status: Status = Status.UNKNOWN,
@@ -52,7 +52,7 @@ data class TransactionEntity(
     val updated: Date = Date(),
 
     val paymentMethodNumber: String = "",
-    val paymentMethodCountry: String = "",
+    val paymentMethodCountry: String? = null,
     val paymentMethodOwnerName: String = "",
     val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
 

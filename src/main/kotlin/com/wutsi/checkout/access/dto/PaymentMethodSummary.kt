@@ -1,7 +1,9 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
+import kotlin.Long
+import kotlin.String
 
 public data class PaymentMethodSummary(
     public val accountId: Long = 0,

@@ -98,7 +98,7 @@ class CreateChargeControllerTest {
         assertEquals(1L, tx.business.id)
         assertEquals(request.orderId, tx.order?.id)
         assertEquals(100L, tx.customerId)
-        assertEquals(1001L, tx.paymentMethod.id)
+        assertEquals(1001L, tx.paymentMethod?.id)
         assertEquals(request.amount, tx.amount)
         assertEquals(fees, tx.fees)
         assertEquals(paymentResponse.fees.value.toLong(), tx.gatewayFees)
@@ -149,7 +149,7 @@ class CreateChargeControllerTest {
         assertEquals(1L, tx.business.id)
         assertEquals(request.orderId, tx.order?.id)
         assertEquals(100L, tx.customerId)
-        assertEquals(1001L, tx.paymentMethod.id)
+        assertEquals(1001L, tx.paymentMethod?.id)
         assertEquals(request.amount, tx.amount)
         assertEquals(0L, tx.fees)
         assertEquals(0L, tx.gatewayFees)
@@ -208,7 +208,7 @@ class CreateChargeControllerTest {
         assertEquals(1L, tx.business.id)
         assertEquals(request.orderId, tx.order?.id)
         assertEquals(100L, tx.customerId)
-        assertEquals(1001L, tx.paymentMethod.id)
+        assertEquals(1001L, tx.paymentMethod?.id)
         assertEquals(request.amount, tx.amount)
         assertEquals(0L, tx.fees)
         assertEquals(0L, tx.gatewayFees)
@@ -251,19 +251,88 @@ class CreateChargeControllerTest {
         assertEquals(120000, business.balance)
     }
 
+    @Test
+    @Sql(value = ["/db/clean.sql", "/db/CreateChargeController.sql"])
+    fun `anonymous payment`() {
+        // GIVEN
+        val paymentResponse = CreatePaymentResponse(
+            transactionId = UUID.randomUUID().toString(),
+            financialTransactionId = null,
+            status = Status.SUCCESSFUL,
+            fees = Money(100.0, "XAF")
+        )
+        doReturn(paymentResponse).whenever(gateway).createPayment(any())
+
+        // WHEN
+        val request = createRequest(
+            amount = 50000,
+            paymentMethodToken = null,
+            paymentMethodType = PaymentMethodType.MOBILE_MONEY.name,
+            paymenMethodNumber = "+237671111100",
+            paymentMethodOwnerName = "Ray Sponsible",
+            paymentProviderId = 1000L
+        )
+        val response = rest.postForEntity(url(), request, CreateChargeResponse::class.java)
+
+        // THEN
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val id = response.body?.transactionId
+        assertEquals(paymentResponse.status.name, response.body?.status)
+        assertNotNull(id)
+
+        val tx = dao.findById(id).get()
+        assertEquals(1L, tx.business.id)
+        assertEquals(request.orderId, tx.order?.id)
+        assertNull(tx.customerId)
+        assertNull(tx.paymentMethod?.id)
+        assertEquals(request.amount, tx.amount)
+        assertEquals(fees, tx.fees)
+        assertEquals(paymentResponse.fees.value.toLong(), tx.gatewayFees)
+        assertEquals(request.amount - fees, tx.net)
+        assertEquals("XAF", tx.currency)
+        assertEquals(gateway.getType(), tx.gatewayType)
+        assertEquals(TransactionType.CHARGE, tx.type)
+        assertEquals(Status.SUCCESSFUL, tx.status)
+        assertEquals(paymentResponse.transactionId, tx.gatewayTransactionId)
+        assertEquals(paymentResponse.financialTransactionId, tx.financialTransactionId)
+        assertNull(tx.supplierErrorCode)
+        assertEquals(request.description, tx.description)
+        assertNull(tx.errorCode)
+        assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals(request.paymenMethodNumber, tx.paymentMethodNumber)
+        assertEquals(request.paymentMethodOwnerName, tx.paymentMethodOwnerName)
+        assertEquals(request.paymentMethodType, tx.paymentMethodType.name)
+        assertNull(tx.paymentMethodCountry)
+        assertEquals(request.paymentProviderId, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
+
+        val business = businessDao.findById(tx.business.id!!).get()
+        assertEquals(120000 + tx.net, business.balance)
+    }
+
     private fun createRequest(
         amount: Long = 50000,
         businessId: Long = 1L,
         idempotencyKey: String = UUID.randomUUID().toString(),
-        paymentMethodToken: String = "token-100",
-        orderId: String = "order-100"
+        paymentMethodToken: String? = "token-100",
+        orderId: String = "order-100",
+        paymentMethodOwnerName: String? = null,
+        paymentMethodType: String? = null,
+        paymentProviderId: Long? = null,
+        paymenMethodNumber: String? = null
     ) = CreateChargeRequest(
         paymentMethodToken = paymentMethodToken,
         businessId = businessId,
         amount = amount,
         description = "Hello world",
         idempotencyKey = idempotencyKey,
-        orderId = orderId
+        orderId = orderId,
+        email = "ray.sponsible@gmail.com",
+        paymentMethodOwnerName = paymentMethodOwnerName,
+        paymentMethodType = paymentMethodType,
+        paymentProviderId = paymentProviderId,
+        paymenMethodNumber = paymenMethodNumber
     )
 
     private fun url() = "http://localhost:$port/v1/transactions/charge"

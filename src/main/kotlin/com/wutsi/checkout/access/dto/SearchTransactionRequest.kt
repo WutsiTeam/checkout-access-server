@@ -7,6 +7,8 @@ import kotlin.collections.List
 
 public data class SearchTransactionRequest(
     public val customerId: Long? = null,
+    public val customerName: String = "",
+    public val customerPhoneNumber: String? = null,
     public val businessId: Long? = null,
     public val type: String? = null,
     public val status: List<String> = emptyList(),

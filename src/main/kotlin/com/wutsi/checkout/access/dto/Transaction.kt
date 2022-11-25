@@ -1,7 +1,9 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
+import kotlin.Long
+import kotlin.String
 
 public data class Transaction(
     public val id: String = "",
@@ -25,6 +27,6 @@ public data class Transaction(
     public val updated: OffsetDateTime = OffsetDateTime.now(),
     public val orderId: String? = null,
     public val gatewayType: String = "",
-    public val paymentMethod: PaymentMethodSummary = PaymentMethodSummary(),
-    public val email: String? = null
+    public val email: String? = null,
+    public val paymentMethod: PaymentMethodSummary = PaymentMethodSummary()
 )
