@@ -10,6 +10,7 @@ import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateCashoutResponse
 import com.wutsi.checkout.access.dto.CreateChargeResponse
+import com.wutsi.checkout.access.enums.PaymentMethodType
 import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.service.FeesCalculator
@@ -107,6 +108,12 @@ class CreateCashoutControllerTest {
         assertEquals(request.description, tx.description)
         assertNull(tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals("+237690000100", tx.paymentMethodNumber)
+        assertEquals("Roger Milla", tx.paymentMethodOwnerName)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("CM", tx.paymentMethodCountry)
+        assertEquals(1000, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000 - tx.net, business.balance)
@@ -154,6 +161,12 @@ class CreateCashoutControllerTest {
         assertEquals(request.description, tx.description)
         assertNull(tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals("+237690000100", tx.paymentMethodNumber)
+        assertEquals("Roger Milla", tx.paymentMethodOwnerName)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("CM", tx.paymentMethodCountry)
+        assertEquals(1000, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000 - tx.net, business.balance)
@@ -207,6 +220,12 @@ class CreateCashoutControllerTest {
         assertEquals(request.description, tx.description)
         assertEquals(e.error.code.name, tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals("+237690000100", tx.paymentMethodNumber)
+        assertEquals("Roger Milla", tx.paymentMethodOwnerName)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("CM", tx.paymentMethodCountry)
+        assertEquals(1000, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)
@@ -249,6 +268,12 @@ class CreateCashoutControllerTest {
         assertEquals(request.description, tx.description)
         assertEquals(ErrorCode.NOT_ENOUGH_FUNDS.name, tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals("+237690000100", tx.paymentMethodNumber)
+        assertEquals("Roger Milla", tx.paymentMethodOwnerName)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("CM", tx.paymentMethodCountry)
+        assertEquals(1000, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)

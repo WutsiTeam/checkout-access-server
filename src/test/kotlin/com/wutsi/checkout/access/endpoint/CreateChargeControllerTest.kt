@@ -9,10 +9,12 @@ import com.wutsi.checkout.access.dao.BusinessRepository
 import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateChargeRequest
 import com.wutsi.checkout.access.dto.CreateChargeResponse
+import com.wutsi.checkout.access.enums.PaymentMethodType
 import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.service.FeesCalculator
 import com.wutsi.platform.core.error.ErrorResponse
+import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.Error
@@ -54,14 +56,19 @@ class CreateChargeControllerTest {
     @MockBean
     private lateinit var calculator: FeesCalculator
 
-    private val fees = 5000L
+    @MockBean
+    private lateinit var tracingContext: TracingContext
 
+    private val fees = 5000L
+    private val deviceId = "049049-40394039"
     private val rest = RestTemplate()
 
     @BeforeEach
     fun setUp() {
         doReturn(GatewayType.FLUTTERWAVE).whenever(gateway).getType()
         doReturn(fees).whenever(calculator).compute(any(), any(), any(), any())
+
+        doReturn(deviceId).whenever(tracingContext).deviceId()
     }
 
     @Test
@@ -106,6 +113,12 @@ class CreateChargeControllerTest {
         assertEquals(request.description, tx.description)
         assertNull(tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals("+237690000100", tx.paymentMethodNumber)
+        assertEquals("Roger Milla", tx.paymentMethodOwnerName)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("CM", tx.paymentMethodCountry)
+        assertEquals(1000, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000 + tx.net, business.balance)
@@ -151,6 +164,12 @@ class CreateChargeControllerTest {
         assertEquals(request.description, tx.description)
         assertNull(tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals("+237690000100", tx.paymentMethodNumber)
+        assertEquals("Roger Milla", tx.paymentMethodOwnerName)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("CM", tx.paymentMethodCountry)
+        assertEquals(1000, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)
@@ -204,6 +223,12 @@ class CreateChargeControllerTest {
         assertEquals(request.description, tx.description)
         assertEquals(e.error.code.name, tx.errorCode)
         assertEquals(request.idempotencyKey, tx.idempotencyKey)
+        assertEquals("+237690000100", tx.paymentMethodNumber)
+        assertEquals("Roger Milla", tx.paymentMethodOwnerName)
+        assertEquals(PaymentMethodType.MOBILE_MONEY, tx.paymentMethodType)
+        assertEquals("CM", tx.paymentMethodCountry)
+        assertEquals(1000, tx.paymentProvider.id)
+        assertEquals(request.email, tx.email)
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)

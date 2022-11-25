@@ -3,12 +3,9 @@ package com.wutsi.checkout.access.dto
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
-import kotlin.Long
-import kotlin.String
 
 public data class CreateChargeRequest(
-    public val customerEmail: String = "",
-    public val deviceId: String = "",
+    public val email: String = "",
     @get:NotBlank
     public val paymentMethodToken: String = "",
     public val businessId: Long = 0,

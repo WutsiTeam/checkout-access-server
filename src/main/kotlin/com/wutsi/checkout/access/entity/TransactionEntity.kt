@@ -1,5 +1,6 @@
 package com.wutsi.checkout.access.entity
 
+import com.wutsi.checkout.access.enums.PaymentMethodType
 import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Status
@@ -34,7 +35,8 @@ data class TransactionEntity(
     var status: Status = Status.UNKNOWN,
     val gatewayType: GatewayType = GatewayType.UNKNOWN,
 
-    val customerId: Long = -1,
+    val customerId: Long? = null,
+    var email: String? = null,
     val description: String? = null,
     var amount: Long = 0L,
     var fees: Long = 0L,
@@ -47,5 +49,14 @@ data class TransactionEntity(
     var gatewayFees: Long = 0,
 
     val created: Date = Date(),
-    val updated: Date = Date()
+    val updated: Date = Date(),
+
+    val paymentMethodNumber: String = "",
+    val paymentMethodCountry: String = "",
+    val paymentMethodOwnerName: String = "",
+    val paymentMethodType: PaymentMethodType = PaymentMethodType.UNKNOWN,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_provider_fk")
+    val paymentProvider: PaymentProviderEntity = PaymentProviderEntity()
 )

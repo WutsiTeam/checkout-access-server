@@ -51,11 +51,12 @@ class GetTransactionControllerTest {
         assertEquals("00000", tx.supplierErrorCode)
         assertEquals("Hello world", tx.description)
         assertEquals(ErrorCode.NOT_ENOUGH_FUNDS.name, tx.errorCode)
+        assertEquals("roger.milla@gmail.com", tx.email)
 
         assertEquals("token-200", tx.paymentMethod.token)
         assertEquals(PaymentMethodType.MOBILE_MONEY.name, tx.paymentMethod.type)
         assertEquals(PaymentMethodStatus.ACTIVE.name, tx.paymentMethod.status)
-        assertEquals("....0200", tx.paymentMethod.number)
+        assertEquals("+237690000200", tx.paymentMethod.number)
         assertEquals(tx.customerId, tx.paymentMethod.accountId)
         assertEquals("MTN", tx.paymentMethod.provider.name)
         assertEquals("MTN", tx.paymentMethod.provider.code)

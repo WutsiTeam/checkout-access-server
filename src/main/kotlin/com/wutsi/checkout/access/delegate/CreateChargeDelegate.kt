@@ -21,8 +21,7 @@ public class CreateChargeDelegate(
         logger.add("request_payment_token", request.paymentMethodToken)
         logger.add("request_description", request.description)
         logger.add("request_idempotency_key", request.idempotencyKey)
-        logger.add("request_customer_email", request.customerEmail)
-        logger.add("request_device_id", request.deviceId)
+        logger.add("request_customer_email", request.email)
 
         val tx = service.charge(request)
 

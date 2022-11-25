@@ -3,6 +3,7 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateChargeRequest
+import com.wutsi.checkout.access.dto.PaymentMethodSummary
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
 import com.wutsi.checkout.access.dto.Transaction
 import com.wutsi.checkout.access.dto.TransactionSummary
@@ -16,6 +17,7 @@ import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
@@ -38,9 +40,11 @@ class TransactionService(
     private val gatewayProvider: PaymentGatewayProvider,
     private val businessService: BusinessService,
     private val paymentMethodService: PaymentMethodService,
+    private val paymentProviderService: PaymentProviderService,
     private val orderService: OrderService,
     private val calculator: FeesCalculator,
-    private val em: EntityManager
+    private val em: EntityManager,
+    private val tracingContext: TracingContext
 ) {
     fun charge(request: CreateChargeRequest): TransactionEntity =
         findByIdempotencyKey(request.idempotencyKey)
@@ -67,18 +71,30 @@ class TransactionService(
             gatewayType = gateway.getType(),
             amount = request.amount,
             fees = 0,
-            net = request.amount
+            net = request.amount,
+
+            paymentMethodNumber = paymentMethod.number,
+            paymentMethodCountry = paymentMethod.country,
+            paymentMethodType = paymentMethod.type,
+            paymentMethodOwnerName = paymentMethod.ownerName,
+            paymentProvider = paymentMethod.provider,
+            email = request.email
         )
 
         // Charge the customer
         try {
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
-                    payer = toParty(paymentMethod, request.customerEmail),
+                    payer = Party(
+                        fullName = tx.paymentMethodOwnerName,
+                        phoneNumber = tx.paymentMethodNumber,
+                        email = request.email,
+                        country = tx.paymentMethodCountry
+                    ),
                     amount = Money(tx.amount.toDouble(), tx.currency),
                     externalId = tx.id!!,
                     description = request.description ?: "",
-                    deviceId = request.deviceId,
+                    deviceId = tracingContext.deviceId(),
                     payerMessage = ""
                 )
             )
@@ -127,7 +143,14 @@ class TransactionService(
             gatewayType = gateway.getType(),
             amount = request.amount,
             fees = fees,
-            net = request.amount - fees
+            net = request.amount - fees,
+
+            paymentMethodNumber = paymentMethod.number,
+            paymentMethodCountry = paymentMethod.country,
+            paymentMethodType = paymentMethod.type,
+            paymentMethodOwnerName = paymentMethod.ownerName,
+            paymentProvider = paymentMethod.provider,
+            email = request.email
         )
 
         // Remove the money from the business wallet
@@ -142,7 +165,7 @@ class TransactionService(
         try {
             val response = gateway.createTransfer(
                 request = CreateTransferRequest(
-                    payee = toParty(paymentMethod, request.customerEmail),
+                    payee = toParty(paymentMethod, request.email),
                     amount = Money(tx.amount.toDouble(), tx.currency),
                     externalId = tx.id!!,
                     description = request.description ?: "",
@@ -197,28 +220,32 @@ class TransactionService(
         return Optional.empty()
     }
 
-    fun toTransaction(tx: TransactionEntity) = Transaction(
-        id = tx.id ?: "",
-        financialTransactionId = tx.financialTransactionId,
-        amount = tx.amount,
-        businessId = tx.business.id ?: -1,
-        status = tx.status.name,
-        currency = tx.currency,
-        created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
-        updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
-        type = tx.type.name,
-        description = tx.description,
-        errorCode = tx.errorCode,
-        fees = tx.fees,
-        orderId = tx.order?.id,
-        gatewayFees = tx.gatewayFees,
-        supplierErrorCode = tx.supplierErrorCode,
-        net = tx.net,
-        gatewayTransactionId = tx.gatewayTransactionId,
-        customerId = tx.customerId,
-        gatewayType = tx.gatewayType.name,
-        paymentMethod = paymentMethodService.toPaymentMethodSummary(tx.paymentMethod)
-    )
+    fun toTransaction(tx: TransactionEntity): Transaction {
+        paymentMethodService.toPaymentMethodSummary(tx.paymentMethod)
+        return Transaction(
+            id = tx.id ?: "",
+            financialTransactionId = tx.financialTransactionId,
+            amount = tx.amount,
+            businessId = tx.business.id ?: -1,
+            status = tx.status.name,
+            currency = tx.currency,
+            created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
+            updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
+            type = tx.type.name,
+            description = tx.description,
+            errorCode = tx.errorCode,
+            fees = tx.fees,
+            orderId = tx.order?.id,
+            gatewayFees = tx.gatewayFees,
+            supplierErrorCode = tx.supplierErrorCode,
+            net = tx.net,
+            gatewayTransactionId = tx.gatewayTransactionId,
+            customerId = tx.customerId,
+            gatewayType = tx.gatewayType.name,
+            email = tx.email,
+            paymentMethod = toPaymentMethodSummary(tx)
+        )
+    }
 
     fun toTransactionSummary(tx: TransactionEntity) = TransactionSummary(
         id = tx.id ?: "",
@@ -229,13 +256,24 @@ class TransactionService(
         created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
         type = tx.type.name,
-        paymentMethodToken = tx.paymentMethod.token,
         description = tx.description,
         fees = tx.fees,
         orderId = tx.order?.id,
         gatewayFees = tx.gatewayFees,
         net = tx.net,
-        customerId = tx.customerId
+        customerId = tx.customerId,
+        paymentMethod = toPaymentMethodSummary(tx)
+    )
+
+    private fun toPaymentMethodSummary(tx: TransactionEntity) = PaymentMethodSummary(
+        token = tx.paymentMethod.token,
+        accountId = tx.paymentMethod.accountId,
+        number = tx.paymentMethodNumber,
+        status = tx.paymentMethod.status.name,
+
+        type = tx.paymentMethodType.name,
+        ownerName = tx.paymentMethodOwnerName,
+        provider = paymentProviderService.toPaymentProviderSummary(tx.paymentProvider)
     )
 
     fun syncStatus(id: String) {
