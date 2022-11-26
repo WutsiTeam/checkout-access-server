@@ -5,8 +5,8 @@ import com.wutsi.checkout.access.dao.PaymentMethodRepository
 import com.wutsi.checkout.access.dto.CreatePaymentMethodRequest
 import com.wutsi.checkout.access.dto.CreatePaymentMethodResponse
 import com.wutsi.checkout.access.error.ErrorURN
-import com.wutsi.core.enums.PaymentMethodStatus
-import com.wutsi.core.enums.PaymentMethodType
+import com.wutsi.enums.PaymentMethodStatus
+import com.wutsi.enums.PaymentMethodType
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

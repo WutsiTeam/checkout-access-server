@@ -1,7 +1,7 @@
 package com.wutsi.checkout.access.service
 
 import com.wutsi.checkout.access.error.ErrorURN
-import com.wutsi.core.enums.PaymentMethodType
+import com.wutsi.enums.PaymentMethodType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.exception.InternalErrorException
 import com.wutsi.platform.payment.Gateway

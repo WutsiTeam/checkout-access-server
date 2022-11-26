@@ -2,8 +2,8 @@ package com.wutsi.checkout.access.service
 
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.error.TransactionException
-import com.wutsi.core.enums.PaymentMethodType
-import com.wutsi.core.enums.TransactionType
+import com.wutsi.enums.PaymentMethodType
+import com.wutsi.enums.TransactionType
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -1,6 +1,6 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.core.enums.DiscountType
+import com.wutsi.enums.DiscountType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue

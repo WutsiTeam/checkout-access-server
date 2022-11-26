@@ -2,7 +2,7 @@ package com.wutsi.checkout.access.endpoint
 
 import com.wutsi.checkout.access.dto.SearchPaymentMethodRequest
 import com.wutsi.checkout.access.dto.SearchPaymentMethodResponse
-import com.wutsi.core.enums.PaymentMethodStatus
+import com.wutsi.enums.PaymentMethodStatus
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort

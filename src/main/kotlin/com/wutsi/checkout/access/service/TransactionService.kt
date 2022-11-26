@@ -12,8 +12,8 @@ import com.wutsi.checkout.access.entity.TransactionEntity
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.error.InsuffisantFundsException
 import com.wutsi.checkout.access.error.TransactionException
-import com.wutsi.core.enums.PaymentMethodType
-import com.wutsi.core.enums.TransactionType
+import com.wutsi.enums.PaymentMethodType
+import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType

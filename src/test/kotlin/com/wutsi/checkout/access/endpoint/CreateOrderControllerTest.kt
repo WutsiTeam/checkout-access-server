@@ -10,10 +10,10 @@ import com.wutsi.checkout.access.dto.CreateOrderDiscountRequest
 import com.wutsi.checkout.access.dto.CreateOrderItemRequest
 import com.wutsi.checkout.access.dto.CreateOrderRequest
 import com.wutsi.checkout.access.dto.CreateOrderResponse
-import com.wutsi.core.enums.ChannelType
-import com.wutsi.core.enums.DeviceType
-import com.wutsi.core.enums.DiscountType
-import com.wutsi.core.enums.OfferType
+import com.wutsi.enums.ChannelType
+import com.wutsi.enums.DeviceType
+import com.wutsi.enums.DiscountType
+import com.wutsi.enums.OfferType
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

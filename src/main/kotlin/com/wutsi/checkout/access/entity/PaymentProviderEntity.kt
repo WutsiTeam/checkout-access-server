@@ -1,6 +1,6 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.core.enums.PaymentMethodType
+import com.wutsi.enums.PaymentMethodType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue

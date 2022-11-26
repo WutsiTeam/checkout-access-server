@@ -35,6 +35,7 @@
     <flyway.version>9.3.0</flyway.version>
     <wutsi-platform-core.version>0.0.186</wutsi-platform-core.version>
     <wutsi-platform-payment.version>0.0.105</wutsi-platform-payment.version>
+    <wutsi-enums.version>1.0.3</wutsi-enums.version>
   </properties>
 
   <dependencies>
@@ -47,6 +48,11 @@
       <groupId>com.wutsi</groupId>
       <artifactId>wutsi-platform-payment</artifactId>
       <version>${wutsi-platform-payment.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.wutsi</groupId>
+      <artifactId>wutsi-enums</artifactId>
+      <version>${wutsi-enums.version}</version>
     </dependency>
 
     <dependency>

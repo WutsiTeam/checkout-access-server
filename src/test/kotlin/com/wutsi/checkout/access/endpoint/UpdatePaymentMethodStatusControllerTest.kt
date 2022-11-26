@@ -2,7 +2,7 @@ package com.wutsi.checkout.access.endpoint
 
 import com.wutsi.checkout.access.dao.PaymentMethodRepository
 import com.wutsi.checkout.access.dto.UpdatePaymentMethodStatusRequest
-import com.wutsi.core.enums.PaymentMethodStatus
+import com.wutsi.enums.PaymentMethodStatus
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

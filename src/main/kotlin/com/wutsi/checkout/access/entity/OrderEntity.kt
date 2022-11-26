@@ -1,8 +1,8 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.core.enums.ChannelType
-import com.wutsi.core.enums.DeviceType
-import com.wutsi.core.enums.OrderStatus
+import com.wutsi.enums.ChannelType
+import com.wutsi.enums.DeviceType
+import com.wutsi.enums.OrderStatus
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.FetchType

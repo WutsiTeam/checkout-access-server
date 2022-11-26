@@ -3,11 +3,11 @@ package com.wutsi.checkout.access.endpoint
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.checkout.access.dto.GetOrderResponse
 import com.wutsi.checkout.access.error.ErrorURN
-import com.wutsi.core.enums.ChannelType
-import com.wutsi.core.enums.DeviceType
-import com.wutsi.core.enums.DiscountType
-import com.wutsi.core.enums.OfferType
-import com.wutsi.core.enums.OrderStatus
+import com.wutsi.enums.ChannelType
+import com.wutsi.enums.DeviceType
+import com.wutsi.enums.DiscountType
+import com.wutsi.enums.OfferType
+import com.wutsi.enums.OrderStatus
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

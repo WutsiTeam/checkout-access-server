@@ -8,8 +8,8 @@ import com.wutsi.checkout.access.dto.SearchPaymentMethodRequest
 import com.wutsi.checkout.access.dto.UpdatePaymentMethodStatusRequest
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.error.ErrorURN
-import com.wutsi.core.enums.PaymentMethodStatus
-import com.wutsi.core.enums.PaymentMethodType
+import com.wutsi.enums.PaymentMethodStatus
+import com.wutsi.enums.PaymentMethodType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType

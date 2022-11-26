@@ -3,9 +3,9 @@ package com.wutsi.checkout.access.endpoint
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.checkout.access.dto.GetTransactionResponse
 import com.wutsi.checkout.access.error.ErrorURN
-import com.wutsi.core.enums.PaymentMethodStatus
-import com.wutsi.core.enums.PaymentMethodType
-import com.wutsi.core.enums.TransactionType
+import com.wutsi.enums.PaymentMethodStatus
+import com.wutsi.enums.PaymentMethodType
+import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.ErrorCode

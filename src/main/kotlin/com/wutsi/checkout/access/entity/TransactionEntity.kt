@@ -1,7 +1,7 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.core.enums.PaymentMethodType
-import com.wutsi.core.enums.TransactionType
+import com.wutsi.enums.PaymentMethodType
+import com.wutsi.enums.TransactionType
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.core.Status
 import java.util.Date

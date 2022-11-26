@@ -1,7 +1,7 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.core.enums.PaymentMethodStatus
-import com.wutsi.core.enums.PaymentMethodType
+import com.wutsi.enums.PaymentMethodStatus
+import com.wutsi.enums.PaymentMethodType
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.Enumerated
