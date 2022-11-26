@@ -2,7 +2,7 @@ package com.wutsi.checkout.access.endpoint
 
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
 import com.wutsi.checkout.access.dto.SearchTransactionResponse
-import com.wutsi.checkout.access.enums.TransactionType
+import com.wutsi.core.enums.TransactionType
 import com.wutsi.platform.payment.core.Status
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

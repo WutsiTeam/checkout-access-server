@@ -7,9 +7,9 @@ import com.wutsi.checkout.access.dto.PaymentMethodSummary
 import com.wutsi.checkout.access.dto.SearchPaymentMethodRequest
 import com.wutsi.checkout.access.dto.UpdatePaymentMethodStatusRequest
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
-import com.wutsi.checkout.access.enums.PaymentMethodStatus
-import com.wutsi.checkout.access.enums.PaymentMethodType
 import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.core.enums.PaymentMethodStatus
+import com.wutsi.core.enums.PaymentMethodType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType

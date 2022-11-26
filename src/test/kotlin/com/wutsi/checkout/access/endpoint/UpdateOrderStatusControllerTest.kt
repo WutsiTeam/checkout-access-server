@@ -2,7 +2,7 @@ package com.wutsi.checkout.access.endpoint
 
 import com.wutsi.checkout.access.dao.OrderRepository
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
-import com.wutsi.checkout.access.enums.OrderStatus
+import com.wutsi.core.enums.OrderStatus
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

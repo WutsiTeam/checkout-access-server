@@ -1,6 +1,6 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.checkout.access.enums.BusinessStatus
+import com.wutsi.core.enums.BusinessStatus
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

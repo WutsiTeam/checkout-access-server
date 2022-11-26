@@ -1,8 +1,8 @@
 package com.wutsi.checkout.access.dao
 
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
-import com.wutsi.checkout.access.enums.PaymentMethodStatus
-import com.wutsi.checkout.access.enums.PaymentMethodType
+import com.wutsi.core.enums.PaymentMethodStatus
+import com.wutsi.core.enums.PaymentMethodType
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository

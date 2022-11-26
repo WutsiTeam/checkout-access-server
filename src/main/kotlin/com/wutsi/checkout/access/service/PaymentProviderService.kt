@@ -5,8 +5,8 @@ import com.wutsi.checkout.access.dto.PaymentProviderSummary
 import com.wutsi.checkout.access.dto.SearchPaymentProviderRequest
 import com.wutsi.checkout.access.entity.PaymentProviderEntity
 import com.wutsi.checkout.access.entity.PaymentProviderPrefixEntity
-import com.wutsi.checkout.access.enums.PaymentMethodType
 import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.core.enums.PaymentMethodType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.exception.NotFoundException

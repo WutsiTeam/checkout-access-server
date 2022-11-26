@@ -24,7 +24,7 @@ public data class OrderSummary(
     public val cancelled: OffsetDateTime? = null,
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val closed: OffsetDateTime? = null,
-    public val customerId: Long = 0,
+    public val customerId: Long? = null,
     public val customerName: String = "",
-    public val customerEmail: String? = null
+    public val customerEmail: String = ""
 )

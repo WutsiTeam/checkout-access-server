@@ -5,9 +5,9 @@ import com.wutsi.checkout.access.dto.Business
 import com.wutsi.checkout.access.dto.CreateBusinessRequest
 import com.wutsi.checkout.access.dto.UpdateBusinessStatusRequest
 import com.wutsi.checkout.access.entity.BusinessEntity
-import com.wutsi.checkout.access.enums.BusinessStatus
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.error.InsuffisantFundsException
+import com.wutsi.core.enums.BusinessStatus
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType

@@ -8,6 +8,7 @@ import kotlin.String
 
 public data class CreateChargeRequest(
     @get:NotBlank
+    @get:Size(max = 255)
     public val email: String = "",
     public val paymentMethodType: String? = null,
     @get:Size(max = 100)

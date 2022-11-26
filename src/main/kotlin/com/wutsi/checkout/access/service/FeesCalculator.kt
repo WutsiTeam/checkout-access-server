@@ -1,9 +1,9 @@
 package com.wutsi.checkout.access.service
 
-import com.wutsi.checkout.access.enums.PaymentMethodType
-import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.error.TransactionException
+import com.wutsi.core.enums.PaymentMethodType
+import com.wutsi.core.enums.TransactionType
 import com.wutsi.platform.core.error.Error
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.properties.ConfigurationProperties

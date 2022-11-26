@@ -1,5 +1,7 @@
 package com.wutsi.checkout.access.endpoint
 
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.checkout.access.dao.OrderDiscountRepository
 import com.wutsi.checkout.access.dao.OrderItemDiscountRepository
 import com.wutsi.checkout.access.dao.OrderItemRepository
@@ -8,13 +10,16 @@ import com.wutsi.checkout.access.dto.CreateOrderDiscountRequest
 import com.wutsi.checkout.access.dto.CreateOrderItemRequest
 import com.wutsi.checkout.access.dto.CreateOrderRequest
 import com.wutsi.checkout.access.dto.CreateOrderResponse
-import com.wutsi.checkout.access.enums.ChannelType
-import com.wutsi.checkout.access.enums.DeviceType
-import com.wutsi.checkout.access.enums.DiscountType
-import com.wutsi.checkout.access.enums.OfferType
+import com.wutsi.core.enums.ChannelType
+import com.wutsi.core.enums.DeviceType
+import com.wutsi.core.enums.DiscountType
+import com.wutsi.core.enums.OfferType
+import com.wutsi.platform.core.tracing.TracingContext
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
@@ -42,6 +47,16 @@ class CreateOrderControllerTest {
     @Autowired
     private lateinit var itemDiscountDao: OrderItemDiscountRepository
 
+    @MockBean
+    private lateinit var tracingContext: TracingContext
+
+    val deviceId = UUID.randomUUID().toString()
+
+    @BeforeEach
+    fun setUp() {
+        doReturn(deviceId).whenever(tracingContext).deviceId()
+    }
+
     @Test
     fun create() {
         val request = CreateOrderRequest(
@@ -50,7 +65,6 @@ class CreateOrderControllerTest {
             customerName = "Ray Sponsible",
             customerEmail = "ray.sponsible@gmail.com",
             deviceType = DeviceType.MOBILE.name,
-            deviceId = UUID.randomUUID().toString(),
             deviceIp = "10.0.0.1",
             channelType = ChannelType.APP.name,
             notes = "This is the notes",
@@ -100,7 +114,7 @@ class CreateOrderControllerTest {
         assertEquals(request.customerName, order.customerName)
         assertEquals(DeviceType.MOBILE, order.deviceType)
         assertEquals(request.deviceIp, order.deviceIp)
-        assertEquals(request.deviceId, order.deviceId)
+        assertEquals(deviceId, order.deviceId)
         assertEquals(ChannelType.APP, order.channelType)
         assertEquals(request.notes, order.notes)
         assertEquals(request.currency, order.currency)

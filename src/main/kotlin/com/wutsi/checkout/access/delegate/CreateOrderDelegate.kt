@@ -22,7 +22,6 @@ class CreateOrderDelegate(
         logger.add("request_business_id", request.businessId)
         logger.add("request_channel_type", request.channelType)
         logger.add("request_currency", request.currency)
-        logger.add("request_device_id", request.deviceId)
         logger.add("request_device_ip", request.deviceIp)
         logger.add("request_device_type", request.deviceType)
 

@@ -19,18 +19,19 @@ import com.wutsi.checkout.access.entity.OrderDiscountEntity
 import com.wutsi.checkout.access.entity.OrderEntity
 import com.wutsi.checkout.access.entity.OrderItemDiscountEntity
 import com.wutsi.checkout.access.entity.OrderItemEntity
-import com.wutsi.checkout.access.enums.ChannelType
-import com.wutsi.checkout.access.enums.DeviceType
-import com.wutsi.checkout.access.enums.DiscountType
-import com.wutsi.checkout.access.enums.OfferType
-import com.wutsi.checkout.access.enums.OrderStatus
-import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.core.enums.ChannelType
+import com.wutsi.core.enums.DeviceType
+import com.wutsi.core.enums.DiscountType
+import com.wutsi.core.enums.OfferType
+import com.wutsi.core.enums.OrderStatus
+import com.wutsi.core.enums.TransactionType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Service
 import java.lang.Long.max
@@ -47,7 +48,8 @@ class OrderService(
     private val discountDao: OrderDiscountRepository,
     private val itemDiscountDao: OrderItemDiscountRepository,
     private val transactionDao: TransactionRepository,
-    private val em: EntityManager
+    private val em: EntityManager,
+    private val tracingContext: TracingContext
 ) {
     fun create(business: BusinessEntity, request: CreateOrderRequest): OrderEntity {
         // Order
@@ -62,7 +64,7 @@ class OrderService(
                 customerName = request.customerName,
                 status = OrderStatus.OPENED,
                 currency = request.currency,
-                deviceId = request.deviceId,
+                deviceId = tracingContext.deviceId(),
                 deviceIp = request.deviceIp,
                 deviceType = request.deviceType?.let { DeviceType.valueOf(it.uppercase()) },
                 subTotalPrice = subTotalPrice,

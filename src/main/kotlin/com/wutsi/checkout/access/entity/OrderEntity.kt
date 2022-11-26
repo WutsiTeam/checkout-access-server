@@ -1,8 +1,8 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.checkout.access.enums.ChannelType
-import com.wutsi.checkout.access.enums.DeviceType
-import com.wutsi.checkout.access.enums.OrderStatus
+import com.wutsi.core.enums.ChannelType
+import com.wutsi.core.enums.DeviceType
+import com.wutsi.core.enums.OrderStatus
 import java.util.Date
 import javax.persistence.Entity
 import javax.persistence.FetchType
@@ -22,9 +22,9 @@ data class OrderEntity(
     @JoinColumn(name = "business_fk")
     val business: BusinessEntity = BusinessEntity(),
 
-    val customerId: Long = -1,
+    val customerId: Long? = null,
     val customerName: String = "",
-    val customerEmail: String? = null,
+    val customerEmail: String = "",
     val deviceId: String? = null,
     val deviceIp: String? = null,
     val deviceType: DeviceType? = null,

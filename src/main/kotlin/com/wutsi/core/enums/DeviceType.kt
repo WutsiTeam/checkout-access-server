@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.enums
+package com.wutsi.core.enums
 
 enum class DeviceType {
     UNKNOWN,

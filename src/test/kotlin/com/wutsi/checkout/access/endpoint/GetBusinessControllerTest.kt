@@ -2,8 +2,8 @@ package com.wutsi.checkout.access.endpoint
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.checkout.access.dto.GetBusinessResponse
-import com.wutsi.checkout.access.enums.BusinessStatus
 import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.core.enums.BusinessStatus
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -8,7 +8,6 @@ import kotlin.String
 import kotlin.collections.List
 
 public data class CreateOrderRequest(
-    public val deviceId: String? = null,
     public val deviceIp: String? = null,
     public val deviceType: String? = null,
     public val channelType: String? = null,
@@ -16,9 +15,11 @@ public data class CreateOrderRequest(
     public val notes: String? = null,
     @get:NotBlank
     public val currency: String = "",
-    public val customerId: Long = 0,
+    public val customerId: Long? = null,
+    @get:NotBlank
     public val customerName: String = "",
-    public val customerEmail: String? = null,
+    @get:NotBlank
+    public val customerEmail: String = "",
     @get:NotNull
     @get:NotEmpty
     public val items: List<CreateOrderItemRequest> = emptyList(),

@@ -10,10 +10,10 @@ import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateCashoutResponse
 import com.wutsi.checkout.access.dto.CreateChargeResponse
-import com.wutsi.checkout.access.enums.PaymentMethodType
-import com.wutsi.checkout.access.enums.TransactionType
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.service.FeesCalculator
+import com.wutsi.core.enums.PaymentMethodType
+import com.wutsi.core.enums.TransactionType
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException

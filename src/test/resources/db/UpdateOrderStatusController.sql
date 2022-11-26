@@ -2,12 +2,12 @@ INSERT INTO T_BUSINESS(id, account_id, status, suspended, currency, country)
     VALUES
         (1, 1, 1, null, 'XAF', 'CM');
 
-INSERT INTO T_ORDER(id, business_fk, customer_id, customer_name, status, currency)
+INSERT INTO T_ORDER(id, business_fk, customer_id, customer_name, status, currency, customer_email)
     VALUES
-        (100, 1, 111, 'Roger Milla', 1, 'XAF'),
-        (101, 1, 111, 'Roger Milla', 1, 'XAF'),
-        (102, 1, 111, 'Roger Milla', 1, 'XAF'),
+        (100, 1, 111, 'Roger Milla', 1, 'XAF', 'roger.milla@gmail.com'),
+        (101, 1, 111, 'Roger Milla', 1, 'XAF', 'roger.milla@gmail.com'),
+        (102, 1, 111, 'Roger Milla', 1, 'XAF', 'roger.milla@gmail.com'),
 
-        (200, 1, 111, 'Roger Milla', 2, 'XAF'),
-        (300, 1, 111, 'Roger Milla', 3, 'XAF')
+        (200, 1, 111, 'Roger Milla', 2, 'XAF', 'roger.milla@gmail.com'),
+        (300, 1, 111, 'Roger Milla', 3, 'XAF', 'roger.milla@gmail.com')
     ;

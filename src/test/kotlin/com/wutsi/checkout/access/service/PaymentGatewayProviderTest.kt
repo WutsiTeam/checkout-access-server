@@ -1,7 +1,7 @@
 package com.wutsi.checkout.access.service
 
 import com.nhaarman.mockitokotlin2.mock
-import com.wutsi.checkout.access.enums.PaymentMethodType
+import com.wutsi.core.enums.PaymentMethodType
 import com.wutsi.platform.core.error.exception.InternalErrorException
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach

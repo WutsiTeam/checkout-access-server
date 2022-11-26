@@ -2,9 +2,9 @@ package com.wutsi.checkout.access.endpoint
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.wutsi.checkout.access.dto.GetPaymentMethodResponse
-import com.wutsi.checkout.access.enums.PaymentMethodStatus
-import com.wutsi.checkout.access.enums.PaymentMethodType
 import com.wutsi.checkout.access.error.ErrorURN
+import com.wutsi.core.enums.PaymentMethodStatus
+import com.wutsi.core.enums.PaymentMethodType
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

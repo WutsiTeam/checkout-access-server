@@ -3,7 +3,7 @@ package com.wutsi.checkout.access.endpoint
 import com.wutsi.checkout.access.dao.BusinessRepository
 import com.wutsi.checkout.access.dto.CreateBusinessRequest
 import com.wutsi.checkout.access.dto.CreateBusinessResponse
-import com.wutsi.checkout.access.enums.BusinessStatus
+import com.wutsi.core.enums.BusinessStatus
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
