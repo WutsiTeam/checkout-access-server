@@ -6,7 +6,6 @@ import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
-import com.wutsi.enums.OfferType
 import com.wutsi.enums.OrderStatus
 import com.wutsi.platform.core.error.ErrorResponse
 import org.junit.jupiter.api.Test
@@ -65,8 +64,7 @@ class GetOrderControllerTest {
         assertEquals(DiscountType.MERCHANT.name, order.discounts[0].type)
 
         assertEquals(2, order.items.size)
-        assertEquals(555L, order.items[0].offerId)
-        assertEquals(OfferType.PRODUCT.name, order.items[0].offerType)
+        assertEquals(555L, order.items[0].productId)
         assertEquals(2, order.items[0].quantity)
         assertEquals(1500L, order.items[0].unitPrice)
         assertEquals(3000L, order.items[0].subTotalPrice)
@@ -84,8 +82,7 @@ class GetOrderControllerTest {
         assertEquals(8, order.items[0].discounts[1].rate)
         assertEquals(DiscountType.DYNAMIC.name, order.items[0].discounts[1].type)
 
-        assertEquals(666L, order.items[1].offerId)
-        assertEquals(OfferType.PRODUCT.name, order.items[1].offerType)
+        assertEquals(666L, order.items[1].productId)
         assertEquals(1, order.items[1].quantity)
         assertEquals(2000L, order.items[1].unitPrice)
         assertEquals(2000L, order.items[1].subTotalPrice)

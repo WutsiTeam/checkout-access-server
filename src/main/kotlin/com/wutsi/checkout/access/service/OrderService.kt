@@ -23,7 +23,6 @@ import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
-import com.wutsi.enums.OfferType
 import com.wutsi.enums.OrderStatus
 import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.Error
@@ -247,8 +246,7 @@ class OrderService(
     }
 
     private fun toOrderItem(item: OrderItemEntity) = OrderItem(
-        offerId = item.offerId,
-        offerType = item.offerType.name,
+        productId = item.productId,
         title = item.title,
         quantity = item.quantity,
         pictureUrl = item.pictureUrl,
@@ -295,8 +293,7 @@ class OrderService(
         val item = itemDao.save(
             OrderItemEntity(
                 order = order,
-                offerId = request.offerId,
-                offerType = OfferType.valueOf(request.offerType),
+                productId = request.productId,
                 title = request.title,
                 quantity = request.quantity,
                 unitPrice = request.unitPrice,

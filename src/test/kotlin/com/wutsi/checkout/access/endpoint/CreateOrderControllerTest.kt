@@ -13,7 +13,6 @@ import com.wutsi.checkout.access.dto.CreateOrderResponse
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
-import com.wutsi.enums.OfferType
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -77,16 +76,14 @@ class CreateOrderControllerTest {
             ),
             items = listOf(
                 CreateOrderItemRequest(
-                    offerType = OfferType.PRODUCT.name,
-                    offerId = 111,
+                    productId = 111,
                     unitPrice = 15000,
                     title = "Chemise",
                     pictureUrl = "https://www.img.1/111.png",
                     quantity = 3
                 ),
                 CreateOrderItemRequest(
-                    offerType = OfferType.PRODUCT.name,
-                    offerId = 222,
+                    productId = 222,
                     unitPrice = 10000,
                     title = "Chemise",
                     quantity = 1,
@@ -129,8 +126,7 @@ class CreateOrderControllerTest {
         assertEquals(2, items.size)
 
         assertEquals(request.items[0].quantity, items[0].quantity)
-        assertEquals(request.items[0].offerId, items[0].offerId)
-        assertEquals(OfferType.valueOf(request.items[0].offerType), items[0].offerType)
+        assertEquals(request.items[0].productId, items[0].productId)
         assertEquals(request.items[0].unitPrice, items[0].unitPrice)
         assertEquals(request.items[0].title, items[0].title)
         assertEquals(request.items[0].pictureUrl, items[0].pictureUrl)
@@ -139,8 +135,7 @@ class CreateOrderControllerTest {
         assertEquals(45000L, items[0].totalPrice)
 
         assertEquals(request.items[1].quantity, items[1].quantity)
-        assertEquals(request.items[1].offerId, items[1].offerId)
-        assertEquals(OfferType.valueOf(request.items[1].offerType), items[1].offerType)
+        assertEquals(request.items[1].productId, items[1].productId)
         assertEquals(request.items[1].unitPrice, items[1].unitPrice)
         assertEquals(request.items[1].title, items[1].title)
         assertEquals(request.items[1].pictureUrl, items[1].pictureUrl)

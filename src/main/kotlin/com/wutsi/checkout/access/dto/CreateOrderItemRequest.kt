@@ -3,15 +3,9 @@ package com.wutsi.checkout.access.dto
 import javax.validation.constraints.Min
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Size
-import kotlin.Int
-import kotlin.Long
-import kotlin.String
-import kotlin.collections.List
 
 public data class CreateOrderItemRequest(
-    public val offerId: Long = 0,
-    @get:NotBlank
-    public val offerType: String = "",
+    public val productId: Long = 0,
     @get:NotBlank
     @get:Size(max = 100)
     public val title: String = "",

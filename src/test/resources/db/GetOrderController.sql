@@ -11,10 +11,10 @@ INSERT INTO T_ORDER_DISCOUNT(id, order_fk, type, code, amount)
         (1001, '100-AEF01-1111', 1, 'C-100', 100)
     ;
 
-INSERT INTO T_ORDER_ITEM(id, order_fk, offer_id, offer_type, title, picture_url, quantity, unit_price, sub_total_price, total_discount, total_price)
+INSERT INTO T_ORDER_ITEM(id, order_fk, product_id, title, picture_url, quantity, unit_price, sub_total_price, total_discount, total_price)
     VALUE
-        (1001, '100-AEF01-1111', 555, 1, 'Product 555', 'https://www.img.com/555.png', 2, 1500, 3000, 900, 2100),
-        (1002, '100-AEF01-1111', 666, 1, 'Product 666', 'https://www.img.com/666.png', 1, 2000, 2000, 0, 2000)
+        (1001, '100-AEF01-1111', 555, 'Product 555', 'https://www.img.com/555.png', 2, 1500, 3000, 900, 2100),
+        (1002, '100-AEF01-1111', 666, 'Product 666', 'https://www.img.com/666.png', 1, 2000, 2000, 0, 2000)
     ;
 
 INSERT INTO T_ORDER_ITEM_DISCOUNT(id, order_item_fk, type, code, amount)

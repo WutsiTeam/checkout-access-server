@@ -1,6 +1,5 @@
 package com.wutsi.checkout.access.entity
 
-import com.wutsi.enums.OfferType
 import javax.persistence.Entity
 import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
@@ -18,8 +17,7 @@ data class OrderItemEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val offerId: Long = -1,
-    val offerType: OfferType = OfferType.UNKNOWN,
+    val productId: Long = -1,
     val title: String = "",
     val pictureUrl: String? = null,
     val unitPrice: Long = 0L,
