@@ -68,28 +68,31 @@ class TransactionService(
         val order = orderService.findById(request.orderId)
         val paymentMethodNumber = paymentMethod?.number ?: request.paymenMethodNumber!!
         val paymentMethodType = paymentMethod?.type ?: PaymentMethodType.valueOf(request.paymentMethodType!!)
-        val tx = TransactionEntity(
-            id = UUID.randomUUID().toString(),
-            business = business,
-            paymentMethod = paymentMethod,
-            order = order,
-            type = TransactionType.CHARGE,
-            currency = business.currency,
-            description = request.description,
-            idempotencyKey = request.idempotencyKey,
-            customerId = paymentMethod?.accountId,
-            status = Status.UNKNOWN,
-            gatewayType = gateway.getType(),
-            amount = request.amount,
-            fees = 0,
-            net = request.amount,
+        val tx = dao.save(
+            TransactionEntity(
+                id = UUID.randomUUID().toString(),
+                business = business,
+                paymentMethod = paymentMethod,
+                order = order,
+                type = TransactionType.CHARGE,
+                currency = business.currency,
+                description = request.description,
+                idempotencyKey = request.idempotencyKey,
+                customerId = paymentMethod?.accountId,
+                status = Status.UNKNOWN,
+                gatewayType = gateway.getType(),
+                amount = request.amount,
+                fees = 0,
+                net = request.amount,
 
-            paymentMethodNumber = paymentMethodNumber,
-            paymentMethodCountry = paymentMethod?.country,
-            paymentMethodType = paymentMethodType,
-            paymentMethodOwnerName = paymentMethod?.ownerName ?: request.paymentMethodOwnerName!!,
-            paymentProvider = paymentMethod?.provider ?: paymentProviderService.findById(request.paymentProviderId!!),
-            email = request.email
+                paymentMethodNumber = paymentMethodNumber,
+                paymentMethodCountry = paymentMethod?.country,
+                paymentMethodType = paymentMethodType,
+                paymentMethodOwnerName = paymentMethod?.ownerName ?: request.paymentMethodOwnerName!!,
+                paymentProvider = paymentMethod?.provider
+                    ?: paymentProviderService.findById(request.paymentProviderId!!),
+                email = request.email
+            )
         )
 
         // Charge the customer
@@ -167,27 +170,29 @@ class TransactionService(
         val paymentMethod = paymentMethodService.findByToken(request.paymentMethodToken)
         val gateway = gatewayProvider.get(paymentMethod.type)
         val fees = calculator.compute(TransactionType.CASHOUT, paymentMethod.type, business.country, request.amount)
-        val tx = TransactionEntity(
-            id = UUID.randomUUID().toString(),
-            business = business,
-            paymentMethod = paymentMethod,
-            type = TransactionType.CASHOUT,
-            currency = business.currency,
-            description = request.description,
-            idempotencyKey = request.idempotencyKey,
-            customerId = paymentMethod.accountId,
-            status = Status.UNKNOWN,
-            gatewayType = gateway.getType(),
-            amount = request.amount,
-            fees = fees,
-            net = request.amount - fees,
+        val tx = dao.save(
+            TransactionEntity(
+                id = UUID.randomUUID().toString(),
+                business = business,
+                paymentMethod = paymentMethod,
+                type = TransactionType.CASHOUT,
+                currency = business.currency,
+                description = request.description,
+                idempotencyKey = request.idempotencyKey,
+                customerId = paymentMethod.accountId,
+                status = Status.UNKNOWN,
+                gatewayType = gateway.getType(),
+                amount = request.amount,
+                fees = fees,
+                net = request.amount - fees,
 
-            paymentMethodNumber = paymentMethod.number,
-            paymentMethodCountry = paymentMethod.country,
-            paymentMethodType = paymentMethod.type,
-            paymentMethodOwnerName = paymentMethod.ownerName,
-            paymentProvider = paymentMethod.provider,
-            email = request.email
+                paymentMethodNumber = paymentMethod.number,
+                paymentMethodCountry = paymentMethod.country,
+                paymentMethodType = paymentMethod.type,
+                paymentMethodOwnerName = paymentMethod.ownerName,
+                paymentProvider = paymentMethod.provider,
+                email = request.email
+            )
         )
 
         // Remove the money from the business wallet

@@ -4,6 +4,7 @@ import com.wutsi.checkout.access.service.OrderService
 import org.springframework.stereotype.Service
 import javax.transaction.Transactional
 
+@Deprecated("Not needed")
 @Service
 class UpdateOrderBalanceDelegate(private val service: OrderService) {
     @Transactional
