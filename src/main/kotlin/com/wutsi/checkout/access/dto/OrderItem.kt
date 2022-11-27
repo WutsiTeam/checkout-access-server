@@ -1,5 +1,10 @@
 package com.wutsi.checkout.access.dto
 
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.collections.List
+
 public data class OrderItem(
     public val productId: Long = 0,
     public val title: String = "",
