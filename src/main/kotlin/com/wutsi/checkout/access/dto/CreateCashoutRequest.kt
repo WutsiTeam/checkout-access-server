@@ -8,7 +8,7 @@ import kotlin.String
 
 public data class CreateCashoutRequest(
     @get:NotBlank
-    @get:Size(max = 255)
+    @get:Size(max = 100)
     public val email: String = "",
     @get:NotBlank
     public val paymentMethodToken: String = "",

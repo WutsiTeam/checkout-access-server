@@ -43,7 +43,7 @@ class GetOrderControllerTest {
         assertEquals("Ray Sponsible", order.customerName)
         assertEquals("ray.sponsible@gmail.com", order.customerEmail)
         assertEquals("0000-1111", order.deviceId)
-        assertEquals("10.0.0.1", order.deviceIp)
+        assertEquals(11110, order.reservationId)
         assertEquals(DeviceType.MOBILE.name, order.deviceType)
         assertEquals(ChannelType.EMAIL.name, order.channelType)
         assertEquals(OrderStatus.CANCELLED.name, order.status)

@@ -1,16 +1,14 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.`annotation`.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.OffsetDateTime
-import kotlin.Long
-import kotlin.String
-import kotlin.collections.List
+import javax.validation.constraints.Size
 
 public data class Order(
     public val id: String = "",
     public val shortId: String = "",
     public val deviceId: String? = null,
-    public val deviceIp: String? = null,
+    public val reservationId: Long? = null,
     public val deviceType: String? = null,
     public val channelType: String? = null,
     public val businessId: Long = 0,
@@ -33,6 +31,7 @@ public data class Order(
     public val notes: String? = null,
     public val customerId: Long? = null,
     public val customerName: String = "",
+    @get:Size(max = 100)
     public val customerEmail: String = "",
     public val items: List<OrderItem> = emptyList(),
     public val discounts: List<Discount> = emptyList()

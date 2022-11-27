@@ -22,11 +22,11 @@ data class OrderEntity(
     @JoinColumn(name = "business_fk")
     val business: BusinessEntity = BusinessEntity(),
 
+    val reservationId: Long? = null,
     val customerId: Long? = null,
     val customerName: String = "",
     val customerEmail: String = "",
     val deviceId: String? = null,
-    val deviceIp: String? = null,
     val deviceType: DeviceType? = null,
     val channelType: ChannelType? = null,
     var status: OrderStatus = OrderStatus.UNKNOWN,
