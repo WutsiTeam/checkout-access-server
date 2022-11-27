@@ -22,7 +22,6 @@ data class OrderEntity(
     @JoinColumn(name = "business_fk")
     val business: BusinessEntity = BusinessEntity(),
 
-    val reservationId: Long? = null,
     val customerId: Long? = null,
     val customerName: String = "",
     val customerEmail: String = "",

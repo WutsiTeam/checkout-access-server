@@ -65,7 +65,6 @@ class CreateOrderControllerTest {
             customerName = "Ray Sponsible",
             customerEmail = "ray.sponsible@gmail.com",
             deviceType = DeviceType.MOBILE.name,
-            reservationId = 33312L,
             channelType = ChannelType.APP.name,
             notes = "This is the notes",
             currency = "XAF",
@@ -113,7 +112,6 @@ class CreateOrderControllerTest {
         assertEquals(request.customerEmail, order.customerEmail)
         assertEquals(request.customerName, order.customerName)
         assertEquals(DeviceType.MOBILE, order.deviceType)
-        assertEquals(request.reservationId, order.reservationId)
         assertEquals(deviceId, order.deviceId)
         assertEquals(ChannelType.APP, order.channelType)
         assertEquals(request.notes, order.notes)
