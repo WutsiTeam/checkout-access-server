@@ -29,7 +29,8 @@ class CreateOrderDelegate(
         logger.add("order_id", order.id)
 
         return CreateOrderResponse(
-            orderId = order.id ?: ""
+            orderId = order.id ?: "",
+            orderStatus = order.status.name
         )
     }
 }

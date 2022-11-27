@@ -13,6 +13,7 @@ import com.wutsi.checkout.access.dto.CreateOrderResponse
 import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
+import com.wutsi.enums.OrderStatus
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -101,9 +102,12 @@ class CreateOrderControllerTest {
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
+        assertEquals(OrderStatus.UNKNOWN.name, response.body.orderStatus)
+
         val orderId = response.body!!.orderId
         val order = dao.findById(orderId).get()
 
+        assertEquals(OrderStatus.UNKNOWN, order.status)
         assertEquals(request.businessId, order.business.id)
         assertEquals(request.customerId, order.customerId)
         assertEquals(request.customerEmail, order.customerEmail)
@@ -147,6 +151,63 @@ class CreateOrderControllerTest {
         assertEquals(1, itemDiscounts.size)
         assertEquals(request.items[1].discounts[0].code, itemDiscounts[0].code)
         assertEquals(request.items[1].discounts[0].amount, itemDiscounts[0].amount)
+    }
+
+    @Test
+    fun free() {
+        val request = CreateOrderRequest(
+            businessId = 1,
+            customerId = 22,
+            customerName = "Ray Sponsible",
+            customerEmail = "ray.sponsible@gmail.com",
+            deviceType = DeviceType.MOBILE.name,
+            channelType = ChannelType.APP.name,
+            notes = "This is the notes",
+            currency = "XAF",
+            items = listOf(
+                CreateOrderItemRequest(
+                    productId = 111,
+                    unitPrice = 0,
+                    title = "Chemise",
+                    pictureUrl = "https://www.img.1/111.png",
+                    quantity = 3
+                )
+            )
+        )
+        val response = rest.postForEntity(url(), request, CreateOrderResponse::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        assertEquals(OrderStatus.OPENED.name, response.body.orderStatus)
+
+        val orderId = response.body!!.orderId
+        val order = dao.findById(orderId).get()
+
+        assertEquals(OrderStatus.OPENED, order.status)
+        assertEquals(request.businessId, order.business.id)
+        assertEquals(request.customerId, order.customerId)
+        assertEquals(request.customerEmail, order.customerEmail)
+        assertEquals(request.customerName, order.customerName)
+        assertEquals(DeviceType.MOBILE, order.deviceType)
+        assertEquals(deviceId, order.deviceId)
+        assertEquals(ChannelType.APP, order.channelType)
+        assertEquals(request.notes, order.notes)
+        assertEquals(request.currency, order.currency)
+        assertEquals(0, order.totalDiscount)
+        assertEquals(0, order.subTotalPrice)
+        assertEquals(0, order.totalPrice)
+
+        val items = itemDao.findByOrder(order)
+        assertEquals(1, items.size)
+
+        assertEquals(request.items[0].quantity, items[0].quantity)
+        assertEquals(request.items[0].productId, items[0].productId)
+        assertEquals(request.items[0].unitPrice, items[0].unitPrice)
+        assertEquals(request.items[0].title, items[0].title)
+        assertEquals(request.items[0].pictureUrl, items[0].pictureUrl)
+        assertEquals(0, items[0].subTotalPrice)
+        assertEquals(0, items[0].totalDiscount)
+        assertEquals(0, items[0].totalPrice)
     }
 
     private fun url() = "http://localhost:$port/v1/orders"

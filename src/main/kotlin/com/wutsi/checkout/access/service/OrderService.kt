@@ -54,6 +54,7 @@ class OrderService(
         // Order
         val subTotalPrice = computeSubTotalPrice(request)
         val totalDiscount = computeTotalDiscount(request)
+        val totalPrice = max(0L, subTotalPrice - totalDiscount)
         val order = dao.save(
             OrderEntity(
                 id = UUID.randomUUID().toString(),
@@ -61,13 +62,13 @@ class OrderService(
                 customerId = request.customerId,
                 customerEmail = request.customerEmail,
                 customerName = request.customerName,
-                status = OrderStatus.OPENED,
+                status = if (totalPrice <= 0) OrderStatus.OPENED else OrderStatus.UNKNOWN,
                 currency = request.currency,
                 deviceId = tracingContext.deviceId(),
                 deviceType = request.deviceType?.let { DeviceType.valueOf(it.uppercase()) },
                 subTotalPrice = subTotalPrice,
                 totalDiscount = totalDiscount,
-                totalPrice = max(0L, subTotalPrice - totalDiscount),
+                totalPrice = totalPrice,
                 channelType = request.channelType?.let { ChannelType.valueOf(it.uppercase()) },
                 notes = request.notes
             )
