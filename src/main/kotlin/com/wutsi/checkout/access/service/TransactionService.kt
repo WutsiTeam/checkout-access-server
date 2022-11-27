@@ -310,19 +310,20 @@ class TransactionService(
         provider = paymentProviderService.toPaymentProviderSummary(tx.paymentProvider)
     )
 
-    fun syncStatus(id: String) {
+    fun syncStatus(id: String): Status {
         val tx = findById(id)
         if (tx.status == Status.PENDING) {
             when (tx.type) {
-                TransactionType.CHARGE -> syncChargeStatus(tx)
-                TransactionType.CASHOUT -> syncCashoutStatus(tx)
+                TransactionType.CHARGE -> return syncChargeStatus(tx)
+                TransactionType.CASHOUT -> return syncCashoutStatus(tx)
                 else -> {}
             }
         }
+        return tx.status
     }
 
-    private fun syncChargeStatus(tx: TransactionEntity) {
-        tx.gatewayTransactionId ?: return
+    private fun syncChargeStatus(tx: TransactionEntity): Status {
+        tx.gatewayTransactionId ?: return tx.status
         try {
             val response = gatewayProvider.get(tx.paymentMethodType).getPayment(tx.gatewayTransactionId!!)
             if (response.status == Status.SUCCESSFUL) {
@@ -336,13 +337,23 @@ class TransactionService(
                     )
                 )
             }
+            return response.status
         } catch (ex: PaymentException) {
             handlePaymentException(tx, ex)
+            throw TransactionException(
+                error = Error(
+                    code = ErrorURN.TRANSACTION_FAILED.urn,
+                    downstreamCode = ex.error.code.name,
+                    data = mapOf(
+                        "transaction-id" to tx.id!!
+                    )
+                )
+            )
         }
     }
 
-    private fun syncCashoutStatus(tx: TransactionEntity) {
-        tx.gatewayTransactionId ?: return
+    private fun syncCashoutStatus(tx: TransactionEntity): Status {
+        tx.gatewayTransactionId ?: return tx.status
         try {
             val response = gatewayProvider.get(tx.paymentMethodType).getTransfer(tx.gatewayTransactionId!!)
             if (response.status == Status.SUCCESSFUL) {
@@ -356,8 +367,18 @@ class TransactionService(
                     )
                 )
             }
+            return response.status
         } catch (ex: PaymentException) {
             handlePaymentException(tx, ex)
+            throw TransactionException(
+                error = Error(
+                    code = ErrorURN.TRANSACTION_FAILED.urn,
+                    downstreamCode = ex.error.code.name,
+                    data = mapOf(
+                        "transaction-id" to tx.id!!
+                    )
+                )
+            )
         }
     }
 

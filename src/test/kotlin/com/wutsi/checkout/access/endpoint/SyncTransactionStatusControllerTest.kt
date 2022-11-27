@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.checkout.access.dao.BusinessRepository
 import com.wutsi.checkout.access.dao.TransactionRepository
+import com.wutsi.checkout.access.dto.SyncTransactionStatusResponse
 import com.wutsi.checkout.access.service.FeesCalculator
 import com.wutsi.platform.payment.GatewayType
 import com.wutsi.platform.payment.PaymentException
@@ -18,12 +19,14 @@ import com.wutsi.platform.payment.model.GetTransferResponse
 import com.wutsi.platform.payment.provider.flutterwave.FWGateway
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import java.util.Date
 import kotlin.test.assertEquals
@@ -68,7 +71,7 @@ class SyncTransactionStatusControllerTest {
         doReturn(paymentResponse).whenever(gateway).getPayment(any())
 
         // WHEN
-        val response = rest.getForEntity(url("tx-102"), Any::class.java)
+        val response = rest.getForEntity(url("tx-102"), SyncTransactionStatusResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -86,6 +89,8 @@ class SyncTransactionStatusControllerTest {
 
         val business = businessDao.findById(tx.business.id)
         assertEquals(120000 + tx.net, business.get().balance)
+
+        assertEquals(tx.status.name, response.body!!.status)
     }
 
     @Test
@@ -100,7 +105,7 @@ class SyncTransactionStatusControllerTest {
 
         // WHEN
         Thread.sleep(2000)
-        val response = rest.getForEntity(url("tx-102"), Any::class.java)
+        val response = rest.getForEntity(url("tx-102"), SyncTransactionStatusResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -110,6 +115,8 @@ class SyncTransactionStatusControllerTest {
 
         val business = businessDao.findById(tx.business.id)
         assertEquals(120000, business.get().balance)
+
+        assertEquals(tx.status.name, response.body!!.status)
     }
 
     @Test
@@ -127,10 +134,12 @@ class SyncTransactionStatusControllerTest {
         doThrow(ex).whenever(gateway).getPayment(any())
 
         // WHEN
-        val response = rest.getForEntity(url("tx-102"), Any::class.java)
+        val e = assertThrows<HttpClientErrorException> {
+            rest.getForEntity(url("tx-102"), Any::class.java)
+        }
 
         // THEN
-        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(HttpStatus.CONFLICT, e.statusCode)
 
         val tx = dao.findById("tx-102").get()
         assertEquals(1500, tx.amount)
@@ -161,7 +170,7 @@ class SyncTransactionStatusControllerTest {
 
         // WHEN
         Thread.sleep(2000)
-        val response = rest.getForEntity(url("tx-101"), Any::class.java)
+        val response = rest.getForEntity(url("tx-101"), SyncTransactionStatusResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -171,6 +180,8 @@ class SyncTransactionStatusControllerTest {
 
         val business = businessDao.findById(tx.business.id)
         assertEquals(120000, business.get().balance)
+
+        assertEquals(tx.status.name, response.body!!.status)
     }
 
     @Test
@@ -185,7 +196,7 @@ class SyncTransactionStatusControllerTest {
         doReturn(paymentResponse).whenever(gateway).getTransfer(any())
 
         // WHEN
-        val response = rest.getForEntity(url("tx-202"), Any::class.java)
+        val response = rest.getForEntity(url("tx-202"), SyncTransactionStatusResponse::class.java)
 
         // THEN
         assertEquals(HttpStatus.OK, response.statusCode)
@@ -203,6 +214,8 @@ class SyncTransactionStatusControllerTest {
 
         val business = businessDao.findById(tx.business.id)
         assertEquals(120000, business.get().balance)
+
+        assertEquals(tx.status.name, response.body!!.status)
     }
 
     @Test
@@ -220,10 +233,12 @@ class SyncTransactionStatusControllerTest {
         doThrow(ex).whenever(gateway).getTransfer(any())
 
         // WHEN
-        val response = rest.getForEntity(url("tx-202"), Any::class.java)
+        val e = assertThrows<HttpClientErrorException> {
+            rest.getForEntity(url("tx-202"), Any::class.java)
+        }
 
         // THEN
-        assertEquals(HttpStatus.OK, response.statusCode)
+        assertEquals(HttpStatus.CONFLICT, e.statusCode)
 
         val tx = dao.findById("tx-202").get()
         assertEquals(1500, tx.amount)

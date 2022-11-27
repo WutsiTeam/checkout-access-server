@@ -1,13 +1,19 @@
 package com.wutsi.checkout.access.`delegate`
 
+import com.wutsi.checkout.access.dto.SyncTransactionStatusResponse
+import com.wutsi.checkout.access.error.TransactionException
 import com.wutsi.checkout.access.service.TransactionService
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class SyncTransactionStatusDelegate(private val service: TransactionService) {
-    @Transactional
-    fun invoke(id: String) {
-        service.syncStatus(id)
+    @Transactional(noRollbackFor = [TransactionException::class])
+    fun invoke(id: String): SyncTransactionStatusResponse {
+        val status = service.syncStatus(id)
+        return SyncTransactionStatusResponse(
+            transactionId = id,
+            status = status.name
+        )
     }
 }
