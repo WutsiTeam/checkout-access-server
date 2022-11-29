@@ -67,20 +67,20 @@ class PaymentProviderService(
     private fun where(request: SearchPaymentProviderRequest): String {
         val criteria = mutableListOf<String>()
 
-        if (request.country != null) {
+        if (!request.country.isNullOrEmpty()) {
             criteria.add("a.country=:country")
         }
-        if (request.type != null) {
+        if (!request.type.isNullOrEmpty()) {
             criteria.add("a.provider.type=:type")
         }
         return criteria.joinToString(separator = " AND ")
     }
 
     private fun parameters(request: SearchPaymentProviderRequest, query: Query) {
-        if (request.country != null) {
+        if (!request.country.isNullOrEmpty()) {
             query.setParameter("country", request.country)
         }
-        if (request.type != null) {
+        if (!request.type.isNullOrEmpty()) {
             query.setParameter("type", PaymentMethodType.valueOf(request.type.uppercase()))
         }
     }

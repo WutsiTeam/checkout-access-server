@@ -55,7 +55,8 @@ class SearchPaymentProviderControllerTest {
     fun byTypeAndNumber() {
         val request = SearchPaymentProviderRequest(
             type = PaymentMethodType.MOBILE_MONEY.name,
-            number = "+237690000010"
+            number = "+237690000010",
+            country = ""
         )
         val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
 
