@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.whenever
 import com.wutsi.checkout.access.dao.BusinessRepository
+import com.wutsi.checkout.access.dao.OrderRepository
 import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateChargeRequest
 import com.wutsi.checkout.access.dto.CreateChargeResponse
@@ -49,6 +50,9 @@ class CreateChargeControllerTest {
 
     @Autowired
     private lateinit var businessDao: BusinessRepository
+
+    @Autowired
+    private lateinit var orderDao: OrderRepository
 
     @MockBean
     private lateinit var gateway: FWGateway
@@ -122,6 +126,9 @@ class CreateChargeControllerTest {
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000 + tx.net, business.balance)
+
+        val order = orderDao.findById(tx.order!!.id).get()
+        assertEquals(tx.amount, order.totalPaid)
     }
 
     @Test
@@ -173,6 +180,9 @@ class CreateChargeControllerTest {
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)
+
+        val order = orderDao.findById(tx.order!!.id).get()
+        assertEquals(0, order.totalPaid)
     }
 
     @Test
@@ -232,6 +242,9 @@ class CreateChargeControllerTest {
 
         val business = businessDao.findById(tx.business.id!!).get()
         assertEquals(120000, business.balance)
+
+        val order = orderDao.findById(tx.order!!.id).get()
+        assertEquals(0, order.totalPaid)
     }
 
     @Test

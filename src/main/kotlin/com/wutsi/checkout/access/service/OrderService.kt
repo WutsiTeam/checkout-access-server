@@ -130,11 +130,16 @@ class OrderService(
                 )
             }
 
+    @Deprecated("")
     fun updateBalance(id: String) {
         val order = findById(id)
-        order.totalPaid = transactionDao.findByOrderIdAndStatus(id, Status.SUCCESSFUL)
+        updateBalance(order)
+    }
+
+    fun updateBalance(order: OrderEntity) {
+        order.totalPaid = transactionDao.findByOrderAndStatus(order, Status.SUCCESSFUL)
             .filter { it.type == TransactionType.CHARGE }
-            .sumOf { it.net }
+            .sumOf { it.amount }
         dao.save(order)
     }
 

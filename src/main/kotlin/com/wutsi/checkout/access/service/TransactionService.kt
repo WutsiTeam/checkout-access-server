@@ -472,6 +472,11 @@ class TransactionService(
 
         // Update the balance
         businessService.updateBalance(tx.business, tx.net)
+
+        // Update the order
+        if (tx.order != null) {
+            orderService.updateBalance(tx.order)
+        }
     }
 
     private fun onPending(tx: TransactionEntity, response: CreatePaymentResponse) {
