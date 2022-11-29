@@ -18,7 +18,7 @@ class SearchPaymentProviderControllerTest {
     private val rest = RestTemplate()
 
     @Test
-    fun byType() {
+    fun byCountryType() {
         val request = SearchPaymentProviderRequest(
             country = "CM",
             type = PaymentMethodType.MOBILE_MONEY.name
@@ -35,7 +35,7 @@ class SearchPaymentProviderControllerTest {
     }
 
     @Test
-    fun byTypeAndNumber() {
+    fun byCountryTypeAndNumber() {
         val request = SearchPaymentProviderRequest(
             country = "CM",
             type = PaymentMethodType.MOBILE_MONEY.name,
@@ -52,7 +52,23 @@ class SearchPaymentProviderControllerTest {
     }
 
     @Test
-    fun byTypeAndNumberNotFound() {
+    fun byTypeAndNumber() {
+        val request = SearchPaymentProviderRequest(
+            type = PaymentMethodType.MOBILE_MONEY.name,
+            number = "+237690000010"
+        )
+        val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val providers = response.body!!.paymentProviders
+        assertEquals(1, providers.size)
+
+        assertEquals("Orange", providers[0].code)
+    }
+
+    @Test
+    fun byCountryTypeAndNumberNotFound() {
         val request = SearchPaymentProviderRequest(
             country = "CM",
             type = PaymentMethodType.MOBILE_MONEY.name,
