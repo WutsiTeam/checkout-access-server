@@ -21,7 +21,7 @@ class SearchTransactionDelegate(
         logger.add("request_offset", request.offset)
 
         val txs = service.search(request)
-        logger.add("count", txs.size)
+        logger.add("response_count", txs.size)
 
         return SearchTransactionResponse(
             transactions = txs.map { service.toTransactionSummary(it) }

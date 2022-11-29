@@ -24,8 +24,8 @@ class CreateCashoutDelegate(
 
         val tx = service.cashout(request)
 
-        logger.add("transaction_id", tx.id)
-        logger.add("transaction_status", tx.status)
+        logger.add("response_transaction_id", tx.id)
+        logger.add("response_transaction_status", tx.status)
         return CreateCashoutResponse(
             transactionId = tx.id ?: "",
             status = tx.status.name

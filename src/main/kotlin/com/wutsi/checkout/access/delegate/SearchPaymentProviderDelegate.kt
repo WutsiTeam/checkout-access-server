@@ -17,7 +17,7 @@ class SearchPaymentProviderDelegate(
         logger.add("request_type", request.type)
 
         val providers = service.search(request)
-        logger.add("count", providers.size)
+        logger.add("response_count", providers.size)
 
         return SearchPaymentProviderResponse(
             paymentProviders = providers.map { service.toPaymentProviderSummary(it) }

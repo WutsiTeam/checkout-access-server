@@ -18,6 +18,7 @@ class CreateBusinessDelegate(
         logger.add("request_currency", request.currency)
 
         val business = service.create(request)
+        logger.add("response_business_id", business.id)
         return CreateBusinessResponse(
             businessId = business.id ?: -1
         )

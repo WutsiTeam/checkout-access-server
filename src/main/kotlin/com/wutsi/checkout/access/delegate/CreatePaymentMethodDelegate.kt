@@ -21,6 +21,8 @@ class CreatePaymentMethodDelegate(
         logger.add("request_number", service.mask(request.number))
 
         val paymentMethod = service.create(request)
+        logger.add("response_payment_method_token", paymentMethod.token)
+
         return CreatePaymentMethodResponse(
             paymentMethodToken = paymentMethod.token
         )
