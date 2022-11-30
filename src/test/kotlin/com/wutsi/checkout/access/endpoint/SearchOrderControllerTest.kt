@@ -62,5 +62,19 @@ public class SearchOrderControllerTest {
         assertTrue(orders.map { it.id }.containsAll(listOf("300")))
     }
 
+    @Test
+    fun expired() {
+        val request = SearchOrderRequest(
+            expiresTo = OffsetDateTime.now()
+        )
+        val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
+
+        assertEquals(200, response.statusCodeValue)
+
+        val orders = response.body!!.orders
+        assertEquals(1, orders.size)
+        assertTrue(orders.map { it.id }.containsAll(listOf("100")))
+    }
+
     private fun url() = "http://localhost:$port/v1/orders/search"
 }

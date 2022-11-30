@@ -238,6 +238,9 @@ class OrderService(
         if (request.createdTo != null) {
             criteria.add("O.created <= :created_to")
         }
+        if (request.expiresTo != null) {
+            criteria.add("O.expires <= :expires_to")
+        }
         return criteria.joinToString(separator = " AND ")
     }
 
@@ -256,6 +259,9 @@ class OrderService(
         }
         if (request.createdTo != null) {
             query.setParameter("created_to", Date.from(request.createdTo.toInstant()))
+        }
+        if (request.expiresTo != null) {
+            query.setParameter("expires_to", Date.from(request.expiresTo.toInstant()))
         }
     }
 

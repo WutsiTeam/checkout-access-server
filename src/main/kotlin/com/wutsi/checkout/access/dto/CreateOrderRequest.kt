@@ -1,11 +1,14 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
+import kotlin.Long
+import kotlin.String
+import kotlin.collections.List
 
 public data class CreateOrderRequest(
     public val deviceType: String? = null,
@@ -20,11 +23,10 @@ public data class CreateOrderRequest(
     @get:NotBlank
     @get:Size(max = 100)
     public val customerEmail: String = "",
+    @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+    public val expires: OffsetDateTime? = null,
     @get:NotNull
     @get:NotEmpty
     public val items: List<CreateOrderItemRequest> = emptyList(),
-    public val discounts: List<CreateOrderDiscountRequest> = emptyList(),
-    @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
-    @get:NotNull
-    public val expires: OffsetDateTime? = null
+    public val discounts: List<CreateOrderDiscountRequest> = emptyList()
 )
