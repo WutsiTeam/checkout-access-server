@@ -24,8 +24,11 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.web.client.RestTemplate
+import java.time.OffsetDateTime
 import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(value = ["/db/clean.sql", "/db/CreateOrderController.sql"])
@@ -68,6 +71,7 @@ class CreateOrderControllerTest {
             channelType = ChannelType.APP.name,
             notes = "This is the notes",
             currency = "XAF",
+            expires = OffsetDateTime.now().plusMinutes(45),
             discounts = listOf(
                 CreateOrderDiscountRequest(
                     code = "X-111",
@@ -120,6 +124,9 @@ class CreateOrderControllerTest {
         assertEquals(3000, order.totalDiscount)
         assertEquals(55000, order.subTotalPrice)
         assertEquals(52000, order.totalPrice)
+        assertNotNull(order.expires)
+        assertNull(order.expired)
+        assertNull(order.cancelled)
 
         val discounts = discountDao.findByOrder(order)
         assertEquals(1, discounts.size)
@@ -172,7 +179,8 @@ class CreateOrderControllerTest {
                     pictureUrl = "https://www.img.1/111.png",
                     quantity = 3
                 )
-            )
+            ),
+            expires = OffsetDateTime.now().plusMinutes(30)
         )
         val response = rest.postForEntity(url(), request, CreateOrderResponse::class.java)
 

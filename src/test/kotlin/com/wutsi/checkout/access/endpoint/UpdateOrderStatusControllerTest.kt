@@ -57,6 +57,20 @@ class UpdateOrderStatusControllerTest {
     }
 
     @Test
+    fun expire() {
+        val request = UpdateOrderStatusRequest(
+            status = OrderStatus.EXPIRED.name
+        )
+        val response = rest.postForEntity(url("102"), request, Any::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+
+        val order = dao.findById("102").get()
+        assertEquals(OrderStatus.EXPIRED, order.status)
+        assertNotNull(order.expired)
+    }
+
+    @Test
     fun sameStatus() {
         val now = System.currentTimeMillis()
         Thread.sleep(1000)

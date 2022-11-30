@@ -70,7 +70,10 @@ class OrderService(
                 totalDiscount = totalDiscount,
                 totalPrice = totalPrice,
                 channelType = request.channelType?.let { ChannelType.valueOf(it.uppercase()) },
-                notes = request.notes
+                notes = request.notes,
+                expires = request.expires?.let {
+                    Date(it.toInstant().toEpochMilli())
+                } ?: Date(System.currentTimeMillis() + 30 * 60 * 1000)
             )
         )
 
@@ -96,6 +99,7 @@ class OrderService(
         order.status = status
         when (status) {
             OrderStatus.CLOSED -> order.closed = Date()
+            OrderStatus.EXPIRED -> order.expired = Date()
 
             OrderStatus.CANCELLED -> {
                 order.cancelled = Date()
@@ -165,6 +169,8 @@ class OrderService(
         updated = order.updated.toInstant().atOffset(ZoneOffset.UTC),
         cancelled = order.cancelled?.toInstant()?.atOffset(ZoneOffset.UTC),
         closed = order.closed?.toInstant()?.atOffset(ZoneOffset.UTC),
+        expired = order.expired?.toInstant()?.atOffset(ZoneOffset.UTC),
+        expires = order.expires.toInstant().atOffset(ZoneOffset.UTC),
         cancellationReason = order.cancellationReason,
         items = order.items.map { toOrderItem(it) },
         discounts = order.discounts.map { toOrderDiscount(order, it) }
@@ -187,7 +193,9 @@ class OrderService(
         created = order.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = order.updated.toInstant().atOffset(ZoneOffset.UTC),
         cancelled = order.cancelled?.toInstant()?.atOffset(ZoneOffset.UTC),
-        closed = order.closed?.toInstant()?.atOffset(ZoneOffset.UTC)
+        closed = order.closed?.toInstant()?.atOffset(ZoneOffset.UTC),
+        expired = order.expired?.toInstant()?.atOffset(ZoneOffset.UTC),
+        expires = order.expires.toInstant().atOffset(ZoneOffset.UTC)
     )
 
     fun search(request: SearchOrderRequest): List<OrderEntity> {
