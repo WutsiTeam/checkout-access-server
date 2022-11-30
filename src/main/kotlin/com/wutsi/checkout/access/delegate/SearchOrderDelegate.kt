@@ -17,6 +17,7 @@ class SearchOrderDelegate(
         logger.add("request_status", request.status)
         logger.add("request_created_from", request.createdFrom)
         logger.add("request_created_to", request.createdTo)
+        logger.add("request_expires_to", request.expiresTo)
         logger.add("request_business_id", request.businessId)
         logger.add("request_customer_id", request.customerId)
 
