@@ -106,12 +106,12 @@ class CreateOrderControllerTest {
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
-        assertEquals(OrderStatus.UNKNOWN.name, response.body.orderStatus)
+        assertEquals(OrderStatus.PENDING.name, response.body.orderStatus)
 
         val orderId = response.body!!.orderId
         val order = dao.findById(orderId).get()
 
-        assertEquals(OrderStatus.UNKNOWN, order.status)
+        assertEquals(OrderStatus.PENDING, order.status)
         assertEquals(request.businessId, order.business.id)
         assertEquals(request.customerId, order.customerId)
         assertEquals(request.customerEmail, order.customerEmail)
