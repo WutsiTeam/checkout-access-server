@@ -97,6 +97,7 @@ class OrderService(
         }
 
         order.status = status
+        order.updated = Date()
         when (status) {
             OrderStatus.CLOSED -> order.closed = Date()
             OrderStatus.EXPIRED -> order.expired = Date()
@@ -134,16 +135,11 @@ class OrderService(
                 )
             }
 
-    @Deprecated("")
-    fun updateBalance(id: String) {
-        val order = findById(id)
-        updateBalance(order)
-    }
-
     fun updateBalance(order: OrderEntity) {
         order.totalPaid = transactionDao.findByOrderAndStatus(order, Status.SUCCESSFUL)
             .filter { it.type == TransactionType.CHARGE }
             .sumOf { it.amount }
+        order.updated = Date()
         dao.save(order)
     }
 

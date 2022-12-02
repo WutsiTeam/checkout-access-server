@@ -43,7 +43,7 @@ data class OrderEntity(
     val discounts: List<OrderDiscountEntity> = emptyList(),
 
     val created: Date = Date(),
-    val updated: Date = Date(),
+    var updated: Date = Date(),
     var cancelled: Date? = null,
     var expired: Date? = null,
     var closed: Date? = null,

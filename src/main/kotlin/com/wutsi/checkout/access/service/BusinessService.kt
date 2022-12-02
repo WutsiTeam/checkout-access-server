@@ -46,6 +46,7 @@ class BusinessService(
         }
 
         business.status = status
+        business.updated = Date()
         when (status) {
             BusinessStatus.SUSPENDED -> business.suspended = Date()
             BusinessStatus.UNDER_REVIEW -> business.suspended = null
@@ -97,6 +98,7 @@ class BusinessService(
         }
 
         business.balance += amount
+        business.updated = Date()
         return dao.save(business)
     }
 }

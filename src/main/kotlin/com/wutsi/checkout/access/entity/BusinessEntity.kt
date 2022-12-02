@@ -22,6 +22,6 @@ data class BusinessEntity(
     val currency: String = "",
 
     val created: Date = Date(),
-    val updated: Date = Date(),
+    var updated: Date = Date(),
     var suspended: Date? = null
 )

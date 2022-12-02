@@ -49,7 +49,7 @@ data class TransactionEntity(
     var gatewayFees: Long = 0,
 
     val created: Date = Date(),
-    val updated: Date = Date(),
+    var updated: Date = Date(),
 
     val paymentMethodNumber: String = "",
     val paymentMethodCountry: String? = null,

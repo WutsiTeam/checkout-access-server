@@ -31,6 +31,7 @@ import com.wutsi.platform.payment.model.CreateTransferResponse
 import com.wutsi.platform.payment.model.Party
 import org.springframework.stereotype.Service
 import java.time.ZoneOffset
+import java.util.Date
 import java.util.Optional
 import java.util.UUID
 import javax.persistence.EntityManager
@@ -468,6 +469,7 @@ class TransactionService(
         tx.gatewayFees = response.fees.value.toLong()
         tx.fees = calculator.compute(tx.type, tx.paymentMethodType, tx.business.country, tx.amount)
         tx.net = tx.amount - tx.fees
+        tx.updated = Date()
         dao.save(tx)
 
         // Update the balance
@@ -488,6 +490,7 @@ class TransactionService(
         tx.status = Status.PENDING
         tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
         tx.financialTransactionId = response.financialTransactionId
+        tx.updated = Date()
         dao.save(tx)
     }
 
@@ -501,6 +504,7 @@ class TransactionService(
         tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
         tx.financialTransactionId = response.financialTransactionId
         tx.gatewayFees = response.fees.value.toLong()
+        tx.updated = Date()
         dao.save(tx)
     }
 
@@ -513,6 +517,7 @@ class TransactionService(
         tx.status = Status.PENDING
         tx.gatewayTransactionId = response.transactionId.ifEmpty { null }
         tx.financialTransactionId = response.financialTransactionId
+        tx.updated = Date()
         dao.save(tx)
     }
 
@@ -521,6 +526,7 @@ class TransactionService(
         tx.errorCode = ex.error.code.name
         tx.supplierErrorCode = ex.error.supplierErrorCode
         tx.gatewayTransactionId = ex.error.transactionId
+        tx.updated = Date()
         dao.save(tx)
 
         if (tx.type == TransactionType.CASHOUT) {
@@ -532,6 +538,7 @@ class TransactionService(
         tx.status = Status.FAILED
         tx.errorCode = ErrorCode.NOT_ENOUGH_FUNDS.name
         tx.gatewayFees = 0L
+        tx.updated = Date()
         dao.save(tx)
     }
 
