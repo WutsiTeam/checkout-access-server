@@ -6,7 +6,7 @@ INSERT INTO T_ORDER(id, business_fk, customer_id, customer_name, status, currenc
     VALUES
         (100, 1, 111, 'Roger Milla', 1, 'XAF', 'roger.milla@gmail.com', now()),
         (101, 1, 111, 'Roger Milla', 1, 'XAF', 'roger.milla@gmail.com', now()),
-        (102, 1, 111, 'Roger Milla', 1, 'XAF', 'roger.milla@gmail.com', now()),
+        (102, 1, 111, 'Roger Milla', 2, 'XAF', 'roger.milla@gmail.com', now()),
 
         (200, 1, 111, 'Roger Milla', 2, 'XAF', 'roger.milla@gmail.com', now()),
         (300, 1, 111, 'Roger Milla', 3, 'XAF', 'roger.milla@gmail.com', now())
