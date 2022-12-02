@@ -267,7 +267,7 @@ class TransactionService(
         id = tx.id ?: "",
         financialTransactionId = tx.financialTransactionId,
         amount = tx.amount,
-        businessId = tx.business.id ?: -1,
+        business = businessService.toBusinessSummary(tx.business),
         status = tx.status.name,
         currency = tx.currency,
         created = tx.created.toInstant().atOffset(ZoneOffset.UTC),

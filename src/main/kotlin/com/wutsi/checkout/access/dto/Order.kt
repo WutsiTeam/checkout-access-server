@@ -13,7 +13,7 @@ public data class Order(
     public val deviceId: String? = null,
     public val deviceType: String? = null,
     public val channelType: String? = null,
-    public val businessId: Long = 0,
+    public val business: BusinessSummary = BusinessSummary(),
     public val status: String = "",
     public val subTotalPrice: Long = 0,
     public val totalDiscount: Long = 0,

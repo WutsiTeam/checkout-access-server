@@ -48,7 +48,8 @@ class OrderService(
     private val itemDiscountDao: OrderItemDiscountRepository,
     private val transactionDao: TransactionRepository,
     private val em: EntityManager,
-    private val tracingContext: TracingContext
+    private val tracingContext: TracingContext,
+    private val businessService: BusinessService
 ) {
     fun create(business: BusinessEntity, request: CreateOrderRequest): OrderEntity {
         // Order
@@ -154,7 +155,7 @@ class OrderService(
         deviceType = order.deviceType?.name,
         channelType = order.channelType?.name,
         notes = order.notes,
-        businessId = order.business.id ?: -1,
+        business = businessService.toBusinessSummary(order.business),
         totalPrice = order.totalPrice,
         totalPaid = order.totalPaid,
         balance = max(0, order.totalPrice - order.totalPaid),

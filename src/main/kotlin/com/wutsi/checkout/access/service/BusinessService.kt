@@ -2,6 +2,7 @@ package com.wutsi.checkout.access.service
 
 import com.wutsi.checkout.access.dao.BusinessRepository
 import com.wutsi.checkout.access.dto.Business
+import com.wutsi.checkout.access.dto.BusinessSummary
 import com.wutsi.checkout.access.dto.CreateBusinessRequest
 import com.wutsi.checkout.access.dto.UpdateBusinessStatusRequest
 import com.wutsi.checkout.access.entity.BusinessEntity
@@ -90,6 +91,15 @@ class BusinessService(
         created = business.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = business.updated.toInstant().atOffset(ZoneOffset.UTC),
         suspended = business.suspended?.toInstant()?.atOffset(ZoneOffset.UTC)
+    )
+
+    fun toBusinessSummary(business: BusinessEntity) = BusinessSummary(
+        id = business.id ?: -1,
+        accountId = business.accountId,
+        status = business.status.name,
+        balance = business.balance,
+        currency = business.currency,
+        country = business.country
     )
 
     fun updateBalance(business: BusinessEntity, amount: Long): BusinessEntity {

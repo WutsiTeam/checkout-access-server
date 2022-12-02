@@ -1,6 +1,6 @@
 INSERT INTO T_BUSINESS(id, account_id, status, suspended, balance, currency, country)
     VALUES
-        (1, 1, 2, null, 120000, 'XAF', 'CM')
+        (1, 11, 2, null, 120000, 'XAF', 'CM')
     ;
 
 INSERT INTO T_PAYMENT_METHOD(id, payment_provider_fk, token, account_id, number, country, owner_name, type, status, deactivated)

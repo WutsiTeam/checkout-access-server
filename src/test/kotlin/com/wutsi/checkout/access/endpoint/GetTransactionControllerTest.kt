@@ -35,7 +35,11 @@ class GetTransactionControllerTest {
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val tx = response.body!!.transaction
-        assertEquals(1L, tx.businessId)
+        assertEquals(1L, tx.business.id)
+        assertEquals(11L, tx.business.accountId)
+        assertEquals("XAF", tx.business.currency)
+        assertEquals("CM", tx.business.country)
+        assertEquals(120000, tx.business.balance)
         assertEquals("order-200", tx.orderId)
         assertEquals(200L, tx.customerId)
         assertEquals(500, tx.amount)
