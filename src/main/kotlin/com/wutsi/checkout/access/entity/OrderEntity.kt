@@ -49,5 +49,8 @@ data class OrderEntity(
     var closed: Date? = null,
     var cancellationReason: String? = null,
     val expires: Date = Date(),
-    val itemCount: Int = 0
+    val itemCount: Int = 0,
+    val productPictureUrl1: String? = null,
+    val productPictureUrl2: String? = null,
+    val productPictureUrl3: String? = null
 )

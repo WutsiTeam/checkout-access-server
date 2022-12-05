@@ -75,7 +75,10 @@ class OrderService(
                 expires = request.expires?.let {
                     Date(it.toInstant().toEpochMilli())
                 } ?: Date(System.currentTimeMillis() + 30 * 60 * 1000),
-                itemCount = request.items.size
+                itemCount = request.items.size,
+                productPictureUrl1 = request.items[0].pictureUrl,
+                productPictureUrl2 = if (request.items.size > 1) request.items[1].pictureUrl else null,
+                productPictureUrl3 = if (request.items.size > 2) request.items[2].pictureUrl else null
             )
         )
 
@@ -187,7 +190,12 @@ class OrderService(
         balance = max(0, order.totalPrice - order.totalPaid),
         status = order.status.name,
         created = order.created.toInstant().atOffset(ZoneOffset.UTC),
-        itemCount = order.itemCount
+        itemCount = order.itemCount,
+        productPictureUrls = listOfNotNull(
+            order.productPictureUrl1,
+            order.productPictureUrl2,
+            order.productPictureUrl3
+        )
     )
 
     fun search(request: SearchOrderRequest): List<OrderEntity> {

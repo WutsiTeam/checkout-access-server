@@ -91,6 +91,7 @@ class CreateOrderControllerTest {
                     productId = 222,
                     unitPrice = 10000,
                     title = "Chemise",
+                    pictureUrl = "https://www.img.1/222.png",
                     quantity = 1,
                     discounts = listOf(
                         CreateOrderDiscountRequest(
@@ -128,6 +129,9 @@ class CreateOrderControllerTest {
         assertNull(order.expired)
         assertNull(order.cancelled)
         assertEquals(request.items.size, order.itemCount)
+        assertEquals(request.items[0].pictureUrl, order.productPictureUrl1)
+        assertEquals(request.items[1].pictureUrl, order.productPictureUrl2)
+        assertNull(order.productPictureUrl3)
 
         val discounts = discountDao.findByOrder(order)
         assertEquals(1, discounts.size)
@@ -206,6 +210,9 @@ class CreateOrderControllerTest {
         assertEquals(0, order.subTotalPrice)
         assertEquals(0, order.totalPrice)
         assertEquals(request.items.size, order.itemCount)
+        assertEquals(request.items[0].pictureUrl, order.productPictureUrl1)
+        assertNull(order.productPictureUrl2)
+        assertNull(order.productPictureUrl3)
 
         val items = itemDao.findByOrder(order)
         assertEquals(1, items.size)
