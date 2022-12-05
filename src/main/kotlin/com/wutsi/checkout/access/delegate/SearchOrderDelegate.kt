@@ -22,6 +22,7 @@ class SearchOrderDelegate(
         logger.add("request_customer_id", request.customerId)
 
         val orders = service.search(request)
+        logger.add("response_count", orders.size)
         return SearchOrderResponse(
             orders = orders.map { service.toOrderSummary(it) }
         )

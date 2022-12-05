@@ -18,7 +18,7 @@ class SearchPaymentMethodDelegate(
         logger.add("request_offset", request.offset)
 
         val payments = service.search(request)
-        logger.add("count", payments.size)
+        logger.add("response_count", payments.size)
         return SearchPaymentMethodResponse(
             paymentMethods = payments.map { service.toPaymentMethodSummary(it) }
         )
