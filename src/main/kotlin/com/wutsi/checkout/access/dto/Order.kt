@@ -3,6 +3,7 @@ package com.wutsi.checkout.access.dto
 import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
 import javax.validation.constraints.Size
+import kotlin.Int
 import kotlin.Long
 import kotlin.String
 import kotlin.collections.List
@@ -40,5 +41,6 @@ public data class Order(
     @get:Size(max = 100)
     public val customerEmail: String = "",
     public val items: List<OrderItem> = emptyList(),
-    public val discounts: List<Discount> = emptyList()
+    public val discounts: List<Discount> = emptyList(),
+    public val itemCount: Int = 0
 )

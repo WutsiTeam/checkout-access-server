@@ -127,6 +127,7 @@ class CreateOrderControllerTest {
         assertNotNull(order.expires)
         assertNull(order.expired)
         assertNull(order.cancelled)
+        assertEquals(request.items.size, order.itemCount)
 
         val discounts = discountDao.findByOrder(order)
         assertEquals(1, discounts.size)
@@ -204,6 +205,7 @@ class CreateOrderControllerTest {
         assertEquals(0, order.totalDiscount)
         assertEquals(0, order.subTotalPrice)
         assertEquals(0, order.totalPrice)
+        assertEquals(request.items.size, order.itemCount)
 
         val items = itemDao.findByOrder(order)
         assertEquals(1, items.size)

@@ -48,5 +48,6 @@ data class OrderEntity(
     var expired: Date? = null,
     var closed: Date? = null,
     var cancellationReason: String? = null,
-    val expires: Date = Date()
+    val expires: Date = Date(),
+    val itemCount: Int = 0
 )
