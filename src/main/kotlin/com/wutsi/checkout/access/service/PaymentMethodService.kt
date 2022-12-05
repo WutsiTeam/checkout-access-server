@@ -38,7 +38,7 @@ class PaymentMethodService(
                         code = ErrorURN.PAYMENT_METHOD_ALREADY_ASSIGNED.urn,
                         parameter = Parameter(
                             name = "number",
-                            value = mask(request.number),
+                            value = request.number,
                             type = ParameterType.PARAMETER_TYPE_PAYLOAD
                         )
                     )
@@ -117,7 +117,7 @@ class PaymentMethodService(
         token = payment.token,
         type = payment.type.name,
         status = payment.status.name,
-        number = mask(payment.number),
+        number = payment.number,
         ownerName = payment.ownerName,
         country = payment.country,
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
@@ -131,7 +131,7 @@ class PaymentMethodService(
         token = payment.token,
         type = payment.type.name,
         status = payment.status.name,
-        number = mask(payment.number),
+        number = payment.number,
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
         deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),

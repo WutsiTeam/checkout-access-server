@@ -38,7 +38,7 @@ class GetPaymentMethodControllerTest {
         assertEquals(300L, payment.accountId)
         assertEquals("Roger Milla", payment.ownerName)
         assertEquals("CM", payment.country)
-        assertEquals("....0300", payment.number)
+        assertEquals("+237690000300", payment.number)
         assertNotNull(payment.created)
         assertNotNull(payment.updated)
         assertNull(payment.deactivated)
