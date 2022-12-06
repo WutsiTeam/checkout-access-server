@@ -1,7 +1,6 @@
 package com.wutsi.checkout.access.service
 
 import com.wutsi.checkout.access.dao.PaymentProviderRepository
-import com.wutsi.checkout.access.dto.PaymentProviderSummary
 import com.wutsi.checkout.access.dto.SearchPaymentProviderRequest
 import com.wutsi.checkout.access.entity.PaymentProviderEntity
 import com.wutsi.checkout.access.entity.PaymentProviderPrefixEntity
@@ -31,14 +30,6 @@ class PaymentProviderService(
                     )
                 )
             }
-
-    fun toPaymentProviderSummary(provider: PaymentProviderEntity) = PaymentProviderSummary(
-        id = provider.id ?: -1,
-        code = provider.code,
-        name = provider.name,
-        logoUrl = provider.logoUrl,
-        type = provider.type.name
-    )
 
     fun search(request: SearchPaymentProviderRequest): List<PaymentProviderEntity> {
         val sql = sql(request)

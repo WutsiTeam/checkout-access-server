@@ -2,8 +2,6 @@ package com.wutsi.checkout.access.service
 
 import com.wutsi.checkout.access.dao.PaymentMethodRepository
 import com.wutsi.checkout.access.dto.CreatePaymentMethodRequest
-import com.wutsi.checkout.access.dto.PaymentMethod
-import com.wutsi.checkout.access.dto.PaymentMethodSummary
 import com.wutsi.checkout.access.dto.SearchPaymentMethodRequest
 import com.wutsi.checkout.access.dto.UpdatePaymentMethodStatusRequest
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
@@ -18,7 +16,6 @@ import com.wutsi.platform.core.error.exception.ConflictException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import java.time.ZoneOffset
 import java.util.Date
 import java.util.UUID
 
@@ -111,32 +108,6 @@ class PaymentMethodService(
         }
         dao.save(paymentMethod)
     }
-
-    fun toPaymentMethod(payment: PaymentMethodEntity) = PaymentMethod(
-        accountId = payment.accountId,
-        token = payment.token,
-        type = payment.type.name,
-        status = payment.status.name,
-        number = payment.number,
-        ownerName = payment.ownerName,
-        country = payment.country,
-        created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
-        updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
-        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
-        provider = paymentProviderService.toPaymentProviderSummary(payment.provider)
-    )
-
-    fun toPaymentMethodSummary(payment: PaymentMethodEntity) = PaymentMethodSummary(
-        accountId = payment.accountId,
-        token = payment.token,
-        type = payment.type.name,
-        status = payment.status.name,
-        number = payment.number,
-        created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
-        updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
-        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
-        provider = paymentProviderService.toPaymentProviderSummary(payment.provider)
-    )
 
     private fun hash(): String =
         UUID.randomUUID().toString().lowercase()

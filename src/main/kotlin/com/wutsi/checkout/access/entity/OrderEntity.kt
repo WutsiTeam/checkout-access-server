@@ -52,5 +52,11 @@ data class OrderEntity(
     val itemCount: Int = 0,
     val productPictureUrl1: String? = null,
     val productPictureUrl2: String? = null,
-    val productPictureUrl3: String? = null
-)
+    val productPictureUrl3: String? = null,
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    val transaactions: List<TransactionEntity> = emptyList()
+) {
+    fun getShortId(): String =
+        id?.takeLast(4)?.uppercase() ?: ""
+}

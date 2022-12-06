@@ -3,10 +3,7 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateChargeRequest
-import com.wutsi.checkout.access.dto.PaymentMethodSummary
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
-import com.wutsi.checkout.access.dto.Transaction
-import com.wutsi.checkout.access.dto.TransactionSummary
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.entity.TransactionEntity
 import com.wutsi.checkout.access.error.ErrorURN
@@ -30,7 +27,6 @@ import com.wutsi.platform.payment.model.CreateTransferRequest
 import com.wutsi.platform.payment.model.CreateTransferResponse
 import com.wutsi.platform.payment.model.Party
 import org.springframework.stereotype.Service
-import java.time.ZoneOffset
 import java.util.Date
 import java.util.Optional
 import java.util.UUID
@@ -262,59 +258,6 @@ class TransactionService(
         }
         return Optional.empty()
     }
-
-    fun toTransaction(tx: TransactionEntity) = Transaction(
-        id = tx.id ?: "",
-        financialTransactionId = tx.financialTransactionId,
-        amount = tx.amount,
-        business = businessService.toBusinessSummary(tx.business),
-        status = tx.status.name,
-        currency = tx.currency,
-        created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
-        updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
-        type = tx.type.name,
-        description = tx.description,
-        errorCode = tx.errorCode,
-        fees = tx.fees,
-        orderId = tx.order?.id,
-        gatewayFees = tx.gatewayFees,
-        supplierErrorCode = tx.supplierErrorCode,
-        net = tx.net,
-        gatewayTransactionId = tx.gatewayTransactionId,
-        customerId = tx.customerId,
-        gatewayType = tx.gatewayType.name,
-        email = tx.email,
-        paymentMethod = toPaymentMethodSummary(tx)
-    )
-
-    fun toTransactionSummary(tx: TransactionEntity) = TransactionSummary(
-        id = tx.id ?: "",
-        amount = tx.amount,
-        businessId = tx.business.id ?: -1,
-        status = tx.status.name,
-        currency = tx.currency,
-        created = tx.created.toInstant().atOffset(ZoneOffset.UTC),
-        updated = tx.updated.toInstant().atOffset(ZoneOffset.UTC),
-        type = tx.type.name,
-        description = tx.description,
-        fees = tx.fees,
-        orderId = tx.order?.id,
-        gatewayFees = tx.gatewayFees,
-        net = tx.net,
-        customerId = tx.customerId,
-        paymentMethod = toPaymentMethodSummary(tx)
-    )
-
-    private fun toPaymentMethodSummary(tx: TransactionEntity) = PaymentMethodSummary(
-        token = tx.paymentMethod?.token ?: "",
-        accountId = tx.paymentMethod?.accountId ?: -1,
-        status = tx.paymentMethod?.status?.name ?: "",
-
-        number = tx.paymentMethodNumber,
-        type = tx.paymentMethodType.name,
-        ownerName = tx.paymentMethodOwnerName,
-        provider = paymentProviderService.toPaymentProviderSummary(tx.paymentProvider)
-    )
 
     fun syncStatus(id: String): Status {
         val tx = findById(id)

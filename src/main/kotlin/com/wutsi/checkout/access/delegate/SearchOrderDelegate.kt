@@ -2,6 +2,7 @@ package com.wutsi.checkout.access.`delegate`
 
 import com.wutsi.checkout.access.dto.SearchOrderRequest
 import com.wutsi.checkout.access.dto.SearchOrderResponse
+import com.wutsi.checkout.access.service.Mapper
 import com.wutsi.checkout.access.service.OrderService
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Service
@@ -24,7 +25,7 @@ class SearchOrderDelegate(
         val orders = service.search(request)
         logger.add("response_count", orders.size)
         return SearchOrderResponse(
-            orders = orders.map { service.toOrderSummary(it) }
+            orders = orders.map { Mapper.toOrderSummary(it) }
         )
     }
 }

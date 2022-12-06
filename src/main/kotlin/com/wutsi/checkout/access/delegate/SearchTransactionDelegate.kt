@@ -2,6 +2,7 @@ package com.wutsi.checkout.access.`delegate`
 
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
 import com.wutsi.checkout.access.dto.SearchTransactionResponse
+import com.wutsi.checkout.access.service.Mapper
 import com.wutsi.checkout.access.service.TransactionService
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Service
@@ -24,7 +25,7 @@ class SearchTransactionDelegate(
         logger.add("response_count", txs.size)
 
         return SearchTransactionResponse(
-            transactions = txs.map { service.toTransactionSummary(it) }
+            transactions = txs.map { Mapper.toTransactionSummary(it) }
         )
     }
 }

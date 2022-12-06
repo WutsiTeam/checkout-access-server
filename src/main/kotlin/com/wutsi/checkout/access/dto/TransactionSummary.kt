@@ -10,7 +10,6 @@ public data class TransactionSummary(
     public val customerId: Long? = null,
     public val businessId: Long = 0,
     public val type: String = "",
-    public val description: String? = null,
     public val amount: Long = 0,
     public val fees: Long = 0,
     public val gatewayFees: Long = 0,

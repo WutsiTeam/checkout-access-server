@@ -7,7 +7,11 @@ import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.PaymentMethodStatus
+import com.wutsi.enums.PaymentMethodType
+import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.ErrorResponse
+import com.wutsi.platform.payment.core.Status
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
@@ -92,6 +96,28 @@ class GetOrderControllerTest {
         assertEquals(0L, order.items[1].totalDiscount)
         assertEquals(2000L, order.items[1].totalPrice)
         assertTrue(order.items[1].discounts.isEmpty())
+
+        assertEquals(1, order.transactions.size)
+
+        val tx = order.transactions[0]
+        assertEquals(1L, tx.businessId)
+        assertEquals(order.id, tx.orderId)
+        assertEquals(100, tx.customerId)
+        assertEquals(2100, tx.amount)
+        assertEquals(5L, tx.fees)
+        assertEquals(10L, tx.gatewayFees)
+        assertEquals(2095, tx.net)
+        assertEquals("XAF", tx.currency)
+        assertEquals(TransactionType.CHARGE.name, tx.type)
+        assertEquals(Status.SUCCESSFUL.name, tx.status)
+
+        assertEquals("token-200", tx.paymentMethod.token)
+        assertEquals(PaymentMethodType.MOBILE_MONEY.name, tx.paymentMethod.type)
+        assertEquals(PaymentMethodStatus.ACTIVE.name, tx.paymentMethod.status)
+        assertEquals("+237690000200", tx.paymentMethod.number)
+        assertEquals(200, tx.paymentMethod.accountId)
+        assertEquals("MTN", tx.paymentMethod.provider.name)
+        assertEquals("MTN", tx.paymentMethod.provider.code)
     }
 
     @Test

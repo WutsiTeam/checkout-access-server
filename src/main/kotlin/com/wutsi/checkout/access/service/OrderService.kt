@@ -8,10 +8,6 @@ import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateOrderDiscountRequest
 import com.wutsi.checkout.access.dto.CreateOrderItemRequest
 import com.wutsi.checkout.access.dto.CreateOrderRequest
-import com.wutsi.checkout.access.dto.Discount
-import com.wutsi.checkout.access.dto.Order
-import com.wutsi.checkout.access.dto.OrderItem
-import com.wutsi.checkout.access.dto.OrderSummary
 import com.wutsi.checkout.access.dto.SearchOrderRequest
 import com.wutsi.checkout.access.dto.UpdateOrderStatusRequest
 import com.wutsi.checkout.access.entity.BusinessEntity
@@ -34,7 +30,6 @@ import com.wutsi.platform.core.tracing.TracingContext
 import com.wutsi.platform.payment.core.Status
 import org.springframework.stereotype.Service
 import java.lang.Long.max
-import java.time.ZoneOffset
 import java.util.Date
 import java.util.UUID
 import javax.persistence.EntityManager
@@ -48,8 +43,7 @@ class OrderService(
     private val itemDiscountDao: OrderItemDiscountRepository,
     private val transactionDao: TransactionRepository,
     private val em: EntityManager,
-    private val tracingContext: TracingContext,
-    private val businessService: BusinessService
+    private val tracingContext: TracingContext
 ) {
     fun create(business: BusinessEntity, request: CreateOrderRequest): OrderEntity {
         // Order
@@ -148,56 +142,6 @@ class OrderService(
         dao.save(order)
     }
 
-    fun toOrder(order: OrderEntity) = Order(
-        id = order.id ?: "",
-        shortId = toShortId(order.id),
-        currency = order.currency,
-        customerEmail = order.customerEmail,
-        customerName = order.customerName,
-        customerId = order.customerId,
-        deviceId = order.deviceId,
-        deviceType = order.deviceType?.name,
-        channelType = order.channelType?.name,
-        notes = order.notes,
-        business = businessService.toBusinessSummary(order.business),
-        totalPrice = order.totalPrice,
-        totalPaid = order.totalPaid,
-        balance = max(0, order.totalPrice - order.totalPaid),
-        totalDiscount = order.totalDiscount,
-        subTotalPrice = order.subTotalPrice,
-        status = order.status.name,
-        created = order.created.toInstant().atOffset(ZoneOffset.UTC),
-        updated = order.updated.toInstant().atOffset(ZoneOffset.UTC),
-        cancelled = order.cancelled?.toInstant()?.atOffset(ZoneOffset.UTC),
-        closed = order.closed?.toInstant()?.atOffset(ZoneOffset.UTC),
-        expired = order.expired?.toInstant()?.atOffset(ZoneOffset.UTC),
-        expires = order.expires.toInstant().atOffset(ZoneOffset.UTC),
-        cancellationReason = order.cancellationReason,
-        items = order.items.map { toOrderItem(it) },
-        discounts = order.discounts.map { toOrderDiscount(order, it) },
-        itemCount = order.itemCount
-    )
-
-    fun toOrderSummary(order: OrderEntity) = OrderSummary(
-        id = order.id ?: "",
-        shortId = toShortId(order.id),
-        currency = order.currency,
-        customerEmail = order.customerEmail,
-        customerName = order.customerName,
-        customerId = order.customerId,
-        businessId = order.business.id ?: -1,
-        totalPrice = order.totalPrice,
-        balance = max(0, order.totalPrice - order.totalPaid),
-        status = order.status.name,
-        created = order.created.toInstant().atOffset(ZoneOffset.UTC),
-        itemCount = order.itemCount,
-        productPictureUrls = listOfNotNull(
-            order.productPictureUrl1,
-            order.productPictureUrl2,
-            order.productPictureUrl3
-        )
-    )
-
     fun search(request: SearchOrderRequest): List<OrderEntity> {
         val query = em.createQuery(sql(request))
         parameters(request, query)
@@ -264,38 +208,6 @@ class OrderService(
             query.setParameter("expires_to", Date.from(request.expiresTo.toInstant()))
         }
     }
-
-    private fun toOrderItem(item: OrderItemEntity) = OrderItem(
-        productId = item.productId,
-        title = item.title,
-        quantity = item.quantity,
-        pictureUrl = item.pictureUrl,
-        unitPrice = item.unitPrice,
-        totalPrice = item.totalPrice,
-        totalDiscount = item.totalDiscount,
-        subTotalPrice = item.subTotalPrice,
-        discounts = item.discounts.map { toOrderItemDiscount(item, it) }
-    )
-
-    private fun toOrderDiscount(order: OrderEntity, discount: OrderDiscountEntity) = Discount(
-        code = discount.code,
-        type = discount.type.name,
-        amount = discount.amount,
-        rate = toRate(discount.amount, order.subTotalPrice)
-    )
-
-    private fun toOrderItemDiscount(item: OrderItemEntity, discount: OrderItemDiscountEntity) = Discount(
-        code = discount.code,
-        type = discount.type.name,
-        amount = discount.amount,
-        rate = toRate(discount.amount, item.order.subTotalPrice)
-    )
-
-    private fun toRate(value: Long, total: Long): Int =
-        if (total == 0L) 0 else (100.0 * value / total).toInt()
-
-    private fun toShortId(id: String?): String =
-        id?.takeLast(4)?.uppercase() ?: ""
 
     private fun create(order: OrderEntity, request: CreateOrderDiscountRequest): OrderDiscountEntity =
         discountDao.save(
