@@ -12,11 +12,6 @@ public data class CreatePaymentMethodRequest(
     public val type: String = "",
     @get:NotBlank
     public val number: String = "",
-    @get:NotBlank
-    @get:Size(
-        min = 2,
-        max = 2
-    )
     public val country: String = "",
     @get:NotBlank
     @get:Size(max = 100)
