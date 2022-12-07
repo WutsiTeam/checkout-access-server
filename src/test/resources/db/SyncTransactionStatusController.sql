@@ -1,4 +1,4 @@
-INSERT INTO T_BUSINESS(id, account_id, status, suspended, balance, currency, country)
+INSERT INTO T_BUSINESS(id, account_id, status, deactivated,balance, currency, country)
     VALUES
         (1, 1, 2, null, 120000, 'XAF', 'CM'),
         (2, 1, 2, null, 120000, 'EUR', 'FR'),

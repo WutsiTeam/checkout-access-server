@@ -29,15 +29,15 @@ public class UpdateBusinessStatusControllerTest {
     @Test
     fun suspended() {
         val request = UpdateOrderStatusRequest(
-            status = BusinessStatus.SUSPENDED.name
+            status = BusinessStatus.INACTIVE.name
         )
         val response = rest.postForEntity(url(100), request, Any::class.java)
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val businessEntity = dao.findById(100).get()
-        assertEquals(BusinessStatus.SUSPENDED, businessEntity.status)
-        assertNotNull(businessEntity.suspended)
+        assertEquals(BusinessStatus.INACTIVE, businessEntity.status)
+        assertNotNull(businessEntity.deactivated)
     }
 
     @Test
@@ -72,16 +72,16 @@ public class UpdateBusinessStatusControllerTest {
 
         Thread.sleep(1000)
         val request = UpdateOrderStatusRequest(
-            status = BusinessStatus.SUSPENDED.name
+            status = BusinessStatus.INACTIVE.name
         )
         val response = rest.postForEntity(url(300), request, Any::class.java)
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val businessEntity = dao.findById(300).get()
-        assertEquals(BusinessStatus.SUSPENDED, businessEntity.status)
+        assertEquals(BusinessStatus.INACTIVE, businessEntity.status)
         assertTrue(businessEntity.updated.before(Date(now)))
-        assertTrue(businessEntity.suspended?.before(Date(now)) == true)
+        assertTrue(businessEntity.deactivated?.before(Date(now)) == true)
     }
 
     private fun url(id: Long) = "http://localhost:$port/v1/businesses/$id/status"

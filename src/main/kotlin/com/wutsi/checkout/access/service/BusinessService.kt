@@ -20,7 +20,7 @@ class BusinessService(
     private val dao: BusinessRepository
 ) {
     fun create(request: CreateBusinessRequest): BusinessEntity {
-        val businesses = dao.findByAccountIdAndStatusNot(request.accountId, BusinessStatus.SUSPENDED)
+        val businesses = dao.findByAccountIdAndStatusNot(request.accountId, BusinessStatus.INACTIVE)
         if (businesses.isNotEmpty()) {
             return businesses[0]
         }
@@ -46,9 +46,9 @@ class BusinessService(
         business.status = status
         business.updated = Date()
         when (status) {
-            BusinessStatus.SUSPENDED -> business.suspended = Date()
-            BusinessStatus.UNDER_REVIEW -> business.suspended = null
-            BusinessStatus.ACTIVE -> business.suspended = null
+            BusinessStatus.INACTIVE -> business.deactivated = Date()
+            BusinessStatus.UNDER_REVIEW -> business.deactivated = null
+            BusinessStatus.ACTIVE -> business.deactivated = null
             else -> throw BadRequestException(
                 error = Error(
                     code = ErrorURN.STATUS_NOT_VALID.urn,

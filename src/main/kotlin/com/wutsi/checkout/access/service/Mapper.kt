@@ -33,7 +33,7 @@ object Mapper {
         country = business.country,
         created = business.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = business.updated.toInstant().atOffset(ZoneOffset.UTC),
-        suspended = business.suspended?.toInstant()?.atOffset(ZoneOffset.UTC)
+        deactivated = business.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC)
     )
 
     fun toBusinessSummary(business: BusinessEntity) = BusinessSummary(
@@ -42,7 +42,8 @@ object Mapper {
         status = business.status.name,
         balance = business.balance,
         currency = business.currency,
-        country = business.country
+        country = business.country,
+        created = business.created.toInstant().atOffset(ZoneOffset.UTC)
     )
 
     fun toOrder(order: OrderEntity) = Order(
@@ -206,8 +207,6 @@ object Mapper {
         status = payment.status.name,
         number = payment.number,
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
-        updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
-        deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
         provider = toPaymentProviderSummary(payment.provider)
     )
 }
