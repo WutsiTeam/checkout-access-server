@@ -29,14 +29,14 @@ class UpdateOrderStatusControllerTest {
     @Test
     fun close() {
         val request = UpdateOrderStatusRequest(
-            status = OrderStatus.CLOSED.name
+            status = OrderStatus.COMPLETED.name
         )
         val response = rest.postForEntity(url("100"), request, Any::class.java)
 
         assertEquals(HttpStatus.OK, response.statusCode)
 
         val order = dao.findById("100").get()
-        assertEquals(OrderStatus.CLOSED, order.status)
+        assertEquals(OrderStatus.COMPLETED, order.status)
         assertNotNull(order.closed)
     }
 

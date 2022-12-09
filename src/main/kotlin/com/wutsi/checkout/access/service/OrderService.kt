@@ -98,9 +98,9 @@ class OrderService(
         order.status = status
         order.updated = Date()
         when (status) {
-            OrderStatus.CLOSED -> order.closed = Date()
+            OrderStatus.COMPLETED -> order.closed = Date()
             OrderStatus.EXPIRED -> order.expired = Date()
-
+            OrderStatus.IN_PROGRESS -> {}
             OrderStatus.CANCELLED -> {
                 order.cancelled = Date()
                 order.cancellationReason = request.reason

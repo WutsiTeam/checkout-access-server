@@ -51,7 +51,7 @@ class GetOrderControllerTest {
         assertEquals("0000-1111", order.deviceId)
         assertEquals(DeviceType.MOBILE.name, order.deviceType)
         assertEquals(ChannelType.EMAIL.name, order.channelType)
-        assertEquals(OrderStatus.CLOSED.name, order.status)
+        assertEquals(OrderStatus.COMPLETED.name, order.status)
         assertEquals(5000L, order.subTotalPrice)
         assertEquals(1000, order.totalDiscount)
         assertEquals(4000L, order.totalPrice)
