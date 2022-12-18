@@ -99,6 +99,7 @@ object Mapper {
 
     private fun toOrderItem(item: OrderItemEntity) = OrderItem(
         productId = item.productId,
+        productType = item.productType.name,
         title = item.title,
         quantity = item.quantity,
         pictureUrl = item.pictureUrl,

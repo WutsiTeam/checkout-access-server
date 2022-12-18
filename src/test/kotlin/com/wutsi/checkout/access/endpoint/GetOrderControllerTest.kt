@@ -9,6 +9,7 @@ import com.wutsi.enums.DiscountType
 import com.wutsi.enums.OrderStatus
 import com.wutsi.enums.PaymentMethodStatus
 import com.wutsi.enums.PaymentMethodType
+import com.wutsi.enums.ProductType
 import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.ErrorResponse
 import com.wutsi.platform.payment.core.Status
@@ -72,6 +73,7 @@ class GetOrderControllerTest {
 
         assertEquals(2, order.items.size)
         assertEquals(555L, order.items[0].productId)
+        assertEquals(ProductType.PHYSICAL_PRODUCT.name, order.items[0].productType)
         assertEquals(2, order.items[0].quantity)
         assertEquals(1500L, order.items[0].unitPrice)
         assertEquals(3000L, order.items[0].subTotalPrice)
@@ -90,6 +92,7 @@ class GetOrderControllerTest {
         assertEquals(DiscountType.DYNAMIC.name, order.items[0].discounts[1].type)
 
         assertEquals(666L, order.items[1].productId)
+        assertEquals(ProductType.EVENT.name, order.items[1].productType)
         assertEquals(1, order.items[1].quantity)
         assertEquals(2000L, order.items[1].unitPrice)
         assertEquals(2000L, order.items[1].subTotalPrice)

@@ -20,6 +20,7 @@ import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.ProductType
 import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
@@ -226,6 +227,7 @@ class OrderService(
             OrderItemEntity(
                 order = order,
                 productId = request.productId,
+                productType = ProductType.valueOf(request.productType),
                 title = request.title,
                 quantity = request.quantity,
                 unitPrice = request.unitPrice,

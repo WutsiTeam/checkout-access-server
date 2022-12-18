@@ -14,6 +14,7 @@ import com.wutsi.enums.ChannelType
 import com.wutsi.enums.DeviceType
 import com.wutsi.enums.DiscountType
 import com.wutsi.enums.OrderStatus
+import com.wutsi.enums.ProductType
 import com.wutsi.platform.core.tracing.TracingContext
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -82,6 +83,7 @@ class CreateOrderControllerTest {
             items = listOf(
                 CreateOrderItemRequest(
                     productId = 111,
+                    productType = ProductType.DIGITAL_DOWNLOAD.name,
                     unitPrice = 15000,
                     title = "Chemise",
                     pictureUrl = "https://www.img.1/111.png",
@@ -89,6 +91,7 @@ class CreateOrderControllerTest {
                 ),
                 CreateOrderItemRequest(
                     productId = 222,
+                    productType = ProductType.EVENT.name,
                     unitPrice = 10000,
                     title = "Chemise",
                     pictureUrl = "https://www.img.1/222.png",
@@ -143,6 +146,7 @@ class CreateOrderControllerTest {
 
         assertEquals(request.items[0].quantity, items[0].quantity)
         assertEquals(request.items[0].productId, items[0].productId)
+        assertEquals(request.items[0].productType, items[0].productType.name)
         assertEquals(request.items[0].unitPrice, items[0].unitPrice)
         assertEquals(request.items[0].title, items[0].title)
         assertEquals(request.items[0].pictureUrl, items[0].pictureUrl)
@@ -152,6 +156,7 @@ class CreateOrderControllerTest {
 
         assertEquals(request.items[1].quantity, items[1].quantity)
         assertEquals(request.items[1].productId, items[1].productId)
+        assertEquals(request.items[1].productType, items[1].productType.name)
         assertEquals(request.items[1].unitPrice, items[1].unitPrice)
         assertEquals(request.items[1].title, items[1].title)
         assertEquals(request.items[1].pictureUrl, items[1].pictureUrl)
@@ -179,6 +184,7 @@ class CreateOrderControllerTest {
             items = listOf(
                 CreateOrderItemRequest(
                     productId = 111,
+                    productType = ProductType.PHYSICAL_PRODUCT.name,
                     unitPrice = 0,
                     title = "Chemise",
                     pictureUrl = "https://www.img.1/111.png",
@@ -219,6 +225,7 @@ class CreateOrderControllerTest {
 
         assertEquals(request.items[0].quantity, items[0].quantity)
         assertEquals(request.items[0].productId, items[0].productId)
+        assertEquals(request.items[0].productType, items[0].productType.name)
         assertEquals(request.items[0].unitPrice, items[0].unitPrice)
         assertEquals(request.items[0].title, items[0].title)
         assertEquals(request.items[0].pictureUrl, items[0].pictureUrl)

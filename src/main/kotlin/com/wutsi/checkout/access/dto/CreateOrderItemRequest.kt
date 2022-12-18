@@ -11,6 +11,8 @@ import kotlin.collections.List
 public data class CreateOrderItemRequest(
     public val productId: Long = 0,
     @get:NotBlank
+    public val productType: String = "",
+    @get:NotBlank
     @get:Size(max = 100)
     public val title: String = "",
     public val quantity: Int = 0,
