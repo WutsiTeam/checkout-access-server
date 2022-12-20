@@ -15,13 +15,13 @@ interface PaymentMethodRepository : CrudRepository<PaymentMethodEntity, Long> {
     fun findByTypeAndNumberAndStatus(
         type: PaymentMethodType,
         number: String,
-        status: PaymentMethodStatus
+        status: PaymentMethodStatus,
     ): List<PaymentMethodEntity>
 
     fun findByAccountId(accountId: Long, pagination: Pageable): List<PaymentMethodEntity>
     fun findByAccountIdAndStatus(
         accountId: Long,
         status: PaymentMethodStatus,
-        pagination: Pageable
+        pagination: Pageable,
     ): List<PaymentMethodEntity>
 }

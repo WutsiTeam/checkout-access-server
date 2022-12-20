@@ -17,7 +17,7 @@ import java.util.Date
 
 @Service
 class BusinessService(
-    private val dao: BusinessRepository
+    private val dao: BusinessRepository,
 ) {
     fun create(request: CreateBusinessRequest): BusinessEntity {
         val businesses = dao.findByAccountIdAndStatusNot(request.accountId, BusinessStatus.INACTIVE)
@@ -31,8 +31,8 @@ class BusinessService(
                 status = BusinessStatus.ACTIVE,
                 currency = request.currency,
                 country = request.country,
-                balance = 0
-            )
+                balance = 0,
+            ),
         )
     }
 
@@ -55,9 +55,9 @@ class BusinessService(
                     parameter = Parameter(
                         name = "status",
                         value = request.status,
-                        type = ParameterType.PARAMETER_TYPE_PAYLOAD
-                    )
-                )
+                        type = ParameterType.PARAMETER_TYPE_PAYLOAD,
+                    ),
+                ),
             )
         }
         dao.save(business)
@@ -72,9 +72,9 @@ class BusinessService(
                         parameter = Parameter(
                             name = "id",
                             value = id,
-                            type = ParameterType.PARAMETER_TYPE_PATH
-                        )
-                    )
+                            type = ParameterType.PARAMETER_TYPE_PATH,
+                        ),
+                    ),
                 )
             }
 

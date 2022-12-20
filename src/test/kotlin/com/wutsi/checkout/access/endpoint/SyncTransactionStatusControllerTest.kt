@@ -66,7 +66,7 @@ class SyncTransactionStatusControllerTest {
         val paymentResponse = GetPaymentResponse(
             financialTransactionId = "320320",
             status = Status.SUCCESSFUL,
-            fees = Money(100.0, "XAF")
+            fees = Money(100.0, "XAF"),
         )
         doReturn(paymentResponse).whenever(gateway).getPayment(any())
 
@@ -99,7 +99,7 @@ class SyncTransactionStatusControllerTest {
         // GIVEN
         val now = Date()
         val paymentResponse = GetPaymentResponse(
-            status = Status.PENDING
+            status = Status.PENDING,
         )
         doReturn(paymentResponse).whenever(gateway).getPayment(any())
 
@@ -128,8 +128,8 @@ class SyncTransactionStatusControllerTest {
                 code = ErrorCode.DECLINED,
                 transactionId = "13203209",
                 supplierErrorCode = "1111",
-                errorId = "111112"
-            )
+                errorId = "111112",
+            ),
         )
         doThrow(ex).whenever(gateway).getPayment(any())
 
@@ -164,7 +164,7 @@ class SyncTransactionStatusControllerTest {
         val paymentResponse = GetPaymentResponse(
             financialTransactionId = "320320",
             status = Status.SUCCESSFUL,
-            fees = Money(100.0, "XAF")
+            fees = Money(100.0, "XAF"),
         )
         doReturn(paymentResponse).whenever(gateway).getPayment(any())
 
@@ -191,7 +191,7 @@ class SyncTransactionStatusControllerTest {
         val paymentResponse = GetTransferResponse(
             financialTransactionId = "320320",
             status = Status.SUCCESSFUL,
-            fees = Money(100.0, "XAF")
+            fees = Money(100.0, "XAF"),
         )
         doReturn(paymentResponse).whenever(gateway).getTransfer(any())
 
@@ -227,8 +227,8 @@ class SyncTransactionStatusControllerTest {
                 code = ErrorCode.DECLINED,
                 transactionId = "13203209",
                 supplierErrorCode = "1111",
-                errorId = "111112"
-            )
+                errorId = "111112",
+            ),
         )
         doThrow(ex).whenever(gateway).getTransfer(any())
 

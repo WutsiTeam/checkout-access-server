@@ -28,5 +28,5 @@ public data class CreateOrderRequest(
     @get:NotNull
     @get:NotEmpty
     public val items: List<CreateOrderItemRequest> = emptyList(),
-    public val discounts: List<CreateOrderDiscountRequest> = emptyList()
+    public val discounts: List<CreateOrderDiscountRequest> = emptyList(),
 )

@@ -19,5 +19,5 @@ public data class PaymentMethod(
     public val updated: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val deactivated: OffsetDateTime? = null,
-    public val provider: PaymentProviderSummary = PaymentProviderSummary()
+    public val provider: PaymentProviderSummary = PaymentProviderSummary(),
 )

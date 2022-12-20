@@ -16,7 +16,7 @@ data class TransactionFee(
     var transactionType: String = "",
     var paymentMethodType: String = "",
     var percent: Int = 0,
-    var amount: Long = 0
+    var amount: Long = 0,
 )
 
 @Service
@@ -39,7 +39,7 @@ class FeesCalculator {
         transactionType: TransactionType,
         paymentMethodType: PaymentMethodType,
         country: String,
-        amount: Long
+        amount: Long,
     ): Long {
         val fee: TransactionFee = transactionFees.find {
             it.transactionType == transactionType.name &&
@@ -48,8 +48,8 @@ class FeesCalculator {
         }
             ?: throw TransactionException(
                 error = Error(
-                    code = ErrorURN.FEES_NOT_FOUND.urn
-                )
+                    code = ErrorURN.FEES_NOT_FOUND.urn,
+                ),
             )
 
         val value = amount * fee.percent.toDouble() / 100.0 + fee.amount

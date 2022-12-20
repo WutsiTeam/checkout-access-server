@@ -33,5 +33,5 @@ data class OrderItemEntity(
     val order: OrderEntity = OrderEntity(),
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderItem")
-    val discounts: List<OrderItemDiscountEntity> = emptyList()
+    val discounts: List<OrderItemDiscountEntity> = emptyList(),
 )

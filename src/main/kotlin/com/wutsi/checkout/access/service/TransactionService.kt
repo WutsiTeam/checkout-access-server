@@ -43,7 +43,7 @@ class TransactionService(
     private val orderService: OrderService,
     private val calculator: FeesCalculator,
     private val em: EntityManager,
-    private val tracingContext: TracingContext
+    private val tracingContext: TracingContext,
 ) {
     fun charge(request: CreateChargeRequest): TransactionEntity =
         findByIdempotencyKey(request.idempotencyKey)
@@ -60,7 +60,7 @@ class TransactionService(
         }
 
         val gateway = gatewayProvider.get(
-            paymentMethod?.type ?: PaymentMethodType.valueOf(request.paymentMethodType!!)
+            paymentMethod?.type ?: PaymentMethodType.valueOf(request.paymentMethodType!!),
         )
         val order = orderService.findById(request.orderId)
         val paymentMethodNumber = paymentMethod?.number ?: request.paymenMethodNumber!!
@@ -88,8 +88,8 @@ class TransactionService(
                 paymentMethodOwnerName = paymentMethod?.ownerName ?: request.paymentMethodOwnerName!!,
                 paymentProvider = paymentMethod?.provider
                     ?: paymentProviderService.findById(request.paymentProviderId!!),
-                email = request.email
-            )
+                email = request.email,
+            ),
         )
 
         // Charge the customer
@@ -100,14 +100,14 @@ class TransactionService(
                         fullName = tx.paymentMethodOwnerName,
                         phoneNumber = tx.paymentMethodNumber,
                         email = request.email,
-                        country = tx.paymentMethodCountry
+                        country = tx.paymentMethodCountry,
                     ),
                     amount = Money(tx.amount.toDouble(), tx.currency),
                     externalId = tx.id!!,
                     description = request.description ?: "",
                     deviceId = tracingContext.deviceId(),
-                    payerMessage = ""
-                )
+                    payerMessage = "",
+                ),
             )
             if (response.status == Status.SUCCESSFUL) {
                 onSuccess(tx, response)
@@ -121,9 +121,9 @@ class TransactionService(
                     code = ErrorURN.TRANSACTION_FAILED.urn,
                     downstreamCode = ex.error.code.name,
                     data = mapOf(
-                        "transaction-id" to tx.id!!
-                    )
-                )
+                        "transaction-id" to tx.id!!,
+                    ),
+                ),
             )
         }
 
@@ -152,8 +152,8 @@ class TransactionService(
 
     private fun badRequest(error: ErrorURN) = BadRequestException(
         error = Error(
-            code = error.urn
-        )
+            code = error.urn,
+        ),
     )
 
     fun cashout(request: CreateCashoutRequest): TransactionEntity =
@@ -188,8 +188,8 @@ class TransactionService(
                 paymentMethodType = paymentMethod.type,
                 paymentMethodOwnerName = paymentMethod.ownerName,
                 paymentProvider = paymentMethod.provider,
-                email = request.email
-            )
+                email = request.email,
+            ),
         )
 
         // Remove the money from the business wallet
@@ -208,8 +208,8 @@ class TransactionService(
                     amount = Money(tx.amount.toDouble(), tx.currency),
                     externalId = tx.id!!,
                     description = request.description ?: "",
-                    payerMessage = ""
-                )
+                    payerMessage = "",
+                ),
             )
             if (response.status == Status.SUCCESSFUL) {
                 onSuccess(tx, response)
@@ -233,9 +233,9 @@ class TransactionService(
                         parameter = Parameter(
                             name = "id",
                             value = id,
-                            type = ParameterType.PARAMETER_TYPE_PATH
-                        )
-                    )
+                            type = ParameterType.PARAMETER_TYPE_PATH,
+                        ),
+                    ),
                 )
             }
 
@@ -249,9 +249,9 @@ class TransactionService(
                         code = ErrorURN.TRANSACTION_FAILED.urn,
                         downstreamCode = tx.errorCode,
                         data = mapOf(
-                            "transaction-id" to (tx.id ?: "")
-                        )
-                    )
+                            "transaction-id" to (tx.id ?: ""),
+                        ),
+                    ),
                 )
             }
             return Optional.of(tx)
@@ -282,8 +282,8 @@ class TransactionService(
                         transactionId = tx.gatewayTransactionId!!,
                         financialTransactionId = response.financialTransactionId,
                         status = response.status,
-                        fees = response.fees
-                    )
+                        fees = response.fees,
+                    ),
                 )
             }
             return response.status
@@ -294,9 +294,9 @@ class TransactionService(
                     code = ErrorURN.TRANSACTION_FAILED.urn,
                     downstreamCode = ex.error.code.name,
                     data = mapOf(
-                        "transaction-id" to tx.id!!
-                    )
-                )
+                        "transaction-id" to tx.id!!,
+                    ),
+                ),
             )
         }
     }
@@ -312,8 +312,8 @@ class TransactionService(
                         transactionId = tx.gatewayTransactionId!!,
                         financialTransactionId = response.financialTransactionId,
                         status = response.status,
-                        fees = response.fees
-                    )
+                        fees = response.fees,
+                    ),
                 )
             }
             return response.status
@@ -324,9 +324,9 @@ class TransactionService(
                     code = ErrorURN.TRANSACTION_FAILED.urn,
                     downstreamCode = ex.error.code.name,
                     data = mapOf(
-                        "transaction-id" to tx.id!!
-                    )
-                )
+                        "transaction-id" to tx.id!!,
+                    ),
+                ),
             )
         }
     }
@@ -397,7 +397,7 @@ class TransactionService(
         fullName = paymentMethod.ownerName,
         country = paymentMethod.country,
         phoneNumber = paymentMethod.number,
-        email = email
+        email = email,
     )
 
     private fun onSuccess(tx: TransactionEntity, response: CreatePaymentResponse) {
@@ -491,9 +491,9 @@ class TransactionService(
                 code = ErrorURN.TRANSACTION_FAILED.urn,
                 downstreamCode = downstreamError.name,
                 data = mapOf(
-                    "transaction-id" to tx.id!!
-                )
+                    "transaction-id" to tx.id!!,
+                ),
             ),
-            cause
+            cause,
         )
 }

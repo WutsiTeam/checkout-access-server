@@ -41,7 +41,7 @@ class CreatePaymentMethodControllerTest {
             number = "+237670000111",
             country = "CM",
             ownerName = "RAY SPONSIBLE",
-            accountId = 111
+            accountId = 111,
         )
         val response = rest.postForEntity(url(), request, CreatePaymentMethodResponse::class.java)
 
@@ -70,7 +70,7 @@ class CreatePaymentMethodControllerTest {
             number = "+237690000300",
             country = "CM",
             ownerName = "RAY SPONSIBLE",
-            accountId = 300
+            accountId = 300,
         )
         val response = rest.postForEntity(url(), request, CreatePaymentMethodResponse::class.java)
 
@@ -88,7 +88,7 @@ class CreatePaymentMethodControllerTest {
             number = "+237690000200",
             country = "CM",
             ownerName = "RAY SPONSIBLE",
-            accountId = 200
+            accountId = 200,
         )
         val response = rest.postForEntity(url(), request, CreatePaymentMethodResponse::class.java)
 
@@ -117,7 +117,7 @@ class CreatePaymentMethodControllerTest {
             providerId = 1000,
             country = "CM",
             ownerName = "RAY SPONSIBLE",
-            accountId = 3333
+            accountId = 3333,
         )
         val ex = assertThrows<HttpClientErrorException> {
             rest.postForEntity(url(), request, CreatePaymentMethodResponse::class.java)

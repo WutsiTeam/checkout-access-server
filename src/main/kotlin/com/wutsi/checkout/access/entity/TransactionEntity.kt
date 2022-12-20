@@ -58,5 +58,5 @@ data class TransactionEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_provider_fk")
-    val paymentProvider: PaymentProviderEntity = PaymentProviderEntity()
+    val paymentProvider: PaymentProviderEntity = PaymentProviderEntity(),
 )

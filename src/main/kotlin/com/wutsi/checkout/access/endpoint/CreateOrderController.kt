@@ -10,9 +10,12 @@ import javax.validation.Valid
 
 @RestController
 public class CreateOrderController(
-    public val `delegate`: CreateOrderDelegate
+    public val `delegate`: CreateOrderDelegate,
 ) {
     @PostMapping("/v1/orders")
-    public fun invoke(@Valid @RequestBody request: CreateOrderRequest): CreateOrderResponse =
+    public fun invoke(
+        @Valid @RequestBody
+        request: CreateOrderRequest,
+    ): CreateOrderResponse =
         delegate.invoke(request)
 }

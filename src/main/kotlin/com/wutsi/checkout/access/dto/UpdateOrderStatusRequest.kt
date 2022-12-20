@@ -4,5 +4,5 @@ import kotlin.String
 
 public data class UpdateOrderStatusRequest(
     public val status: String = "",
-    public val reason: String? = null
+    public val reason: String? = null,
 )

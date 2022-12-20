@@ -21,7 +21,7 @@ class SearchPaymentProviderControllerTest {
     fun byCountryType() {
         val request = SearchPaymentProviderRequest(
             country = "CM",
-            type = PaymentMethodType.MOBILE_MONEY.name
+            type = PaymentMethodType.MOBILE_MONEY.name,
         )
         val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
 
@@ -39,7 +39,7 @@ class SearchPaymentProviderControllerTest {
         val request = SearchPaymentProviderRequest(
             country = "CM",
             type = PaymentMethodType.MOBILE_MONEY.name,
-            number = "+237690000010"
+            number = "+237690000010",
         )
         val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
 
@@ -56,7 +56,7 @@ class SearchPaymentProviderControllerTest {
         val request = SearchPaymentProviderRequest(
             type = PaymentMethodType.MOBILE_MONEY.name,
             number = "+237690000010",
-            country = ""
+            country = "",
         )
         val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
 
@@ -73,7 +73,7 @@ class SearchPaymentProviderControllerTest {
         val request = SearchPaymentProviderRequest(
             country = "CM",
             type = PaymentMethodType.MOBILE_MONEY.name,
-            number = "+000690000010"
+            number = "+000690000010",
         )
         val response = rest.postForEntity(url(), request, SearchPaymentProviderResponse::class.java)
 

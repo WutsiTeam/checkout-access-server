@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
 import com.wutsi.checkout.access.dto.SearchTransactionResponse
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class SearchTransactionDelegate(
     private val service: TransactionService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     fun invoke(request: SearchTransactionRequest): SearchTransactionResponse {
         logger.add("request_business_id", request.businessId)
@@ -25,7 +25,7 @@ class SearchTransactionDelegate(
         logger.add("response_count", txs.size)
 
         return SearchTransactionResponse(
-            transactions = txs.map { Mapper.toTransactionSummary(it) }
+            transactions = txs.map { Mapper.toTransactionSummary(it) },
         )
     }
 }

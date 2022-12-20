@@ -10,13 +10,13 @@ public data class CreateBusinessRequest(
     @get:NotBlank
     @get:Size(
         min = 2,
-        max = 2
+        max = 2,
     )
     public val country: String = "",
     @get:NotBlank
     @get:Size(
         min = 3,
-        max = 3
+        max = 3,
     )
-    public val currency: String = ""
+    public val currency: String = "",
 )

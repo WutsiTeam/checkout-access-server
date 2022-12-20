@@ -23,5 +23,5 @@ data class OrderDiscountEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_fk")
-    val order: OrderEntity = OrderEntity()
+    val order: OrderEntity = OrderEntity(),
 )

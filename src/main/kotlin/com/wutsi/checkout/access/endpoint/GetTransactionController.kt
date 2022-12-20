@@ -9,7 +9,7 @@ import kotlin.String
 
 @RestController
 public class GetTransactionController(
-    public val `delegate`: GetTransactionDelegate
+    public val `delegate`: GetTransactionDelegate,
 ) {
     @GetMapping("/v1/transactions/{id}")
     public fun invoke(@PathVariable(name = "id") id: String): GetTransactionResponse =

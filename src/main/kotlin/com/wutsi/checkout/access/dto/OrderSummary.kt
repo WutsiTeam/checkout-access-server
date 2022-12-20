@@ -21,5 +21,5 @@ public data class OrderSummary(
     public val customerName: String = "",
     public val customerEmail: String = "",
     public val itemCount: Int = 0,
-    public val productPictureUrls: List<String> = emptyList()
+    public val productPictureUrls: List<String> = emptyList(),
 )

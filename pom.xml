@@ -26,15 +26,15 @@
 
     <javax-validation.version>2.0.1.Final</javax-validation.version>
     <junit.version>5.9.0</junit.version>
-    <kotlin.version>1.7.10</kotlin.version>
+    <kotlin.version>1.7.22</kotlin.version>
     <kotlin-mockito.version>2.2.0</kotlin-mockito.version>
-    <klint.version>0.47.1</klint.version>
+    <klint.version>0.48.0</klint.version>
     <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
     <hikari-cp.version>5.0.1</hikari-cp.version>
     <mysql.version>8.0.31</mysql.version>
     <flyway.version>9.3.0</flyway.version>
 
-    <wutsi-platform-core.version>0.0.191</wutsi-platform-core.version>
+    <wutsi-platform-core.version>0.0.195</wutsi-platform-core.version>
     <wutsi-platform-payment.version>0.0.105</wutsi-platform-payment.version>
     <wutsi-enums.version>1.0.19</wutsi-enums.version>
   </properties>

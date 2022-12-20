@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.SyncTransactionStatusResponse
 import com.wutsi.checkout.access.error.TransactionException
@@ -13,7 +13,7 @@ class SyncTransactionStatusDelegate(private val service: TransactionService) {
         val status = service.syncStatus(id)
         return SyncTransactionStatusResponse(
             transactionId = id,
-            status = status.name
+            status = status.name,
         )
     }
 }

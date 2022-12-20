@@ -30,7 +30,7 @@ class CreateBusinessControllerTest {
         val request = CreateBusinessRequest(
             accountId = 100,
             currency = "XAF",
-            country = "CM"
+            country = "CM",
         )
         val response = rest.postForEntity(url(), request, CreateBusinessResponse::class.java)
 
@@ -50,7 +50,7 @@ class CreateBusinessControllerTest {
         val request = CreateBusinessRequest(
             accountId = 200,
             currency = "XAF",
-            country = "CM"
+            country = "CM",
         )
         val response = rest.postForEntity(url(), request, CreateBusinessResponse::class.java)
 

@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.UpdatePaymentMethodStatusRequest
 import com.wutsi.checkout.access.service.PaymentMethodService
@@ -9,7 +9,7 @@ import javax.transaction.Transactional
 @Service
 class UpdatePaymentMethodStatusDelegate(
     private val service: PaymentMethodService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     @Transactional
     fun invoke(token: String, request: UpdatePaymentMethodStatusRequest) {

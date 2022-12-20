@@ -16,7 +16,7 @@ import javax.persistence.Query
 @Service
 class PaymentProviderService(
     private val dao: PaymentProviderRepository,
-    private val em: EntityManager
+    private val em: EntityManager,
 ) {
     fun findById(id: Long): PaymentProviderEntity =
         dao.findById(id)
@@ -25,9 +25,9 @@ class PaymentProviderService(
                     error = Error(
                         code = ErrorURN.PAYMENT_PROVIDER_NOT_FOUND.urn,
                         parameter = Parameter(
-                            value = id
-                        )
-                    )
+                            value = id,
+                        ),
+                    ),
                 )
             }
 

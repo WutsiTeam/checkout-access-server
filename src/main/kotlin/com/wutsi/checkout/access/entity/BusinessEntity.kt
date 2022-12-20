@@ -23,5 +23,5 @@ data class BusinessEntity(
 
     val created: Date = Date(),
     var updated: Date = Date(),
-    var deactivated: Date? = null
+    var deactivated: Date? = null,
 )

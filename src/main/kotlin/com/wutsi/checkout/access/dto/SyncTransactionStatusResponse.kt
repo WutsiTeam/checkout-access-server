@@ -4,5 +4,5 @@ import kotlin.String
 
 public data class SyncTransactionStatusResponse(
     public val transactionId: String = "",
-    public val status: String = ""
+    public val status: String = "",
 )

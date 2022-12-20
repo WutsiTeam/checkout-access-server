@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.CreateChargeRequest
 import com.wutsi.checkout.access.dto.CreateChargeResponse
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 public class CreateChargeDelegate(
     private val service: TransactionService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     @Transactional(noRollbackFor = [TransactionException::class])
     public fun invoke(request: CreateChargeRequest): CreateChargeResponse {
@@ -29,7 +29,7 @@ public class CreateChargeDelegate(
 
         return CreateChargeResponse(
             transactionId = tx.id ?: "",
-            status = tx.status.name
+            status = tx.status.name,
         )
     }
 }

@@ -22,7 +22,7 @@ class SearchPaymentMethodControllerTest {
     @Test
     fun byAccount() {
         val request = SearchPaymentMethodRequest(
-            accountId = 300L
+            accountId = 300L,
         )
         val response = rest.postForEntity(url(), request, SearchPaymentMethodResponse::class.java)
 
@@ -37,7 +37,7 @@ class SearchPaymentMethodControllerTest {
     fun byStatus() {
         val request = SearchPaymentMethodRequest(
             accountId = 300L,
-            status = PaymentMethodStatus.ACTIVE.name
+            status = PaymentMethodStatus.ACTIVE.name,
         )
         val response = rest.postForEntity(url(), request, SearchPaymentMethodResponse::class.java)
 

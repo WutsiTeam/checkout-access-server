@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.CreateOrderRequest
 import com.wutsi.checkout.access.dto.CreateOrderResponse
@@ -12,7 +12,7 @@ import javax.transaction.Transactional
 class CreateOrderDelegate(
     private val service: OrderService,
     private val businessService: BusinessService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     @Transactional
     fun invoke(request: CreateOrderRequest): CreateOrderResponse {
@@ -30,7 +30,7 @@ class CreateOrderDelegate(
 
         return CreateOrderResponse(
             orderId = order.id ?: "",
-            orderStatus = order.status.name
+            orderStatus = order.status.name,
         )
     }
 }

@@ -9,7 +9,7 @@ import kotlin.String
 
 @RestController
 public class SyncTransactionStatusController(
-    public val `delegate`: SyncTransactionStatusDelegate
+    public val `delegate`: SyncTransactionStatusDelegate,
 ) {
     @GetMapping("/v1/transactions/{id}/status/sync")
     public fun invoke(@PathVariable(name = "id") id: String): SyncTransactionStatusResponse =

@@ -21,5 +21,5 @@ public data class TransactionSummary(
     public val created: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val updated: OffsetDateTime = OffsetDateTime.now(),
-    public val paymentMethod: PaymentMethodSummary = PaymentMethodSummary()
+    public val paymentMethod: PaymentMethodSummary = PaymentMethodSummary(),
 )

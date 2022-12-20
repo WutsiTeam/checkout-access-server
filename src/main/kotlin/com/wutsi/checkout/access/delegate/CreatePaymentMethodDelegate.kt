@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.CreatePaymentMethodRequest
 import com.wutsi.checkout.access.dto.CreatePaymentMethodResponse
@@ -10,7 +10,7 @@ import javax.transaction.Transactional
 @Service
 class CreatePaymentMethodDelegate(
     private val service: PaymentMethodService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     @Transactional
     fun invoke(request: CreatePaymentMethodRequest): CreatePaymentMethodResponse {
@@ -24,7 +24,7 @@ class CreatePaymentMethodDelegate(
         logger.add("response_payment_method_token", paymentMethod.token)
 
         return CreatePaymentMethodResponse(
-            paymentMethodToken = paymentMethod.token
+            paymentMethodToken = paymentMethod.token,
         )
     }
 }

@@ -48,7 +48,7 @@ class GetPaymentMethodControllerTest {
         assertEquals(PaymentMethodType.MOBILE_MONEY.name, payment.provider.type)
         assertEquals(
             "https://prod-wutsi.s3.amazonaws.com/static/checkout-access-server/logos/mtn.png",
-            payment.provider.logoUrl
+            payment.provider.logoUrl,
         )
     }
 

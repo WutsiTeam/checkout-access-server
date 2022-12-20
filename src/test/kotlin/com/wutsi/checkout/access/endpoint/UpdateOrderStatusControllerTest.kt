@@ -29,7 +29,7 @@ class UpdateOrderStatusControllerTest {
     @Test
     fun close() {
         val request = UpdateOrderStatusRequest(
-            status = OrderStatus.COMPLETED.name
+            status = OrderStatus.COMPLETED.name,
         )
         val response = rest.postForEntity(url("100"), request, Any::class.java)
 
@@ -44,7 +44,7 @@ class UpdateOrderStatusControllerTest {
     fun cancel() {
         val request = UpdateOrderStatusRequest(
             status = OrderStatus.CANCELLED.name,
-            reason = "Yeauuurk"
+            reason = "Yeauuurk",
         )
         val response = rest.postForEntity(url("101"), request, Any::class.java)
 
@@ -59,7 +59,7 @@ class UpdateOrderStatusControllerTest {
     @Test
     fun expire() {
         val request = UpdateOrderStatusRequest(
-            status = OrderStatus.EXPIRED.name
+            status = OrderStatus.EXPIRED.name,
         )
         val response = rest.postForEntity(url("102"), request, Any::class.java)
 
@@ -77,7 +77,7 @@ class UpdateOrderStatusControllerTest {
 
         val request = UpdateOrderStatusRequest(
             status = OrderStatus.OPENED.name,
-            reason = "Yeauuurk"
+            reason = "Yeauuurk",
         )
         val response = rest.postForEntity(url("102"), request, Any::class.java)
 

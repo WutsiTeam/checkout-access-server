@@ -22,5 +22,5 @@ data class PaymentProviderEntity(
     val type: PaymentMethodType = PaymentMethodType.UNKNOWN,
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "provider")
-    val prefixes: List<PaymentProviderPrefixEntity> = emptyList()
+    val prefixes: List<PaymentProviderPrefixEntity> = emptyList(),
 )

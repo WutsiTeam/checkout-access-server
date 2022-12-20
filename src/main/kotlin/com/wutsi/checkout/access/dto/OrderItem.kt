@@ -15,5 +15,5 @@ public data class OrderItem(
     public val subTotalPrice: Long = 0,
     public val totalDiscount: Long = 0,
     public val totalPrice: Long = 0,
-    public val discounts: List<Discount> = emptyList()
+    public val discounts: List<Discount> = emptyList(),
 )

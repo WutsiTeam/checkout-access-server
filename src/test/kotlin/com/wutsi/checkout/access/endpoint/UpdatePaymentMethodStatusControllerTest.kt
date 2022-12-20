@@ -28,7 +28,7 @@ class UpdatePaymentMethodStatusControllerTest {
     @Test
     fun deactivate() {
         val request = UpdatePaymentMethodStatusRequest(
-            status = PaymentMethodStatus.INACTIVE.name
+            status = PaymentMethodStatus.INACTIVE.name,
         )
         val response = rest.postForEntity(url("token-300"), request, Any::class.java)
 
@@ -42,7 +42,7 @@ class UpdatePaymentMethodStatusControllerTest {
     @Test
     fun activate() {
         val request = UpdatePaymentMethodStatusRequest(
-            status = PaymentMethodStatus.INACTIVE.name
+            status = PaymentMethodStatus.INACTIVE.name,
         )
         val response = rest.postForEntity(url("token-399"), request, Any::class.java)
 

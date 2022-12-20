@@ -22,7 +22,7 @@ import java.util.UUID
 @Service
 class PaymentMethodService(
     private val dao: PaymentMethodRepository,
-    private val paymentProviderService: PaymentProviderService
+    private val paymentProviderService: PaymentProviderService,
 ) {
     fun create(request: CreatePaymentMethodRequest): PaymentMethodEntity {
         val type = PaymentMethodType.valueOf(request.type.uppercase())
@@ -36,9 +36,9 @@ class PaymentMethodService(
                         parameter = Parameter(
                             name = "number",
                             value = request.number,
-                            type = ParameterType.PARAMETER_TYPE_PAYLOAD
-                        )
-                    )
+                            type = ParameterType.PARAMETER_TYPE_PAYLOAD,
+                        ),
+                    ),
                 )
         }
 
@@ -51,8 +51,8 @@ class PaymentMethodService(
                 status = PaymentMethodStatus.ACTIVE,
                 country = request.country,
                 ownerName = request.ownerName,
-                token = hash()
-            )
+                token = hash(),
+            ),
         )
     }
 
@@ -65,9 +65,9 @@ class PaymentMethodService(
                         parameter = Parameter(
                             name = "token",
                             value = token,
-                            type = ParameterType.PARAMETER_TYPE_PATH
-                        )
-                    )
+                            type = ParameterType.PARAMETER_TYPE_PATH,
+                        ),
+                    ),
                 )
             }
 
@@ -101,9 +101,9 @@ class PaymentMethodService(
                     parameter = Parameter(
                         name = "status",
                         value = request.status,
-                        type = ParameterType.PARAMETER_TYPE_PAYLOAD
-                    )
-                )
+                        type = ParameterType.PARAMETER_TYPE_PAYLOAD,
+                    ),
+                ),
             )
         }
         dao.save(paymentMethod)

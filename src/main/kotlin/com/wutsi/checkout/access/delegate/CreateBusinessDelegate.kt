@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.CreateBusinessRequest
 import com.wutsi.checkout.access.dto.CreateBusinessResponse
@@ -10,7 +10,7 @@ import javax.transaction.Transactional
 @Service
 class CreateBusinessDelegate(
     private val service: BusinessService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     @Transactional
     fun invoke(request: CreateBusinessRequest): CreateBusinessResponse {
@@ -20,7 +20,7 @@ class CreateBusinessDelegate(
         val business = service.create(request)
         logger.add("response_business_id", business.id)
         return CreateBusinessResponse(
-            businessId = business.id ?: -1
+            businessId = business.id ?: -1,
         )
     }
 }

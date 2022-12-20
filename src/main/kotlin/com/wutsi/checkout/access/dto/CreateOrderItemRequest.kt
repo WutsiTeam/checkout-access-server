@@ -19,5 +19,5 @@ public data class CreateOrderItemRequest(
     public val pictureUrl: String? = null,
     @get:Min(0)
     public val unitPrice: Long = 0,
-    public val discounts: List<CreateOrderDiscountRequest> = emptyList()
+    public val discounts: List<CreateOrderDiscountRequest> = emptyList(),
 )

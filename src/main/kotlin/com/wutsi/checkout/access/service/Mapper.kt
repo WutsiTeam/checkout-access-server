@@ -33,7 +33,7 @@ object Mapper {
         country = business.country,
         created = business.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = business.updated.toInstant().atOffset(ZoneOffset.UTC),
-        deactivated = business.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC)
+        deactivated = business.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
     )
 
     fun toBusinessSummary(business: BusinessEntity) = BusinessSummary(
@@ -43,7 +43,7 @@ object Mapper {
         balance = business.balance,
         currency = business.currency,
         country = business.country,
-        created = business.created.toInstant().atOffset(ZoneOffset.UTC)
+        created = business.created.toInstant().atOffset(ZoneOffset.UTC),
     )
 
     fun toOrder(order: OrderEntity) = Order(
@@ -74,7 +74,7 @@ object Mapper {
         items = order.items.map { toOrderItem(it) },
         discounts = order.discounts.map { toOrderDiscount(order, it) },
         itemCount = order.itemCount,
-        transactions = order.transaactions.map { toTransactionSummary(it) }
+        transactions = order.transaactions.map { toTransactionSummary(it) },
     )
 
     fun toOrderSummary(order: OrderEntity) = OrderSummary(
@@ -93,8 +93,8 @@ object Mapper {
         productPictureUrls = listOfNotNull(
             order.productPictureUrl1,
             order.productPictureUrl2,
-            order.productPictureUrl3
-        )
+            order.productPictureUrl3,
+        ),
     )
 
     private fun toOrderItem(item: OrderItemEntity) = OrderItem(
@@ -107,21 +107,21 @@ object Mapper {
         totalPrice = item.totalPrice,
         totalDiscount = item.totalDiscount,
         subTotalPrice = item.subTotalPrice,
-        discounts = item.discounts.map { toOrderItemDiscount(item, it) }
+        discounts = item.discounts.map { toOrderItemDiscount(item, it) },
     )
 
     private fun toOrderDiscount(order: OrderEntity, discount: OrderDiscountEntity) = Discount(
         code = discount.code,
         type = discount.type.name,
         amount = discount.amount,
-        rate = toRate(discount.amount, order.subTotalPrice)
+        rate = toRate(discount.amount, order.subTotalPrice),
     )
 
     private fun toOrderItemDiscount(item: OrderItemEntity, discount: OrderItemDiscountEntity) = Discount(
         code = discount.code,
         type = discount.type.name,
         amount = discount.amount,
-        rate = toRate(discount.amount, item.order.subTotalPrice)
+        rate = toRate(discount.amount, item.order.subTotalPrice),
     )
 
     private fun toRate(value: kotlin.Long, total: kotlin.Long): Int =
@@ -148,7 +148,7 @@ object Mapper {
         customerId = tx.customerId,
         gatewayType = tx.gatewayType.name,
         email = tx.email,
-        paymentMethod = toPaymentMethodSummary(tx)
+        paymentMethod = toPaymentMethodSummary(tx),
     )
 
     fun toTransactionSummary(tx: TransactionEntity) = TransactionSummary(
@@ -165,7 +165,7 @@ object Mapper {
         gatewayFees = tx.gatewayFees,
         net = tx.net,
         customerId = tx.customerId,
-        paymentMethod = toPaymentMethodSummary(tx)
+        paymentMethod = toPaymentMethodSummary(tx),
     )
 
     private fun toPaymentMethodSummary(tx: TransactionEntity) = PaymentMethodSummary(
@@ -176,7 +176,7 @@ object Mapper {
         number = tx.paymentMethodNumber,
         type = tx.paymentMethodType.name,
         ownerName = tx.paymentMethodOwnerName,
-        provider = toPaymentProviderSummary(tx.paymentProvider)
+        provider = toPaymentProviderSummary(tx.paymentProvider),
     )
 
     fun toPaymentProviderSummary(provider: PaymentProviderEntity) = PaymentProviderSummary(
@@ -184,7 +184,7 @@ object Mapper {
         code = provider.code,
         name = provider.name,
         logoUrl = provider.logoUrl,
-        type = provider.type.name
+        type = provider.type.name,
     )
 
     fun toPaymentMethod(payment: PaymentMethodEntity) = PaymentMethod(
@@ -198,7 +198,7 @@ object Mapper {
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
         updated = payment.updated.toInstant().atOffset(ZoneOffset.UTC),
         deactivated = payment.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
-        provider = toPaymentProviderSummary(payment.provider)
+        provider = toPaymentProviderSummary(payment.provider),
     )
 
     fun toPaymentMethodSummary(payment: PaymentMethodEntity) = PaymentMethodSummary(
@@ -208,6 +208,6 @@ object Mapper {
         status = payment.status.name,
         number = payment.number,
         created = payment.created.toInstant().atOffset(ZoneOffset.UTC),
-        provider = toPaymentProviderSummary(payment.provider)
+        provider = toPaymentProviderSummary(payment.provider),
     )
 }

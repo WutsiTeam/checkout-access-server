@@ -44,7 +44,7 @@ class OrderService(
     private val itemDiscountDao: OrderItemDiscountRepository,
     private val transactionDao: TransactionRepository,
     private val em: EntityManager,
-    private val tracingContext: TracingContext
+    private val tracingContext: TracingContext,
 ) {
     fun create(business: BusinessEntity, request: CreateOrderRequest): OrderEntity {
         // Order
@@ -73,8 +73,8 @@ class OrderService(
                 itemCount = request.items.size,
                 productPictureUrl1 = request.items[0].pictureUrl,
                 productPictureUrl2 = if (request.items.size > 1) request.items[1].pictureUrl else null,
-                productPictureUrl3 = if (request.items.size > 2) request.items[2].pictureUrl else null
-            )
+                productPictureUrl3 = if (request.items.size > 2) request.items[2].pictureUrl else null,
+            ),
         )
 
         // Discount
@@ -112,9 +112,9 @@ class OrderService(
                     parameter = Parameter(
                         name = "status",
                         value = request.status,
-                        type = ParameterType.PARAMETER_TYPE_PAYLOAD
-                    )
-                )
+                        type = ParameterType.PARAMETER_TYPE_PAYLOAD,
+                    ),
+                ),
             )
         }
         dao.save(order)
@@ -129,9 +129,9 @@ class OrderService(
                         parameter = Parameter(
                             name = "id",
                             value = id,
-                            type = ParameterType.PARAMETER_TYPE_PATH
-                        )
-                    )
+                            type = ParameterType.PARAMETER_TYPE_PATH,
+                        ),
+                    ),
                 )
             }
 
@@ -216,8 +216,8 @@ class OrderService(
                 order = order,
                 amount = request.amount,
                 code = request.code,
-                type = DiscountType.valueOf(request.type.uppercase())
-            )
+                type = DiscountType.valueOf(request.type.uppercase()),
+            ),
         )
 
     private fun create(order: OrderEntity, request: CreateOrderItemRequest): OrderItemEntity {
@@ -234,8 +234,8 @@ class OrderService(
                 subTotalPrice = subTotalPrice,
                 totalDiscount = totalDiscount,
                 totalPrice = max(0, subTotalPrice - totalDiscount),
-                pictureUrl = request.pictureUrl
-            )
+                pictureUrl = request.pictureUrl,
+            ),
         )
         request.discounts.forEach {
             create(item, it)
@@ -249,8 +249,8 @@ class OrderService(
                 orderItem = item,
                 amount = request.amount,
                 code = request.code,
-                type = DiscountType.valueOf(request.type.uppercase())
-            )
+                type = DiscountType.valueOf(request.type.uppercase()),
+            ),
         )
 
     private fun computeTotalDiscount(request: CreateOrderRequest): Long =

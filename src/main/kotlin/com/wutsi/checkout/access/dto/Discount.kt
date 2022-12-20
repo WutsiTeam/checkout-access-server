@@ -8,5 +8,5 @@ public data class Discount(
     public val code: String = "",
     public val amount: Long = 0,
     public val rate: Int = 0,
-    public val type: String = ""
+    public val type: String = "",
 )

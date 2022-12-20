@@ -8,5 +8,5 @@ public data class PaymentProviderSummary(
     public val code: String = "",
     public val name: String = "",
     public val type: String = "",
-    public val logoUrl: String = ""
+    public val logoUrl: String = "",
 )

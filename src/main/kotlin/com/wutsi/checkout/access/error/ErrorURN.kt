@@ -21,5 +21,5 @@ enum class ErrorURN(val urn: String) {
     STATUS_NOT_VALID("urn:wutsi:error:checkout-access:status-not-valid"),
 
     TRANSACTION_FAILED("urn:wutsi:error:checkout-access:transaction-failed"),
-    TRANSACTION_NOT_FOUND("urn:wutsi:error:checkout-access:transaction-not-found")
+    TRANSACTION_NOT_FOUND("urn:wutsi:error:checkout-access:transaction-not-found"),
 }

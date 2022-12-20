@@ -9,7 +9,7 @@ import kotlin.String
 
 @RestController
 public class GetPaymentMethodController(
-    public val `delegate`: GetPaymentMethodDelegate
+    public val `delegate`: GetPaymentMethodDelegate,
 ) {
     @GetMapping("/v1/payment-methods/{token}")
     public fun invoke(@PathVariable(name = "token") token: String): GetPaymentMethodResponse =

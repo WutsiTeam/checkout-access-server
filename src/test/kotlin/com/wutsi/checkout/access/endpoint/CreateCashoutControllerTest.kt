@@ -74,7 +74,7 @@ class CreateCashoutControllerTest {
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = null,
             status = Status.SUCCESSFUL,
-            fees = Money(100.0, "XAF")
+            fees = Money(100.0, "XAF"),
         )
         doReturn(paymentResponse).whenever(gateway).createTransfer(any())
 
@@ -127,7 +127,7 @@ class CreateCashoutControllerTest {
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = null,
             status = Status.PENDING,
-            fees = Money(100.0, "XAF")
+            fees = Money(100.0, "XAF"),
         )
         doReturn(paymentResponse).whenever(gateway).createTransfer(any())
 
@@ -180,8 +180,8 @@ class CreateCashoutControllerTest {
             error = Error(
                 code = ErrorCode.DECLINED,
                 transactionId = UUID.randomUUID().toString(),
-                supplierErrorCode = "failed"
-            )
+                supplierErrorCode = "failed",
+            ),
         )
         doThrow(e).whenever(gateway).createTransfer(any())
 
@@ -300,14 +300,14 @@ class CreateCashoutControllerTest {
         amount: Long = 50000,
         businessId: Long = 1L,
         idempotencyKey: String = UUID.randomUUID().toString(),
-        paymentMethodToken: String = "token-100"
+        paymentMethodToken: String = "token-100",
     ) = CreateCashoutRequest(
         paymentMethodToken = paymentMethodToken,
         businessId = businessId,
         amount = amount,
         description = "Hello world",
         idempotencyKey = idempotencyKey,
-        email = "ray.sponsible@gmail.com"
+        email = "ray.sponsible@gmail.com",
     )
 
     private fun url() = "http://localhost:$port/v1/transactions/cashout"

@@ -24,7 +24,7 @@ class SearchTransactionControllerTest {
     fun searchByCustomerId() {
         // WHEN
         val request = SearchTransactionRequest(
-            customerId = 100L
+            customerId = 100L,
         )
         val response = rest.postForEntity(url(), request, SearchTransactionResponse::class.java)
 
@@ -40,7 +40,7 @@ class SearchTransactionControllerTest {
     fun searchByBusinessId() {
         // WHEN
         val request = SearchTransactionRequest(
-            businessId = 3L
+            businessId = 3L,
         )
         val response = rest.postForEntity(url(), request, SearchTransactionResponse::class.java)
 
@@ -56,7 +56,7 @@ class SearchTransactionControllerTest {
     fun searchByType() {
         // WHEN
         val request = SearchTransactionRequest(
-            type = TransactionType.CHARGE.name
+            type = TransactionType.CHARGE.name,
         )
         val response = rest.postForEntity(url(), request, SearchTransactionResponse::class.java)
 
@@ -72,7 +72,7 @@ class SearchTransactionControllerTest {
     fun searchByOrderId() {
         // WHEN
         val request = SearchTransactionRequest(
-            orderId = "order-100"
+            orderId = "order-100",
         )
         val response = rest.postForEntity(url(), request, SearchTransactionResponse::class.java)
 
@@ -88,7 +88,7 @@ class SearchTransactionControllerTest {
     fun searchByStatus() {
         // WHEN
         val request = SearchTransactionRequest(
-            status = listOf(Status.SUCCESSFUL.name, Status.PENDING.name)
+            status = listOf(Status.SUCCESSFUL.name, Status.PENDING.name),
         )
         val response = rest.postForEntity(url(), request, SearchTransactionResponse::class.java)
 

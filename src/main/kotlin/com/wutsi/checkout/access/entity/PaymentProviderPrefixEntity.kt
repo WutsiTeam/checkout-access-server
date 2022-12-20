@@ -21,5 +21,5 @@ data class PaymentProviderPrefixEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_provider_fk")
-    val provider: PaymentProviderEntity = PaymentProviderEntity()
+    val provider: PaymentProviderEntity = PaymentProviderEntity(),
 )

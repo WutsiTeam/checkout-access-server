@@ -10,9 +10,12 @@ import javax.validation.Valid
 
 @RestController
 public class CreateCashoutController(
-    public val `delegate`: CreateCashoutDelegate
+    public val `delegate`: CreateCashoutDelegate,
 ) {
     @PostMapping("/v1/transactions/cashout")
-    public fun invoke(@Valid @RequestBody request: CreateCashoutRequest): CreateCashoutResponse =
+    public fun invoke(
+        @Valid @RequestBody
+        request: CreateCashoutRequest,
+    ): CreateCashoutResponse =
         delegate.invoke(request)
 }

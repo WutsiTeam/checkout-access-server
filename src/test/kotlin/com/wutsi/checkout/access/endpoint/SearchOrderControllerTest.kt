@@ -22,7 +22,7 @@ public class SearchOrderControllerTest {
     @Test
     fun searchByCustomer() {
         val request = SearchOrderRequest(
-            customerId = 11L
+            customerId = 11L,
         )
         val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
 
@@ -36,7 +36,7 @@ public class SearchOrderControllerTest {
     @Test
     fun byBusiness() {
         val request = SearchOrderRequest(
-            businessId = 2
+            businessId = 2,
         )
         val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
 
@@ -51,7 +51,7 @@ public class SearchOrderControllerTest {
     fun byDates() {
         val request = SearchOrderRequest(
             createdFrom = OffsetDateTime.now().minusDays(90),
-            createdTo = OffsetDateTime.now().plusDays(1)
+            createdTo = OffsetDateTime.now().plusDays(1),
         )
         val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
 
@@ -65,7 +65,7 @@ public class SearchOrderControllerTest {
     @Test
     fun expired() {
         val request = SearchOrderRequest(
-            expiresTo = OffsetDateTime.now()
+            expiresTo = OffsetDateTime.now(),
         )
         val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
 

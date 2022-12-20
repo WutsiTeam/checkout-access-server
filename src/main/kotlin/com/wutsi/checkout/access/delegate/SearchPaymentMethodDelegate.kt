@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.SearchPaymentMethodRequest
 import com.wutsi.checkout.access.dto.SearchPaymentMethodResponse
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class SearchPaymentMethodDelegate(
     private val service: PaymentMethodService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     fun invoke(request: SearchPaymentMethodRequest): SearchPaymentMethodResponse {
         logger.add("request_account_id", request.accountId)
@@ -21,7 +21,7 @@ class SearchPaymentMethodDelegate(
         val payments = service.search(request)
         logger.add("response_count", payments.size)
         return SearchPaymentMethodResponse(
-            paymentMethods = payments.map { Mapper.toPaymentMethodSummary(it) }
+            paymentMethods = payments.map { Mapper.toPaymentMethodSummary(it) },
         )
     }
 }

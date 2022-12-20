@@ -10,9 +10,12 @@ import javax.validation.Valid
 
 @RestController
 public class CreateBusinessController(
-    public val `delegate`: CreateBusinessDelegate
+    public val `delegate`: CreateBusinessDelegate,
 ) {
     @PostMapping("/v1/businesses")
-    public fun invoke(@Valid @RequestBody request: CreateBusinessRequest): CreateBusinessResponse =
+    public fun invoke(
+        @Valid @RequestBody
+        request: CreateBusinessRequest,
+    ): CreateBusinessResponse =
         delegate.invoke(request)
 }

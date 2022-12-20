@@ -12,5 +12,5 @@ public data class SearchTransactionRequest(
     public val status: List<String> = emptyList(),
     public val orderId: String? = null,
     public val limit: Int = 100,
-    public val offset: Int = 0
+    public val offset: Int = 0,
 )

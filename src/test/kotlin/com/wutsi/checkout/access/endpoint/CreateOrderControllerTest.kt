@@ -77,8 +77,8 @@ class CreateOrderControllerTest {
                 CreateOrderDiscountRequest(
                     code = "X-111",
                     amount = 2000,
-                    type = DiscountType.COUPON.name
-                )
+                    type = DiscountType.COUPON.name,
+                ),
             ),
             items = listOf(
                 CreateOrderItemRequest(
@@ -87,7 +87,7 @@ class CreateOrderControllerTest {
                     unitPrice = 15000,
                     title = "Chemise",
                     pictureUrl = "https://www.img.1/111.png",
-                    quantity = 3
+                    quantity = 3,
                 ),
                 CreateOrderItemRequest(
                     productId = 222,
@@ -100,11 +100,11 @@ class CreateOrderControllerTest {
                         CreateOrderDiscountRequest(
                             code = "SPECIAL",
                             amount = 1000,
-                            type = DiscountType.MERCHANT.name
-                        )
-                    )
-                )
-            )
+                            type = DiscountType.MERCHANT.name,
+                        ),
+                    ),
+                ),
+            ),
         )
         val response = rest.postForEntity(url(), request, CreateOrderResponse::class.java)
 
@@ -188,10 +188,10 @@ class CreateOrderControllerTest {
                     unitPrice = 0,
                     title = "Chemise",
                     pictureUrl = "https://www.img.1/111.png",
-                    quantity = 3
-                )
+                    quantity = 3,
+                ),
             ),
-            expires = OffsetDateTime.now().plusMinutes(30)
+            expires = OffsetDateTime.now().plusMinutes(30),
         )
         val response = rest.postForEntity(url(), request, CreateOrderResponse::class.java)
 

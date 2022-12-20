@@ -9,5 +9,5 @@ public data class CreateOrderDiscountRequest(
     public val code: String = "",
     public val amount: Long = 0,
     @get:NotBlank
-    public val type: String = ""
+    public val type: String = "",
 )

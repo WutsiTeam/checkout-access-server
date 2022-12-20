@@ -1,4 +1,4 @@
-package com.wutsi.checkout.access.`delegate`
+package com.wutsi.checkout.access.delegate
 
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateCashoutResponse
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class CreateCashoutDelegate(
     private val service: TransactionService,
-    private val logger: KVLogger
+    private val logger: KVLogger,
 ) {
     @Transactional(noRollbackFor = [TransactionException::class])
     fun invoke(request: CreateCashoutRequest): CreateCashoutResponse {
@@ -28,7 +28,7 @@ class CreateCashoutDelegate(
         logger.add("response_transaction_status", tx.status)
         return CreateCashoutResponse(
             transactionId = tx.id ?: "",
-            status = tx.status.name
+            status = tx.status.name,
         )
     }
 }

@@ -83,7 +83,7 @@ class CreateChargeControllerTest {
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = null,
             status = Status.SUCCESSFUL,
-            fees = Money(100.0, "XAF")
+            fees = Money(100.0, "XAF"),
         )
         doReturn(paymentResponse).whenever(gateway).createPayment(any())
 
@@ -137,7 +137,7 @@ class CreateChargeControllerTest {
         val paymentResponse = CreatePaymentResponse(
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = null,
-            status = Status.PENDING
+            status = Status.PENDING,
         )
         doReturn(paymentResponse).whenever(gateway).createPayment(any())
 
@@ -193,8 +193,8 @@ class CreateChargeControllerTest {
             error = Error(
                 code = ErrorCode.NOT_ENOUGH_FUNDS,
                 transactionId = UUID.randomUUID().toString(),
-                supplierErrorCode = "failed"
-            )
+                supplierErrorCode = "failed",
+            ),
         )
         doThrow(e).whenever(gateway).createPayment(any())
 
@@ -272,7 +272,7 @@ class CreateChargeControllerTest {
             transactionId = UUID.randomUUID().toString(),
             financialTransactionId = null,
             status = Status.SUCCESSFUL,
-            fees = Money(100.0, "XAF")
+            fees = Money(100.0, "XAF"),
         )
         doReturn(paymentResponse).whenever(gateway).createPayment(any())
 
@@ -283,7 +283,7 @@ class CreateChargeControllerTest {
             paymentMethodType = PaymentMethodType.MOBILE_MONEY.name,
             paymenMethodNumber = "+237671111100",
             paymentMethodOwnerName = "Ray Sponsible",
-            paymentProviderId = 1000L
+            paymentProviderId = 1000L,
         )
         val response = rest.postForEntity(url(), request, CreateChargeResponse::class.java)
 
@@ -333,7 +333,7 @@ class CreateChargeControllerTest {
         paymentMethodOwnerName: String? = null,
         paymentMethodType: String? = null,
         paymentProviderId: Long? = null,
-        paymenMethodNumber: String? = null
+        paymenMethodNumber: String? = null,
     ) = CreateChargeRequest(
         paymentMethodToken = paymentMethodToken,
         businessId = businessId,
@@ -345,7 +345,7 @@ class CreateChargeControllerTest {
         paymentMethodOwnerName = paymentMethodOwnerName,
         paymentMethodType = paymentMethodType,
         paymentProviderId = paymentProviderId,
-        paymenMethodNumber = paymenMethodNumber
+        paymenMethodNumber = paymenMethodNumber,
     )
 
     private fun url() = "http://localhost:$port/v1/transactions/charge"

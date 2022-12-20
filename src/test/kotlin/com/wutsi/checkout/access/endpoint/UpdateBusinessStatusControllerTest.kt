@@ -29,7 +29,7 @@ public class UpdateBusinessStatusControllerTest {
     @Test
     fun suspended() {
         val request = UpdateOrderStatusRequest(
-            status = BusinessStatus.INACTIVE.name
+            status = BusinessStatus.INACTIVE.name,
         )
         val response = rest.postForEntity(url(100), request, Any::class.java)
 
@@ -43,7 +43,7 @@ public class UpdateBusinessStatusControllerTest {
     @Test
     fun underReview() {
         val request = UpdateOrderStatusRequest(
-            status = BusinessStatus.UNDER_REVIEW.name
+            status = BusinessStatus.UNDER_REVIEW.name,
         )
         val response = rest.postForEntity(url(100), request, Any::class.java)
 
@@ -56,7 +56,7 @@ public class UpdateBusinessStatusControllerTest {
     @Test
     fun active() {
         val request = UpdateOrderStatusRequest(
-            status = BusinessStatus.ACTIVE.name
+            status = BusinessStatus.ACTIVE.name,
         )
         val response = rest.postForEntity(url(200), request, Any::class.java)
 
@@ -72,7 +72,7 @@ public class UpdateBusinessStatusControllerTest {
 
         Thread.sleep(1000)
         val request = UpdateOrderStatusRequest(
-            status = BusinessStatus.INACTIVE.name
+            status = BusinessStatus.INACTIVE.name,
         )
         val response = rest.postForEntity(url(300), request, Any::class.java)
 

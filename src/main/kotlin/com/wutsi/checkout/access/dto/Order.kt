@@ -43,5 +43,5 @@ public data class Order(
     public val items: List<OrderItem> = emptyList(),
     public val discounts: List<Discount> = emptyList(),
     public val itemCount: Int = 0,
-    public val transactions: List<TransactionSummary> = emptyList()
+    public val transactions: List<TransactionSummary> = emptyList(),
 )
