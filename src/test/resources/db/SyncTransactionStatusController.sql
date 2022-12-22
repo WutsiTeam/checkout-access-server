@@ -17,7 +17,7 @@ INSERT INTO T_ORDER(id, business_fk, customer_account_id, customer_name, status,
         ('order-200', 1, 100, 'Roger Milla', 1, 'XAF', 500, 'roger.milla@gmail.com', now())
     ;
 
-INSERT INTO T_TRANSACTION(id, idempotency_key, type, status, gateway_type, payment_method_fk, business_fk, order_fk, customer_id, amount, fees, gateway_fees, net, currency, gateway_transaction_id, payment_method_type, payment_method_number, payment_method_owner_name, payment_method_country, payment_provider_fk)
+INSERT INTO T_TRANSACTION(id, idempotency_key, type, status, gateway_type, payment_method_fk, business_fk, order_fk, customer_account_id, amount, fees, gateway_fees, net, currency, gateway_transaction_id, payment_method_type, payment_method_number, payment_method_owner_name, payment_method_country, payment_provider_fk)
     VALUES
         ('tx-101', 'idempotent-101', 1, 1, 3, 2001, 1, 'order-100', 100, 1500, 0, 0, 1500, 'XAF', 'TX-00000-000-101', 1, '+237690000200', 'Roger Milla', 'CM', 1000),
         ('tx-102', 'idempotent-102', 1, 2, 3, 2001, 2, 'order-100', 100, 1500, 0, 0, 1500, 'XAF', 'TX-00000-000-102', 1, '+237690000200', 'Roger Milla', 'CM', 1000),

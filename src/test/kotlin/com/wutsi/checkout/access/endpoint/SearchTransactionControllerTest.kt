@@ -24,7 +24,7 @@ class SearchTransactionControllerTest {
     fun searchByCustomerId() {
         // WHEN
         val request = SearchTransactionRequest(
-            customerId = 100L,
+            customerAccountId = 100L,
         )
         val response = rest.postForEntity(url(), request, SearchTransactionResponse::class.java)
 

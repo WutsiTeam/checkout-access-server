@@ -29,7 +29,7 @@ INSERT INTO T_PAYMENT_METHOD(id, payment_provider_fk, token, account_id, number,
         (2001, 1000, 'token-200', 200, '+237690000200', 'CM', 'Omam Biyick', 1, 1, null)
     ;
 
-INSERT INTO T_TRANSACTION(id, idempotency_key, type, status, gateway_type, payment_method_fk, business_fk, order_fk, customer_id, amount, fees, gateway_fees, net, currency, gateway_transaction_id, financial_transaction_id, error_code, supplier_error_code, description, payment_method_type, payment_method_number, payment_method_owner_name, payment_method_country, payment_provider_fk)
+INSERT INTO T_TRANSACTION(id, idempotency_key, type, status, gateway_type, payment_method_fk, business_fk, order_fk, customer_account_id, amount, fees, gateway_fees, net, currency, gateway_transaction_id, financial_transaction_id, error_code, supplier_error_code, description, payment_method_type, payment_method_number, payment_method_owner_name, payment_method_country, payment_provider_fk)
     VALUES
         ('tx-100', 'idempotent-100', 1, 1, 3, 2001, 1, '100-AEF01-1111', 100, 2100, 5, 10, 2095, 'XAF', 'TX-00000-000-1111', 'FIN-00000-000-1111', 'NOT_ENOUGH_FUNDS', '00000', 'Hello world', 1, '+237690000200', 'Roger Milla', 'CM', 1000),
         ('tx-101', 'idempotent-101', 1, 1, 3, 2001, 2, null, 100, 1500, 5, 10, 495, 'XAF', 'TX-00000-000-1111', 'FIN-00000-000-1111', 'NOT_ENOUGH_FUNDS', '00000', 'Hello world', 1, '+237690000200', 'Roger Milla', 'CM', 1000)

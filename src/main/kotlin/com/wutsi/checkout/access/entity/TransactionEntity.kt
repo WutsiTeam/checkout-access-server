@@ -35,7 +35,7 @@ data class TransactionEntity(
     var status: Status = Status.UNKNOWN,
     val gatewayType: GatewayType = GatewayType.UNKNOWN,
 
-    val customerId: Long? = null,
+    val customerAccountId: Long? = null,
     var email: String? = null,
     val description: String? = null,
     var amount: Long = 0L,

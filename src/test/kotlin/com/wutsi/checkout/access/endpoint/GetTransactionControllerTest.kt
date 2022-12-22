@@ -41,7 +41,7 @@ class GetTransactionControllerTest {
         assertEquals("CM", tx.business.country)
         assertEquals(120000, tx.business.balance)
         assertEquals("order-200", tx.orderId)
-        assertEquals(200L, tx.customerId)
+        assertEquals(200L, tx.customerAccountId)
         assertEquals(500, tx.amount)
         assertEquals(5L, tx.fees)
         assertEquals(10L, tx.gatewayFees)
@@ -61,7 +61,7 @@ class GetTransactionControllerTest {
         assertEquals(PaymentMethodType.MOBILE_MONEY.name, tx.paymentMethod.type)
         assertEquals(PaymentMethodStatus.ACTIVE.name, tx.paymentMethod.status)
         assertEquals("+237690000200", tx.paymentMethod.number)
-        assertEquals(tx.customerId, tx.paymentMethod.accountId)
+        assertEquals(tx.customerAccountId, tx.paymentMethod.accountId)
         assertEquals("MTN", tx.paymentMethod.provider.name)
         assertEquals("MTN", tx.paymentMethod.provider.code)
     }

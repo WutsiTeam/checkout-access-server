@@ -145,7 +145,7 @@ object Mapper {
         supplierErrorCode = tx.supplierErrorCode,
         net = tx.net,
         gatewayTransactionId = tx.gatewayTransactionId,
-        customerId = tx.customerId,
+        customerAccountId = tx.customerAccountId,
         gatewayType = tx.gatewayType.name,
         email = tx.email,
         paymentMethod = toPaymentMethodSummary(tx),
@@ -164,7 +164,7 @@ object Mapper {
         orderId = tx.order?.id,
         gatewayFees = tx.gatewayFees,
         net = tx.net,
-        customerId = tx.customerId,
+        customerAccountId = tx.customerAccountId,
         paymentMethod = toPaymentMethodSummary(tx),
     )
 

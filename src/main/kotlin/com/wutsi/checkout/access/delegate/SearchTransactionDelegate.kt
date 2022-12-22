@@ -14,7 +14,7 @@ class SearchTransactionDelegate(
 ) {
     fun invoke(request: SearchTransactionRequest): SearchTransactionResponse {
         logger.add("request_business_id", request.businessId)
-        logger.add("request_customer_id", request.customerId)
+        logger.add("request_customer_account_id", request.customerAccountId)
         logger.add("request_status", request.status)
         logger.add("request_type", request.type)
         logger.add("request_order_id", request.orderId)

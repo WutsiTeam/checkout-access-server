@@ -1,13 +1,11 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.`annotation`.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.OffsetDateTime
-import kotlin.Long
-import kotlin.String
 
 public data class TransactionSummary(
     public val id: String = "",
-    public val customerId: Long? = null,
+    public val customerAccountId: Long? = null,
     public val businessId: Long = 0,
     public val type: String = "",
     public val amount: Long = 0,

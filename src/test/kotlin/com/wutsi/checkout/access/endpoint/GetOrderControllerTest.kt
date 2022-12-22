@@ -105,7 +105,7 @@ class GetOrderControllerTest {
         val tx = order.transactions[0]
         assertEquals(1L, tx.businessId)
         assertEquals(order.id, tx.orderId)
-        assertEquals(100, tx.customerId)
+        assertEquals(100, tx.customerAccountId)
         assertEquals(2100, tx.amount)
         assertEquals(5L, tx.fees)
         assertEquals(10L, tx.gatewayFees)

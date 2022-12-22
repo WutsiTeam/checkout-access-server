@@ -75,7 +75,7 @@ class TransactionService(
                 currency = business.currency,
                 description = request.description,
                 idempotencyKey = request.idempotencyKey,
-                customerId = paymentMethod?.accountId,
+                customerAccountId = paymentMethod?.accountId,
                 status = Status.UNKNOWN,
                 gatewayType = gateway.getType(),
                 amount = request.amount,
@@ -176,7 +176,7 @@ class TransactionService(
                 currency = business.currency,
                 description = request.description,
                 idempotencyKey = request.idempotencyKey,
-                customerId = paymentMethod.accountId,
+                customerAccountId = paymentMethod.accountId,
                 status = Status.UNKNOWN,
                 gatewayType = gateway.getType(),
                 amount = request.amount,
@@ -357,8 +357,8 @@ class TransactionService(
     private fun where(request: SearchTransactionRequest): String {
         val criteria = mutableListOf<String>()
 
-        if (request.customerId != null) {
-            criteria.add("a.customerId=:customer_id")
+        if (request.customerAccountId != null) {
+            criteria.add("a.customerAccountId=:customer_account_id")
         }
         if (request.businessId != null) {
             criteria.add("a.business.id=:business_id")
@@ -376,8 +376,8 @@ class TransactionService(
     }
 
     private fun parameters(request: SearchTransactionRequest, query: Query) {
-        if (request.customerId != null) {
-            query.setParameter("customer_id", request.customerId)
+        if (request.customerAccountId != null) {
+            query.setParameter("customer_account_id", request.customerAccountId)
         }
         if (request.businessId != null) {
             query.setParameter("business_id", request.businessId)
