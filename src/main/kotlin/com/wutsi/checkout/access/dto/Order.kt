@@ -1,8 +1,12 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.annotation.DateTimeFormat
+import org.springframework.format.`annotation`.DateTimeFormat
 import java.time.OffsetDateTime
 import javax.validation.constraints.Size
+import kotlin.Int
+import kotlin.Long
+import kotlin.String
+import kotlin.collections.List
 
 public data class Order(
     public val id: String = "",
