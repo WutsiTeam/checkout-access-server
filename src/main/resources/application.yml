@@ -65,6 +65,10 @@ wutsi:
     jobs:
       create-customer:
         cron: "0 0 * * * *"  # Runs every hour
+      compute-today-kpi:
+        cron: "0 15 * * * *"  # Runs every hour at *:15
+      compute-yesterday-kpi:
+        cron: "0 0 1 * * *"  # Runs every day at 1 AM
     services:
       fees-calculator:
         transaction-fees:
