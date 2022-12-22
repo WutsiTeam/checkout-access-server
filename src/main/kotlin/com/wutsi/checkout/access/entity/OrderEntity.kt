@@ -22,7 +22,7 @@ data class OrderEntity(
     @JoinColumn(name = "business_fk")
     val business: BusinessEntity = BusinessEntity(),
 
-    val customerId: Long? = null,
+    val customerAccountId: Long? = null,
     val customerName: String = "",
     val customerEmail: String = "",
     val deviceId: String? = null,

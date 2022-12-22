@@ -22,7 +22,7 @@ public class SearchOrderControllerTest {
     @Test
     fun searchByCustomer() {
         val request = SearchOrderRequest(
-            customerId = 11L,
+            customerAccountId = 11L,
         )
         val response = rest.postForEntity(url(), request, SearchOrderResponse::class.java)
 

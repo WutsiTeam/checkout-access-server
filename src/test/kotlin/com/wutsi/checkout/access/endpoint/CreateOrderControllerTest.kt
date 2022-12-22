@@ -65,7 +65,7 @@ class CreateOrderControllerTest {
     fun create() {
         val request = CreateOrderRequest(
             businessId = 1,
-            customerId = 22,
+            customerAccountId = 22,
             customerName = "Ray Sponsible",
             customerEmail = "ray.sponsible@gmail.com",
             deviceType = DeviceType.MOBILE.name,
@@ -117,7 +117,7 @@ class CreateOrderControllerTest {
 
         assertEquals(OrderStatus.PENDING, order.status)
         assertEquals(request.businessId, order.business.id)
-        assertEquals(request.customerId, order.customerId)
+        assertEquals(request.customerAccountId, order.customerAccountId)
         assertEquals(request.customerEmail, order.customerEmail)
         assertEquals(request.customerName, order.customerName)
         assertEquals(DeviceType.MOBILE, order.deviceType)
@@ -174,7 +174,7 @@ class CreateOrderControllerTest {
     fun free() {
         val request = CreateOrderRequest(
             businessId = 1,
-            customerId = 22,
+            customerAccountId = 22,
             customerName = "Ray Sponsible",
             customerEmail = "ray.sponsible@gmail.com",
             deviceType = DeviceType.MOBILE.name,
@@ -204,7 +204,7 @@ class CreateOrderControllerTest {
 
         assertEquals(OrderStatus.OPENED, order.status)
         assertEquals(request.businessId, order.business.id)
-        assertEquals(request.customerId, order.customerId)
+        assertEquals(request.customerAccountId, order.customerAccountId)
         assertEquals(request.customerEmail, order.customerEmail)
         assertEquals(request.customerName, order.customerName)
         assertEquals(DeviceType.MOBILE, order.deviceType)

@@ -1,14 +1,11 @@
 package com.wutsi.checkout.access.dto
 
-import org.springframework.format.`annotation`.DateTimeFormat
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.OffsetDateTime
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
-import kotlin.Long
-import kotlin.String
-import kotlin.collections.List
 
 public data class CreateOrderRequest(
     public val deviceType: String? = null,
@@ -17,7 +14,7 @@ public data class CreateOrderRequest(
     public val notes: String? = null,
     @get:NotBlank
     public val currency: String = "",
-    public val customerId: Long? = null,
+    public val customerAccountId: Long? = null,
     @get:NotBlank
     public val customerName: String = "",
     @get:NotBlank

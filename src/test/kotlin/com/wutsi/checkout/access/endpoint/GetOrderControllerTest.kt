@@ -46,7 +46,7 @@ class GetOrderControllerTest {
         assertEquals(11L, order.business.accountId)
         assertEquals("XAF", order.business.currency)
         assertEquals("CM", order.business.country)
-        assertEquals(11L, order.customerId)
+        assertEquals(11L, order.customerAccountId)
         assertEquals("Ray Sponsible", order.customerName)
         assertEquals("ray.sponsible@gmail.com", order.customerEmail)
         assertEquals("0000-1111", order.deviceId)

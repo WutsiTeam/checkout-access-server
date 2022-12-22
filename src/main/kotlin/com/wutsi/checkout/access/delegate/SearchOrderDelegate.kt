@@ -20,7 +20,7 @@ class SearchOrderDelegate(
         logger.add("request_created_to", request.createdTo)
         logger.add("request_expires_to", request.expiresTo)
         logger.add("request_business_id", request.businessId)
-        logger.add("request_customer_id", request.customerId)
+        logger.add("request_customer_account_id", request.customerAccountId)
 
         val orders = service.search(request)
         logger.add("response_count", orders.size)

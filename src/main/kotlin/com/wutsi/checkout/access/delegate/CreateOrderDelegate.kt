@@ -16,7 +16,7 @@ class CreateOrderDelegate(
 ) {
     @Transactional
     fun invoke(request: CreateOrderRequest): CreateOrderResponse {
-        logger.add("request_customer_id", request.customerId)
+        logger.add("request_customer_account_id", request.customerAccountId)
         logger.add("request_customer_email", request.customerEmail)
         logger.add("request_customer_name", request.customerName)
         logger.add("request_business_id", request.businessId)

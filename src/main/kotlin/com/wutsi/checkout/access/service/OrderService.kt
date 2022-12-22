@@ -55,7 +55,7 @@ class OrderService(
             OrderEntity(
                 id = UUID.randomUUID().toString(),
                 business = business,
-                customerId = request.customerId,
+                customerAccountId = request.customerAccountId,
                 customerEmail = request.customerEmail.lowercase(),
                 customerName = request.customerName,
                 status = if (totalPrice <= 0) OrderStatus.OPENED else OrderStatus.PENDING,
@@ -168,8 +168,8 @@ class OrderService(
     private fun where(request: SearchOrderRequest): String {
         val criteria = mutableListOf<String>()
 
-        if (request.customerId != null) {
-            criteria.add("O.customerId = :customer_id")
+        if (request.customerAccountId != null) {
+            criteria.add("O.customerAccountId = :customer_account_id")
         }
         if (request.businessId != null) {
             criteria.add("O.business.id = :business_id")
@@ -190,8 +190,8 @@ class OrderService(
     }
 
     private fun parameters(request: SearchOrderRequest, query: Query) {
-        if (request.customerId != null) {
-            query.setParameter("customer_id", request.customerId)
+        if (request.customerAccountId != null) {
+            query.setParameter("customer_account_id", request.customerAccountId)
         }
         if (request.businessId != null) {
             query.setParameter("business_id", request.businessId)
