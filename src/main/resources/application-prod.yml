@@ -13,6 +13,13 @@ spring:
 wutsi:
   client-id: checkout-access
   platform:
+    cache:
+      type: memcached
+      memcached:
+        username: ${MEMCACHIER_USERNAME}
+        password: ${MEMCACHIER_PASSWORD}
+        servers: ${MEMCACHIER_SERVERS}
+        ttl: 86400
     payment:
       flutterwave:
         test-mode: false

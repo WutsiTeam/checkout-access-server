@@ -56,7 +56,7 @@ class OrderService(
                 id = UUID.randomUUID().toString(),
                 business = business,
                 customerId = request.customerId,
-                customerEmail = request.customerEmail,
+                customerEmail = request.customerEmail.lowercase(),
                 customerName = request.customerName,
                 status = if (totalPrice <= 0) OrderStatus.OPENED else OrderStatus.PENDING,
                 currency = request.currency,

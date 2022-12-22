@@ -62,6 +62,9 @@ wutsi:
   client-id: checkout-access
   application:
     name: checkout-access
+    jobs:
+      create-customer:
+        cron: "0 0 * * * *"  # Runs every hour
     services:
       fees-calculator:
         transaction-fees:
