@@ -2,7 +2,7 @@ package com.wutsi.checkout.access.job
 
 import com.wutsi.checkout.access.dao.BusinessRepository
 import com.wutsi.checkout.access.dao.CustomerRepository
-import com.wutsi.checkout.access.dao.KpiSalesRepository
+import com.wutsi.checkout.access.dao.SalesKpiRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -13,13 +13,13 @@ import java.util.Date
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/ComputeTodayKpiSalesJob.sql"])
-internal class ComputeTodayKpiSalesJobTest {
+@Sql(value = ["/db/clean.sql", "/db/ComputeTodaySalesKpiJob.sql"])
+internal class ComputeTodaySalesKpiJobTest {
     @Autowired
-    private lateinit var job: ComputeTodayKpiSalesJob
+    private lateinit var job: ComputeTodaySalesKpiJob
 
     @Autowired
-    private lateinit var dao: KpiSalesRepository
+    private lateinit var dao: SalesKpiRepository
 
     @Autowired
     private lateinit var businessDao: BusinessRepository

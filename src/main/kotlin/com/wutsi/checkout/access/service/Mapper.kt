@@ -19,9 +19,8 @@ import com.wutsi.checkout.access.entity.OrderItemEntity
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.entity.PaymentProviderEntity
 import com.wutsi.checkout.access.entity.TransactionEntity
-import java.lang.Long
 import java.time.ZoneOffset
-import kotlin.Int
+import kotlin.math.max
 
 object Mapper {
     fun toBusiness(business: BusinessEntity) = Business(
@@ -60,7 +59,7 @@ object Mapper {
         business = toBusinessSummary(order.business),
         totalPrice = order.totalPrice,
         totalPaid = order.totalPaid,
-        balance = Long.max(0, order.totalPrice - order.totalPaid),
+        balance = max(0, order.totalPrice - order.totalPaid),
         totalDiscount = order.totalDiscount,
         subTotalPrice = order.subTotalPrice,
         status = order.status.name,
@@ -86,7 +85,7 @@ object Mapper {
         customerAccountId = order.customerAccountId,
         businessId = order.business.id ?: -1,
         totalPrice = order.totalPrice,
-        balance = Long.max(0, order.totalPrice - order.totalPaid),
+        balance = max(0, order.totalPrice - order.totalPaid),
         status = order.status.name,
         created = order.created.toInstant().atOffset(ZoneOffset.UTC),
         itemCount = order.itemCount,

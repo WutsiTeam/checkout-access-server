@@ -12,7 +12,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "T_KPI_SALES")
-data class KpiSalesEntity(
+data class SalesKpiEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
