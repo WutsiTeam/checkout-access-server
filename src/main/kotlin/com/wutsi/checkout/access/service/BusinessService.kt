@@ -13,11 +13,14 @@ import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.util.Date
+import javax.sql.DataSource
 
 @Service
 class BusinessService(
     private val dao: BusinessRepository,
+    private val ds: DataSource,
 ) {
     fun create(request: CreateBusinessRequest): BusinessEntity {
         val businesses = dao.findByAccountIdAndStatusNot(request.accountId, BusinessStatus.INACTIVE)
@@ -86,5 +89,35 @@ class BusinessService(
         business.balance += amount
         business.updated = Date()
         return dao.save(business)
+    }
+
+    fun updateSalesKpi(date: LocalDate): Long =
+        execute(
+            """
+                UPDATE T_BUSINESS B,
+                    (
+                        SELECT K.business_fk, SUM(K.total_orders) as total_orders, SUM(K.total_units) as total_units, SUM(K.total_value) as total_value
+                            FROM T_KPI_SALES K
+                            WHERE K.business_fk IN (SELECT O.business_fk FROM T_ORDER O WHERE DATE(O.created)='$date')
+                            GROUP by K.business_fk
+                    ) TMP
+                    SET
+                        B.total_orders=TMP.total_orders,
+                        B.total_units=TMP.total_units,
+                        B.total_value=TMP.total_value
+                    WHERE
+                        B.id=TMP.business_fk
+
+            """.trimIndent(),
+        )
+
+    private fun execute(sql: String): Long {
+        val cnn = ds.connection
+        cnn.use {
+            val stmt = cnn.createStatement()
+            stmt.use {
+                return stmt.executeUpdate(sql).toLong()
+            }
+        }
     }
 }

@@ -31,6 +31,16 @@ internal class ComputeYesterdayKpiSalesJobTest {
         assertKpi(3, 6, 9000, 1, 100, date)
         assertKpi(1, 1, 500, 1, 101, date)
         assertKpi(1, 1, 1500, 2, 200, date)
+
+        val business1 = businessDao.findById(1).get()
+        assertEquals(4, business1.totalOrders)
+        assertEquals(7, business1.totalUnits)
+        assertEquals(9500, business1.totalValue)
+
+        val business2 = businessDao.findById(2).get()
+        assertEquals(1, business2.totalOrders)
+        assertEquals(1, business2.totalUnits)
+        assertEquals(1500, business2.totalValue)
     }
 
     private fun assertKpi(
