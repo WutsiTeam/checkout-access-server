@@ -1,7 +1,6 @@
 package com.wutsi.checkout.access.job
 
 import com.wutsi.checkout.access.dao.BusinessRepository
-import com.wutsi.checkout.access.dao.CustomerRepository
 import com.wutsi.checkout.access.dao.SalesKpiRepository
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,18 +23,14 @@ internal class ComputeYesterdayKpiSalesJobTest {
     @Autowired
     private lateinit var businessDao: BusinessRepository
 
-    @Autowired
-    private lateinit var customerDao: CustomerRepository
-
     @Test
     fun run() {
         job.run()
 
         val date = LocalDate.now().minusDays(1)
-        assertKpi(1, 3, 4500, 1, 10, 100, date)
-        assertKpi(1, 1, 500, 1, 10, 101, date)
-        assertKpi(2, 3, 4500, 1, 11, 100, date)
-        assertKpi(1, 1, 1500, 2, 20, 200, date)
+        assertKpi(3, 6, 9000, 1, 100, date)
+        assertKpi(1, 1, 500, 1, 101, date)
+        assertKpi(1, 1, 1500, 2, 200, date)
     }
 
     private fun assertKpi(
@@ -43,13 +38,11 @@ internal class ComputeYesterdayKpiSalesJobTest {
         totalUnits: Long,
         totalValue: Long,
         businessId: Long,
-        customerId: Long,
         productId: Long,
         date: LocalDate,
     ) {
-        val kpi = dao.findByBusinessAndCustomerAndProductIdAndDate(
+        val kpi = dao.findByBusinessAndProductIdAndDate(
             business = businessDao.findById(businessId).get(),
-            customer = customerDao.findById(customerId).get(),
             productId = productId,
             date = Date.from(date.atStartOfDay(ZoneId.of("UTC")).toInstant()),
         )

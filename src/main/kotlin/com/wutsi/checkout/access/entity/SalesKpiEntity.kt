@@ -24,11 +24,6 @@ data class SalesKpiEntity(
     val business: BusinessEntity = BusinessEntity(),
 
     val productId: Long = -1,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_fk")
-    val customer: CustomerEntity = CustomerEntity(),
-
     val totalOrders: Long = 0,
     val totalUnits: Long = 0,
     val totalValue: Long = 0,
