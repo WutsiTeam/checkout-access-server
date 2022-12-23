@@ -154,16 +154,24 @@ class OrderService(
 
     private fun sql(request: SearchOrderRequest): String {
         val select = select()
+        val from = from(request)
         val where = where(request)
         return if (where.isNullOrEmpty()) {
             select
         } else {
-            "$select WHERE $where ORDER BY O.created DESC"
+            "$select $from WHERE $where ORDER BY O.created DESC"
         }
     }
 
     private fun select(): String =
-        "SELECT O FROM OrderEntity O"
+        "SELECT O"
+
+    private fun from(request: SearchOrderRequest): String =
+        if (request.productId == null) {
+            "FROM OrderEntity O"
+        } else {
+            "FROM OrderEntity O JOIN O.items I"
+        }
 
     private fun where(request: SearchOrderRequest): String {
         val criteria = mutableListOf<String>()
@@ -186,6 +194,9 @@ class OrderService(
         if (request.expiresTo != null) {
             criteria.add("O.expires <= :expires_to")
         }
+        if (request.productId != null) {
+            criteria.add("I.productId = :product_id")
+        }
         return criteria.joinToString(separator = " AND ")
     }
 
@@ -207,6 +218,9 @@ class OrderService(
         }
         if (request.expiresTo != null) {
             query.setParameter("expires_to", Date.from(request.expiresTo.toInstant()))
+        }
+        if (request.productId != null) {
+            query.setParameter("product_id", request.productId)
         }
     }
 
