@@ -34,7 +34,7 @@ object Mapper {
         updated = business.updated.toInstant().atOffset(ZoneOffset.UTC),
         deactivated = business.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
         totalOrders = business.totalOrders,
-        totalSales = business.totalSales
+        totalSales = business.totalSales,
     )
 
     fun toBusinessSummary(business: BusinessEntity) = BusinessSummary(
