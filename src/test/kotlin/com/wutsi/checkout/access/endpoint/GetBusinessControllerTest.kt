@@ -35,6 +35,8 @@ class GetBusinessControllerTest {
         assertEquals("XAF", business.currency)
         assertEquals(100000L, business.balance)
         assertEquals("CM", business.country)
+        assertEquals(30, business.totalOrders)
+        assertEquals(150000, business.totalSales)
     }
 
     @Test

@@ -18,4 +18,6 @@ public data class Business(
     public val updated: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val deactivated: OffsetDateTime? = null,
+    public val totalOrders: Long = 0,
+    public val totalSales: Long = 0,
 )

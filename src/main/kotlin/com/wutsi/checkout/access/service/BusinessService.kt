@@ -96,15 +96,14 @@ class BusinessService(
             """
                 UPDATE T_BUSINESS B,
                     (
-                        SELECT K.business_fk, SUM(K.total_orders) as total_orders, SUM(K.total_units) as total_units, SUM(K.total_value) as total_value
+                        SELECT K.business_fk, SUM(K.total_orders) as total_orders, SUM(K.total_value) as total_value
                             FROM T_KPI_SALES K
                             WHERE K.business_fk IN (SELECT O.business_fk FROM T_ORDER O WHERE DATE(O.created)='$date')
                             GROUP by K.business_fk
                     ) TMP
                     SET
                         B.total_orders=TMP.total_orders,
-                        B.total_units=TMP.total_units,
-                        B.total_value=TMP.total_value
+                        B.total_sales=TMP.total_value
                     WHERE
                         B.id=TMP.business_fk
 
