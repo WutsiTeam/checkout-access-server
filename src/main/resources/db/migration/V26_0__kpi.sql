@@ -30,7 +30,7 @@ INSERT INTO T_KPI(year, month, day, business_id, type, value)
 
 -- SALES BY BUSINESS
 INSERT INTO T_KPI(year, month, day, business_id, type, value)
-    SELECT YEAR(O.created), MONTH(O.created), DAY(O.created), O.business_fk, 2, COUNT(total_price)
+    SELECT YEAR(O.created), MONTH(O.created), DAY(O.created), O.business_fk, 3, COUNT(total_price)
         FROM T_ORDER O
         WHERE O.status NOT IN (0, 1, 5)
         GROUP BY YEAR(O.created), MONTH(O.created), DAY(O.created), O.business_fk;
