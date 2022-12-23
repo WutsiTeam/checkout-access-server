@@ -11,16 +11,25 @@ import javax.persistence.ManyToOne
 import javax.persistence.Table
 
 @Entity
-@Table(name = "T_CUSTOMER")
-data class CustomerEntity(
+@Table(name = "T_KPI_SALES")
+data class KpiSalesEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = -1,
+    val id: Long? = null,
+
+    val date: Date = Date(),
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_fk")
     val business: BusinessEntity = BusinessEntity(),
 
-    val email: String = "",
-    val created: Date = Date(),
+    val productId: Long = -1,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_fk")
+    val customer: CustomerEntity = CustomerEntity(),
+
+    val totalOrders: Long = 0,
+    val totalUnits: Long = 0,
+    val totalValue: Long = 0,
 )

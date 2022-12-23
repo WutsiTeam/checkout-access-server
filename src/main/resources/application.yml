@@ -69,6 +69,10 @@ wutsi:
         cron: "0 15 * * * *"  # Runs every hour at *:15
       compute-yesterday-kpi:
         cron: "0 0 1 * * *"  # Runs every day at 1 AM
+      compute-today-kpi-sales:
+        cron: "0 15 * * * *"  # Runs every hour at *:15
+      compute-yesterday-kpi-sales:
+        cron: "0 0 1 * * *"  # Runs every day at 1 AM
     services:
       fees-calculator:
         transaction-fees:
