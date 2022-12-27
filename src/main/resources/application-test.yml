@@ -31,5 +31,5 @@ wutsi:
     storage:
       type: aws
       aws:
-        bucket: prod-wutsi-data
+        bucket: int-wutsi-data
 
