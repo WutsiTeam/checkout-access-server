@@ -14,7 +14,7 @@ class ComputeSalesKpiJob(
     private val businessService: BusinessService,
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
-    override fun getJobName() = "compute-today-kpi-sales"
+    override fun getJobName() = "compute-sales"
 
     @Scheduled(cron = "\${wutsi.application.jobs.compute-kpi-sales.cron}")
     override fun run() {
@@ -22,11 +22,16 @@ class ComputeSalesKpiJob(
     }
 
     override fun doRun(): Long {
-        // The job runs every hours - compute KPIs for orders in the past 2 hours
+        // The job runs every hour - compute KPIs for orders in the past 2 hours
         val date = OffsetDateTime.now().minusHours(2)
+
+        // Compute the KPI
         val result = service.compute(date)
         if (result > 0) {
+            // Update business KPI
             businessService.updateSalesKpi(date)
+
+            // Export the KPI to storage
             service.export(date)
         }
         return result
