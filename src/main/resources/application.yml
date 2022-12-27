@@ -64,7 +64,7 @@ wutsi:
     name: checkout-access
     jobs:
       compute-sales-kpi:
-        cron: "0 0 * * * *"  # Runs every hour at *:15
+        cron: "0 0 * * * *"  # Runs every hour at *:00
     services:
       fees-calculator:
         transaction-fees:
