@@ -4,13 +4,6 @@ INSERT INTO T_BUSINESS(id, account_id, status, deactivated,currency, country)
         (2, 2, 1, null, 'XAF', 'CM')
     ;
 
-INSERT INTO T_CUSTOMER(id, business_fk, email)
-    VALUES
-        (10, 1, 'ray.sponsible10@gmail.com'),
-        (11, 1, 'ray.sponsible11@gmail.com'),
-        (20, 2, 'ray.sponsible20@gmail.com')
-;
-
 INSERT INTO T_ORDER(id, business_fk, status, total_price, created, customer_name, customer_email, currency, expires)
     VALUES
         (1000, 1, 3, 4000, now(), 'Ray Sponsible', 'ray.sponsible10@gmail.com', 'XAF', now()),
