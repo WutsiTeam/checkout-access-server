@@ -106,7 +106,7 @@ class SalesKpiService(
                     writer,
                     CSVFormat.DEFAULT
                         .builder()
-                        .setHeader("business_id", "product_id", "total_orders", "total_units", "total_value")
+                        .setHeader("business_id", "product_id", "total_orders", "total_units", "total_sales")
                         .build(),
                 )
                 printer.use {

@@ -58,7 +58,7 @@ internal class ComputeSalesKpiJobTest {
         input.use {
             assertEquals(
                 """
-                    business_id,product_id,total_orders,total_units,total_value
+                    business_id,product_id,total_orders,total_units,total_sales
                     1,100,3,6,9000
                     1,101,1,1,500
                     2,200,1,1,1500
