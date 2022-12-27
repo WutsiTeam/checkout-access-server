@@ -64,6 +64,8 @@ jobs:
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_TEST}}
           HEROKU_APP: checkout-access-test
+          AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_TEST}}
+          AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_TEST}}
           MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_TEST}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_TEST}}
           MYSQL_URL: ${{secrets.MYSQL_URL_TEST}}
@@ -73,6 +75,8 @@ jobs:
           heroku buildpacks:clear --app ${HEROKU_APP}
           heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
           heroku config:set --app ${HEROKU_APP} APP_PROFILE=test
+          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
@@ -125,6 +129,8 @@ jobs:
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY_PROD}}
           HEROKU_APP: checkout-access-prod
+          AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY_PROD}}
+          AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY_PROD}}
           MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME_PROD}}
           MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD_PROD}}
           MYSQL_URL: ${{secrets.MYSQL_URL_PROD}}
@@ -134,6 +140,8 @@ jobs:
           heroku buildpacks:clear --app ${HEROKU_APP}
           heroku buildpacks:add heroku/jvm --app ${HEROKU_APP}
           heroku config:set --app ${HEROKU_APP} APP_PROFILE=prod
+          heroku config:set --app ${HEROKU_APP} AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+          heroku config:set --app ${HEROKU_APP} AWS_SECRET_KEY=${AWS_SECRET_KEY}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_USERNAME=${MYSQL_USERNAME}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_PASSWORD=${MYSQL_PASSWORD}
           heroku config:set --app ${HEROKU_APP} SPRING_DATABASE_URL=${MYSQL_URL}
