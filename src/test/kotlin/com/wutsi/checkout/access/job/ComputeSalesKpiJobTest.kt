@@ -1,21 +1,26 @@
 package com.wutsi.checkout.access.job
 
+import com.amazonaws.util.IOUtils
 import com.wutsi.checkout.access.dao.BusinessRepository
 import com.wutsi.checkout.access.dao.SalesKpiRepository
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.jdbc.Sql
+import java.io.File
+import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/ComputeYesterdaySalesKpiJob.sql"])
-internal class ComputeYesterdayKpiSalesJobTest {
+@Sql(value = ["/db/clean.sql", "/db/ComputeSalesKpiJob.sql"])
+internal class ComputeSalesKpiJobTest {
     @Autowired
-    private lateinit var job: ComputeYesterdayKpiSalesJob
+    private lateinit var job: ComputeSalesKpiJob
 
     @Autowired
     private lateinit var dao: SalesKpiRepository
@@ -23,11 +28,19 @@ internal class ComputeYesterdayKpiSalesJobTest {
     @Autowired
     private lateinit var businessDao: BusinessRepository
 
+    @Value("\${wutsi.platform.storage.local.directory}")
+    private lateinit var storageDirectory: String
+
+    @BeforeEach
+    fun setUp() {
+        File(storageDirectory).deleteRecursively()
+    }
+
     @Test
     fun run() {
         job.run()
 
-        val date = LocalDate.now().minusDays(1)
+        val date = LocalDate.now()
         assertKpi(3, 6, 9000, 1, 100, date)
         assertKpi(1, 1, 500, 1, 101, date)
         assertKpi(1, 1, 1500, 2, 200, date)
@@ -39,6 +52,20 @@ internal class ComputeYesterdayKpiSalesJobTest {
         val business2 = businessDao.findById(2).get()
         assertEquals(1, business2.totalOrders)
         assertEquals(1500, business2.totalSales)
+
+        val input =
+            FileInputStream(File("$storageDirectory/kpi/${date.year}/${date.monthValue}/${date.dayOfMonth}/sales.csv"))
+        input.use {
+            assertEquals(
+                """
+                    business_id,product_id,total_orders,total_units,total_value
+                    1,100,3,6,9000
+                    1,101,1,1,500
+                    2,200,1,1,1500
+                """.trimIndent(),
+                IOUtils.toString(input).trimIndent(),
+            )
+        }
     }
 
     private fun assertKpi(

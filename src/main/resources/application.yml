@@ -65,14 +65,8 @@ wutsi:
     jobs:
       create-customer:
         cron: "0 0 * * * *"  # Runs every hour
-      compute-today-kpi:
+      compute-kpi-sales:
         cron: "0 15 * * * *"  # Runs every hour at *:15
-      compute-yesterday-kpi:
-        cron: "0 0 1 * * *"  # Runs every day at 1 AM
-      compute-today-kpi-sales:
-        cron: "0 15 * * * *"  # Runs every hour at *:15
-      compute-yesterday-kpi-sales:
-        cron: "0 0 1 * * *"  # Runs every day at 1 AM
     services:
       fees-calculator:
         transaction-fees:
@@ -105,6 +99,10 @@ wutsi:
         encryption-key: "----"
     security:
       type: none
+    storage:
+      type: local
+      local:
+        directory: "${user:home}/wutsi/storage}"
     tracing:
       client-id: ${wutsi.application.name}
       device-id-provider:

@@ -28,4 +28,8 @@ wutsi:
         encryption-key: ${FLUTTERWAVE_ENCRYPTION_KEY}
     security:
       type: none
+    storage:
+      type: aws
+      aws:
+        bucket: prod-wutsi-data
 
