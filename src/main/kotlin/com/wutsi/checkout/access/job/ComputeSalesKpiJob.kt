@@ -14,7 +14,7 @@ class ComputeSalesKpiJob(
     private val businessService: BusinessService,
     lockManager: CronLockManager,
 ) : AbstractCronJob(lockManager) {
-    override fun getJobName() = "compute-sales"
+    override fun getJobName() = "compute-sales-kpi"
 
     @Scheduled(cron = "\${wutsi.application.jobs.compute-sales-kpi.cron}")
     override fun run() {
