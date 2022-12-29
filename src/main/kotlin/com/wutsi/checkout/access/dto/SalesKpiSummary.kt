@@ -10,4 +10,5 @@ public data class SalesKpiSummary(
     public val totalOrders: Long = 0,
     public val totalUnits: Long = 0,
     public val totalValue: Long = 0,
+    public val totalViews: Long = 0,
 )

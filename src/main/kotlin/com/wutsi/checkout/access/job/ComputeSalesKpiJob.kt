@@ -25,8 +25,8 @@ class ComputeSalesKpiJob(
         // The job runs every hour - compute KPIs for orders in the past 2 hours
         val date = OffsetDateTime.now().minusHours(2)
 
-        // Compute the KPI
-        val result = service.compute(date)
+        // Compute the KPIs
+        val result = service.computeFromOrders(date) + service.importViews(date)
         if (result > 0) {
             // Update business KPI
             businessService.updateSalesKpi(date)

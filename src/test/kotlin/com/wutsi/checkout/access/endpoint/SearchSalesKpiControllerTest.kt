@@ -33,14 +33,17 @@ public class SearchSalesKpiControllerTest {
         assertEquals(3, kpis[0].totalOrders)
         assertEquals(3, kpis[0].totalUnits)
         assertEquals(3000, kpis[0].totalValue)
+        assertEquals(20000, kpis[0].totalViews)
 
         assertEquals(1, kpis[1].totalOrders)
         assertEquals(2, kpis[1].totalUnits)
         assertEquals(2000, kpis[1].totalValue)
+        assertEquals(10000, kpis[1].totalViews)
 
         assertEquals(1, kpis[2].totalOrders)
         assertEquals(5, kpis[2].totalUnits)
         assertEquals(5000, kpis[2].totalValue)
+        assertEquals(30000, kpis[2].totalViews)
     }
 
     @Test
@@ -58,18 +61,22 @@ public class SearchSalesKpiControllerTest {
         assertEquals(11, kpis[0].totalOrders)
         assertEquals(33, kpis[0].totalUnits)
         assertEquals(50000, kpis[0].totalValue)
+        assertEquals(30000, kpis[0].totalViews)
 
         assertEquals(3, kpis[1].totalOrders)
         assertEquals(3, kpis[1].totalUnits)
         assertEquals(3000, kpis[1].totalValue)
+        assertEquals(20000, kpis[1].totalViews)
 
         assertEquals(1, kpis[2].totalOrders)
         assertEquals(2, kpis[2].totalUnits)
         assertEquals(2000, kpis[2].totalValue)
+        assertEquals(10000, kpis[2].totalViews)
 
         assertEquals(1, kpis[3].totalOrders)
         assertEquals(5, kpis[3].totalUnits)
         assertEquals(5000, kpis[3].totalValue)
+        assertEquals(30000, kpis[3].totalViews)
     }
 
     @Test

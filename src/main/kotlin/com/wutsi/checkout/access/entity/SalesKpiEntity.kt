@@ -27,4 +27,5 @@ data class SalesKpiEntity(
     val totalOrders: Long = 0,
     val totalUnits: Long = 0,
     val totalValue: Long = 0,
+    val totalViews: Long = 0,
 )

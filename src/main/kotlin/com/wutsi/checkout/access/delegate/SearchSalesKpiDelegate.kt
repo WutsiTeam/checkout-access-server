@@ -1,12 +1,11 @@
 package com.wutsi.checkout.access.delegate
 
-import com.wutsi.checkout.access.dto.SalesKpiSummary
 import com.wutsi.checkout.access.dto.SearchSalesKpiRequest
 import com.wutsi.checkout.access.dto.SearchSalesKpiResponse
+import com.wutsi.checkout.access.service.Mapper
 import com.wutsi.checkout.access.service.SalesKpiService
 import com.wutsi.platform.core.logging.KVLogger
 import org.springframework.stereotype.Service
-import java.time.ZoneOffset
 
 @Service
 public class SearchSalesKpiDelegate(
@@ -25,12 +24,7 @@ public class SearchSalesKpiDelegate(
 
         return SearchSalesKpiResponse(
             kpis = kpis.map {
-                SalesKpiSummary(
-                    date = it.date.toInstant().atZone(ZoneOffset.UTC).toLocalDate(),
-                    totalOrders = it.totalOrders,
-                    totalUnits = it.totalUnits,
-                    totalValue = it.totalValue,
-                )
+                Mapper.toKpiSales(it)
             },
         )
     }

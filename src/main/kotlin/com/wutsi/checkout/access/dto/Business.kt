@@ -20,4 +20,5 @@ public data class Business(
     public val deactivated: OffsetDateTime? = null,
     public val totalOrders: Long = 0,
     public val totalSales: Long = 0,
+    public val totalViews: Long = 0,
 )

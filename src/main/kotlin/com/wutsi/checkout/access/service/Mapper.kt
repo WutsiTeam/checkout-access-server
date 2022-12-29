@@ -9,6 +9,7 @@ import com.wutsi.checkout.access.dto.OrderSummary
 import com.wutsi.checkout.access.dto.PaymentMethod
 import com.wutsi.checkout.access.dto.PaymentMethodSummary
 import com.wutsi.checkout.access.dto.PaymentProviderSummary
+import com.wutsi.checkout.access.dto.SalesKpiSummary
 import com.wutsi.checkout.access.dto.Transaction
 import com.wutsi.checkout.access.dto.TransactionSummary
 import com.wutsi.checkout.access.entity.BusinessEntity
@@ -18,11 +19,20 @@ import com.wutsi.checkout.access.entity.OrderItemDiscountEntity
 import com.wutsi.checkout.access.entity.OrderItemEntity
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.entity.PaymentProviderEntity
+import com.wutsi.checkout.access.entity.SalesKpiEntity
 import com.wutsi.checkout.access.entity.TransactionEntity
 import java.time.ZoneOffset
 import kotlin.math.max
 
 object Mapper {
+    fun toKpiSales(kpi: SalesKpiEntity) = SalesKpiSummary(
+        date = kpi.date.toInstant().atZone(ZoneOffset.UTC).toLocalDate(),
+        totalOrders = kpi.totalOrders,
+        totalUnits = kpi.totalUnits,
+        totalValue = kpi.totalValue,
+        totalViews = kpi.totalViews,
+    )
+
     fun toBusiness(business: BusinessEntity) = Business(
         id = business.id ?: -1,
         accountId = business.accountId,
@@ -35,6 +45,7 @@ object Mapper {
         deactivated = business.deactivated?.toInstant()?.atOffset(ZoneOffset.UTC),
         totalOrders = business.totalOrders,
         totalSales = business.totalSales,
+        totalViews = business.totalViews,
     )
 
     fun toBusinessSummary(business: BusinessEntity) = BusinessSummary(
