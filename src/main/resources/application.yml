@@ -100,7 +100,7 @@ wutsi:
     storage:
       type: local
       local:
-        directory: "${user:home}/wutsi/storage"
+        directory: "${user.home}/wutsi/storage"
     tracing:
       client-id: ${wutsi.application.name}
       device-id-provider:
