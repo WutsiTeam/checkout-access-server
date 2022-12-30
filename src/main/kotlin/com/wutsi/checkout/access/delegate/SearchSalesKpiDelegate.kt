@@ -25,8 +25,8 @@ public class SearchSalesKpiDelegate(
 
         return SearchSalesKpiResponse(
             kpis = kpis.map { Mapper.toKpiSales(it) }
-                .groupBy { it.date }
-                .map {
+                .groupBy { it.date } // Aggregate by date
+                .map { // Sum KPIs by dates
                     it.value.reduce { cur, acc ->
                         SalesKpiSummary(
                             cur.date,
