@@ -241,7 +241,7 @@ class SalesKpiService(
                     totalValue = kpis.sumOf { it.totalValue },
                     totalUnits = kpis.sumOf { it.totalUnits },
                     totalOrders = kpis.sumOf { it.totalOrders },
-                    totalViews = kpis.sumOf { it.totalViews }
+                    totalViews = kpis.sumOf { it.totalViews },
                 ),
             )
         }
