@@ -95,6 +95,7 @@ public class SearchSalesKpiControllerTest {
         assertEquals(5, kpis[0].totalOrders)
         assertEquals(10, kpis[0].totalUnits)
         assertEquals(10000, kpis[0].totalValue)
+        assertEquals(60000, kpis[0].totalViews)
     }
 
     private fun url() = "http://localhost:$port/v1/kpis/sales/search"
