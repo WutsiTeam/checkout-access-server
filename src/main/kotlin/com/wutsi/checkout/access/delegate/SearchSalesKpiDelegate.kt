@@ -1,5 +1,6 @@
 package com.wutsi.checkout.access.delegate
 
+import com.wutsi.checkout.access.dto.SalesKpiSummary
 import com.wutsi.checkout.access.dto.SearchSalesKpiRequest
 import com.wutsi.checkout.access.dto.SearchSalesKpiResponse
 import com.wutsi.checkout.access.service.Mapper
@@ -23,9 +24,19 @@ public class SearchSalesKpiDelegate(
         logger.add("response_count", kpis.size)
 
         return SearchSalesKpiResponse(
-            kpis = kpis.map {
-                Mapper.toKpiSales(it)
-            },
+            kpis = kpis.map { Mapper.toKpiSales(it) }
+                .groupBy { it.date }
+                .map {
+                    it.value.reduce { cur, acc ->
+                        SalesKpiSummary(
+                            cur.date,
+                            cur.totalOrders + acc.totalOrders,
+                            cur.totalUnits + acc.totalUnits,
+                            cur.totalValue + acc.totalValue,
+                            cur.totalViews + acc.totalViews
+                        )
+                    }
+                },
         )
     }
 }

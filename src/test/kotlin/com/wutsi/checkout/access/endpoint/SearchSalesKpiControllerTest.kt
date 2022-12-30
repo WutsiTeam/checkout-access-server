@@ -63,10 +63,10 @@ public class SearchSalesKpiControllerTest {
         assertEquals(50000, kpis[0].totalValue)
         assertEquals(30000, kpis[0].totalViews)
 
-        assertEquals(3, kpis[1].totalOrders)
-        assertEquals(3, kpis[1].totalUnits)
-        assertEquals(3000, kpis[1].totalValue)
-        assertEquals(20000, kpis[1].totalViews)
+        assertEquals(4, kpis[1].totalOrders)
+        assertEquals(13, kpis[1].totalUnits)
+        assertEquals(8000, kpis[1].totalValue)
+        assertEquals(21000, kpis[1].totalViews)
 
         assertEquals(1, kpis[2].totalOrders)
         assertEquals(2, kpis[2].totalUnits)
