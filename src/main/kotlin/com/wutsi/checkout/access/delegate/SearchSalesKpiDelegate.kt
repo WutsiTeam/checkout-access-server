@@ -33,7 +33,7 @@ public class SearchSalesKpiDelegate(
                             cur.totalOrders + acc.totalOrders,
                             cur.totalUnits + acc.totalUnits,
                             cur.totalValue + acc.totalValue,
-                            cur.totalViews + acc.totalViews
+                            cur.totalViews + acc.totalViews,
                         )
                     }
                 },
