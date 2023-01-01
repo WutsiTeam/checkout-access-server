@@ -15,14 +15,15 @@ import java.io.File
 import java.io.FileInputStream
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import kotlin.test.assertEquals
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(value = ["/db/clean.sql", "/db/ComputeSalesKpiJob.sql"])
-internal class ComputeSalesKpiJobTest {
+@Sql(value = ["/db/clean.sql", "/db/ComputeTodaySalesKpiJob.sql"])
+internal class ComputeTodaySalesKpiJobTest {
     @Autowired
-    private lateinit var job: ComputeSalesKpiJob
+    private lateinit var job: ComputeTodaySalesKpiJob
 
     @Autowired
     private lateinit var dao: SalesKpiRepository
@@ -51,17 +52,17 @@ internal class ComputeSalesKpiJobTest {
             200,20
             99999,-1
         """.trimIndent()
-        val date = LocalDate.now()
-        val path = "kpi/${date.year}/${date.monthValue}/${date.dayOfMonth}/views.csv"
+        val today = LocalDate.now()
+        val path = "kpi/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/views.csv"
         storage.store(path, ByteArrayInputStream(csv.toByteArray()))
 
         // WEN
         job.run()
 
         // THEN
-        assertKpi(3, 6, 9000, 10, 1, 100, date)
-        assertKpi(1, 1, 500, 11, 1, 101, date)
-        assertKpi(1, 1, 1500, 20, 2, 200, date)
+        assertKpi(3, 6, 9000, 10, 1, 100, today)
+        assertKpi(1, 1, 500, 11, 1, 101, today)
+        assertKpi(1, 1, 1500, 20, 2, 200, today)
 
         val business1 = businessDao.findById(1).get()
         assertEquals(4, business1.totalOrders)
@@ -74,7 +75,7 @@ internal class ComputeSalesKpiJobTest {
         assertEquals(20, business2.totalViews)
 
         val input =
-            FileInputStream(File("$storageDirectory/kpi/${date.year}/${date.monthValue}/${date.dayOfMonth}/sales.csv"))
+            FileInputStream(File("$storageDirectory/kpi/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/sales.csv"))
         input.use {
             assertEquals(
                 """

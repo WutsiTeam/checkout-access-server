@@ -13,7 +13,7 @@ import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import org.springframework.stereotype.Service
-import java.time.OffsetDateTime
+import java.time.LocalDate
 import java.util.Date
 import javax.sql.DataSource
 
@@ -91,14 +91,14 @@ class BusinessService(
         return dao.save(business)
     }
 
-    fun updateSalesKpi(date: OffsetDateTime): Long {
+    fun updateSalesKpi(date: LocalDate): Long {
         val sql =
             """
                 UPDATE T_BUSINESS B,
                     (
                         SELECT K.business_fk, SUM(K.total_orders) as total_orders, SUM(K.total_value) as total_value, SUM(K.total_views) as total_views
                             FROM T_KPI_SALES K
-                            WHERE K.business_fk IN (SELECT O.business_fk FROM T_ORDER O WHERE O.created >= ?)
+                            WHERE K.business_fk IN (SELECT O.business_fk FROM T_ORDER O WHERE DATE(O.created) = '$date')
                             GROUP by K.business_fk
                     ) TMP
                     SET
@@ -112,7 +112,6 @@ class BusinessService(
         val cnn = ds.connection
         cnn.use {
             val stmt = cnn.prepareStatement(sql)
-            stmt.setDate(1, java.sql.Date(Date.from(date.toInstant()).time))
             stmt.use {
                 return stmt.executeUpdate().toLong()
             }
