@@ -65,6 +65,7 @@ wutsi:
     jobs:
       compute-sales-kpi:
         cron: "0 15 * * * *"  # Runs every hour at *:15
+        date-threshold-hours: 12 # Compute start from past 12hrs
     services:
       fees-calculator:
         transaction-fees:

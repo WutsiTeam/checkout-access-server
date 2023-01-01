@@ -12,6 +12,10 @@ spring:
 
 wutsi:
   client-id: checkout-access
+  application:
+    jobs:
+      compute-sales-kpi:
+        date-threshold-hours: 2
   platform:
     cache:
       type: memcached

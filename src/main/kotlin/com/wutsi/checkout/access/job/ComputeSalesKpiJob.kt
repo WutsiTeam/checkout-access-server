@@ -4,6 +4,7 @@ import com.wutsi.checkout.access.service.BusinessService
 import com.wutsi.checkout.access.service.SalesKpiService
 import com.wutsi.platform.core.cron.AbstractCronJob
 import com.wutsi.platform.core.cron.CronLockManager
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime
@@ -13,6 +14,8 @@ class ComputeSalesKpiJob(
     private val service: SalesKpiService,
     private val businessService: BusinessService,
     lockManager: CronLockManager,
+
+    @Value("\${wutsi.application.jobs.compute-sales-kpi.date-threshold-hours}") private val dateThreshold: Long,
 ) : AbstractCronJob(lockManager) {
     override fun getJobName() = "compute-sales-kpi"
 
@@ -22,8 +25,8 @@ class ComputeSalesKpiJob(
     }
 
     override fun doRun(): Long {
-        // The job runs every hour - compute KPIs for orders in the past 2 hours
-        val date = OffsetDateTime.now().minusHours(2)
+        // The job runs every hour - compute KPIs for orders in the past xx hours
+        val date = OffsetDateTime.now().minusHours(dateThreshold)
 
         // Compute the KPIs
         val result = service.computeFromOrders(date) + service.importViews(date)
