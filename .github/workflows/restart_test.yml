@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: Run
         run: |
-          curl -sSf https://tracking-manager-test.herokuapp.com/actuator/health >> /dev/null
+          curl -sSf https://checkout-access-server-test.herokuapp.com/actuator/health >> /dev/null
