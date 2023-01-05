@@ -123,14 +123,16 @@ object Mapper {
     )
 
     private fun toOrderDiscount(order: OrderEntity, discount: OrderDiscountEntity) = Discount(
-        code = discount.code,
+        discountId = discount.discountId,
+        name = discount.name,
         type = discount.type.name,
         amount = discount.amount,
         rate = toRate(discount.amount, order.subTotalPrice),
     )
 
     private fun toOrderItemDiscount(item: OrderItemEntity, discount: OrderItemDiscountEntity) = Discount(
-        code = discount.code,
+        discountId = discount.discountId,
+        name = discount.name,
         type = discount.type.name,
         amount = discount.amount,
         rate = toRate(discount.amount, item.order.subTotalPrice),

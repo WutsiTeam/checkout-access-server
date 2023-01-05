@@ -66,10 +66,11 @@ class GetOrderControllerTest {
         assertNull(order.closed)
 
         assertEquals(1, order.discounts.size)
-        assertEquals("C-100", order.discounts[0].code)
+        assertEquals("C-100", order.discounts[0].name)
         assertEquals(100L, order.discounts[0].amount)
         assertEquals(2, order.discounts[0].rate)
-        assertEquals(DiscountType.MERCHANT.name, order.discounts[0].type)
+        assertEquals(DiscountType.SALES.name, order.discounts[0].type)
+        assertEquals(1L, order.discounts[0].discountId)
 
         assertEquals(2, order.items.size)
         assertEquals(555L, order.items[0].productId)
@@ -81,15 +82,17 @@ class GetOrderControllerTest {
         assertEquals(2100L, order.items[0].totalPrice)
 
         assertEquals(2, order.items[0].discounts.size)
-        assertEquals("MERCHANT", order.items[0].discounts[0].code)
+        assertEquals("MERCHANT", order.items[0].discounts[0].name)
         assertEquals(500L, order.items[0].discounts[0].amount)
         assertEquals(10, order.items[0].discounts[0].rate)
-        assertEquals(DiscountType.MERCHANT.name, order.items[0].discounts[0].type)
+        assertEquals(DiscountType.SALES.name, order.items[0].discounts[0].type)
+        assertEquals(11L, order.items[0].discounts[0].discountId)
 
-        assertEquals("MOBILE", order.items[0].discounts[1].code)
+        assertEquals("MOBILE", order.items[0].discounts[1].name)
         assertEquals(400, order.items[0].discounts[1].amount)
         assertEquals(8, order.items[0].discounts[1].rate)
-        assertEquals(DiscountType.DYNAMIC.name, order.items[0].discounts[1].type)
+        assertEquals(DiscountType.COUPON.name, order.items[0].discounts[1].type)
+        assertEquals(12L, order.items[0].discounts[1].discountId)
 
         assertEquals(666L, order.items[1].productId)
         assertEquals(ProductType.EVENT.name, order.items[1].productType)

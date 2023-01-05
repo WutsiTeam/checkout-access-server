@@ -229,8 +229,9 @@ class OrderService(
             OrderDiscountEntity(
                 order = order,
                 amount = request.amount,
-                code = request.code,
+                name = request.name,
                 type = DiscountType.valueOf(request.type.uppercase()),
+                discountId = request.discountId,
             ),
         )
 
@@ -262,8 +263,9 @@ class OrderService(
             OrderItemDiscountEntity(
                 orderItem = item,
                 amount = request.amount,
-                code = request.code,
+                name = request.name,
                 type = DiscountType.valueOf(request.type.uppercase()),
+                discountId = request.discountId,
             ),
         )
 

@@ -17,7 +17,8 @@ data class OrderDiscountEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    val code: String = "",
+    val discountId: Long = -1,
+    val name: String = "",
     val amount: Long = 0L,
     val type: DiscountType = DiscountType.UNKNOWN,
 

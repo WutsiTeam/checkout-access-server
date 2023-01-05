@@ -75,7 +75,8 @@ class CreateOrderControllerTest {
             expires = OffsetDateTime.now().plusMinutes(45),
             discounts = listOf(
                 CreateOrderDiscountRequest(
-                    code = "X-111",
+                    discountId = 111,
+                    name = "X-111",
                     amount = 2000,
                     type = DiscountType.COUPON.name,
                 ),
@@ -98,9 +99,10 @@ class CreateOrderControllerTest {
                     quantity = 1,
                     discounts = listOf(
                         CreateOrderDiscountRequest(
-                            code = "SPECIAL",
+                            discountId = 222,
+                            name = "SPECIAL",
                             amount = 1000,
-                            type = DiscountType.MERCHANT.name,
+                            type = DiscountType.SALES.name,
                         ),
                     ),
                 ),
@@ -138,8 +140,10 @@ class CreateOrderControllerTest {
 
         val discounts = discountDao.findByOrder(order)
         assertEquals(1, discounts.size)
-        assertEquals(request.discounts[0].code, discounts[0].code)
+        assertEquals(request.discounts[0].name, discounts[0].name)
         assertEquals(request.discounts[0].amount, discounts[0].amount)
+        assertEquals(request.discounts[0].discountId, discounts[0].discountId)
+        assertEquals(DiscountType.valueOf(request.discounts[0].type), discounts[0].type)
 
         val items = itemDao.findByOrder(order)
         assertEquals(2, items.size)
@@ -166,8 +170,10 @@ class CreateOrderControllerTest {
 
         val itemDiscounts = itemDiscountDao.findByOrderItem(items[1])
         assertEquals(1, itemDiscounts.size)
-        assertEquals(request.items[1].discounts[0].code, itemDiscounts[0].code)
+        assertEquals(request.items[1].discounts[0].name, itemDiscounts[0].name)
         assertEquals(request.items[1].discounts[0].amount, itemDiscounts[0].amount)
+        assertEquals(request.items[1].discounts[0].discountId, itemDiscounts[0].discountId)
+        assertEquals(DiscountType.valueOf(request.items[1].discounts[0].type), itemDiscounts[0].type)
     }
 
     @Test

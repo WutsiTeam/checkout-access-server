@@ -37,7 +37,7 @@
 
     <wutsi-platform-core.version>0.0.196</wutsi-platform-core.version>
     <wutsi-platform-payment.version>0.0.105</wutsi-platform-payment.version>
-    <wutsi-enums.version>1.0.22</wutsi-enums.version>
+    <wutsi-enums.version>1.0.24</wutsi-enums.version>
   </properties>
 
   <dependencies>
