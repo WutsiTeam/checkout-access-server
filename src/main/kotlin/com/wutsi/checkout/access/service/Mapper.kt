@@ -127,7 +127,6 @@ object Mapper {
         name = discount.name,
         type = discount.type.name,
         amount = discount.amount,
-        rate = toRate(discount.amount, order.subTotalPrice),
     )
 
     private fun toOrderItemDiscount(item: OrderItemEntity, discount: OrderItemDiscountEntity) = Discount(
@@ -135,11 +134,7 @@ object Mapper {
         name = discount.name,
         type = discount.type.name,
         amount = discount.amount,
-        rate = toRate(discount.amount, item.order.subTotalPrice),
     )
-
-    private fun toRate(value: kotlin.Long, total: kotlin.Long): Int =
-        if (total == 0L) 0 else (100.0 * value / total).toInt()
 
     fun toTransaction(tx: TransactionEntity) = Transaction(
         id = tx.id ?: "",
@@ -157,6 +152,7 @@ object Mapper {
         orderId = tx.order?.id,
         gatewayFees = tx.gatewayFees,
         supplierErrorCode = tx.supplierErrorCode,
+        supplierErrorMessage = tx.supplierErrorMessage,
         net = tx.net,
         gatewayTransactionId = tx.gatewayTransactionId,
         customerAccountId = tx.customerAccountId,

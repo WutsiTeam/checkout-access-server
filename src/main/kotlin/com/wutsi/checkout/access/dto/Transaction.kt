@@ -21,6 +21,7 @@ public data class Transaction(
     public val financialTransactionId: String? = null,
     public val errorCode: String? = null,
     public val supplierErrorCode: String? = null,
+    public val supplierErrorMessage: String? = null,
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     public val created: OffsetDateTime = OffsetDateTime.now(),
     @get:DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")

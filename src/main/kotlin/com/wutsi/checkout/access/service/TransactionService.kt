@@ -468,6 +468,7 @@ class TransactionService(
         tx.status = Status.FAILED
         tx.errorCode = ex.error.code.name
         tx.supplierErrorCode = ex.error.supplierErrorCode
+        tx.supplierErrorMessage = ex.error.message
         tx.gatewayTransactionId = ex.error.transactionId
         tx.updated = Date()
         dao.save(tx)

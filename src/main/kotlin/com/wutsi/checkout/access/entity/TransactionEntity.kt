@@ -47,6 +47,7 @@ data class TransactionEntity(
     var errorCode: String? = null,
     var supplierErrorCode: String? = null,
     var gatewayFees: Long = 0,
+    var supplierErrorMessage: String? = null,
 
     val created: Date = Date(),
     var updated: Date = Date(),
