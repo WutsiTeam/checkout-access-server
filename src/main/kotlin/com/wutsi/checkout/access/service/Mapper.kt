@@ -33,7 +33,7 @@ object Mapper {
         totalViews = kpi.totalViews,
     )
 
-    fun toBusiness(business: BusinessEntity) = Business(
+    fun toBusiness(business: BusinessEntity, service: BusinessService) = Business(
         id = business.id ?: -1,
         accountId = business.accountId,
         status = business.status.name,
@@ -46,6 +46,7 @@ object Mapper {
         totalOrders = business.totalOrders,
         totalSales = business.totalSales,
         totalViews = business.totalViews,
+        cashoutBalance = service.computeCashoutBalance(business),
     )
 
     fun toBusinessSummary(business: BusinessEntity) = BusinessSummary(

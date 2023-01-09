@@ -235,7 +235,7 @@ class CreateCashoutControllerTest {
     @Sql(value = ["/db/clean.sql", "/db/CreateCashoutController.sql"])
     fun notEnoughFunds() {
         // WHEN
-        val request = createRequest(amount = 1000000)
+        val request = createRequest(amount = 120000)
         val ex = assertThrows<HttpClientErrorException> {
             rest.postForEntity(url(), request, CreateChargeResponse::class.java)
         }

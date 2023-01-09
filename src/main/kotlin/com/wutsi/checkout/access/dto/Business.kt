@@ -9,6 +9,7 @@ public data class Business(
     public val id: Long = 0,
     public val accountId: Long = 0,
     public val balance: Long = 0,
+    public val cashoutBalance: Long = 0,
     public val country: String = "",
     public val currency: String = "",
     public val status: String = "",

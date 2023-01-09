@@ -38,6 +38,7 @@ class GetBusinessControllerTest {
         assertEquals(30, business.totalOrders)
         assertEquals(150000, business.totalSales)
         assertEquals(2000000, business.totalViews)
+        assertEquals(90000L, business.cashoutBalance)
     }
 
     @Test

@@ -10,7 +10,7 @@ class GetBusinessDelegate(private val service: BusinessService) {
     fun invoke(id: Long): GetBusinessResponse {
         val business = service.findById(id)
         return GetBusinessResponse(
-            business = Mapper.toBusiness(business),
+            business = Mapper.toBusiness(business, service),
         )
     }
 }

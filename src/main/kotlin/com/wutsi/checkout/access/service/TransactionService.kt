@@ -4,6 +4,7 @@ import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateChargeRequest
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
+import com.wutsi.checkout.access.entity.BusinessEntity
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
 import com.wutsi.checkout.access.entity.TransactionEntity
 import com.wutsi.checkout.access.error.ErrorURN
@@ -194,6 +195,7 @@ class TransactionService(
 
         // Remove the money from the business wallet
         try {
+            checkCashoutBalance(business, request)
             businessService.updateBalance(business, -tx.net)
         } catch (ex: InsuffisantFundsException) {
             handleInsufisantFundsException(tx)
@@ -222,6 +224,13 @@ class TransactionService(
         }
 
         return tx
+    }
+
+    private fun checkCashoutBalance(business: BusinessEntity, request: CreateCashoutRequest) {
+        val balance = businessService.computeCashoutBalance(business)
+        if (request.amount > balance) {
+            throw InsuffisantFundsException()
+        }
     }
 
     fun findById(id: String): TransactionEntity =

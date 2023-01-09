@@ -1,26 +1,34 @@
 package com.wutsi.checkout.access.service
 
 import com.wutsi.checkout.access.dao.BusinessRepository
+import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateBusinessRequest
 import com.wutsi.checkout.access.dto.UpdateBusinessStatusRequest
 import com.wutsi.checkout.access.entity.BusinessEntity
 import com.wutsi.checkout.access.error.ErrorURN
 import com.wutsi.checkout.access.error.InsuffisantFundsException
 import com.wutsi.enums.BusinessStatus
+import com.wutsi.enums.TransactionType
 import com.wutsi.platform.core.error.Error
 import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.payment.core.Status
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.util.Date
 import javax.sql.DataSource
+import kotlin.math.max
 
 @Service
 class BusinessService(
     private val dao: BusinessRepository,
+    private val txDao: TransactionRepository,
     private val ds: DataSource,
+    @Value("\${wutsi.application.cashout.delay-days}") private val cashoutDelay: Long,
 ) {
     fun create(request: CreateBusinessRequest): BusinessEntity {
         val businesses = dao.findByAccountIdAndStatusNot(request.accountId, BusinessStatus.INACTIVE)
@@ -89,6 +97,21 @@ class BusinessService(
         business.balance += amount
         business.updated = Date()
         return dao.save(business)
+    }
+
+    fun computeCashoutBalance(business: BusinessEntity): Long {
+        if (business.balance == 0L) {
+            return 0
+        }
+        val threshold = Date.from(OffsetDateTime.now().minusDays(cashoutDelay).toInstant())
+        val txs = txDao.findByBusinessAndTypeAndStatusAndCreatedGreaterThanEqual(
+            business,
+            TransactionType.CHARGE,
+            Status.SUCCESSFUL,
+            threshold,
+        )
+        val totalCharges = txs.sumOf { it.net }
+        return max(0L, business.balance - totalCharges)
     }
 
     fun updateSalesKpi(date: LocalDate): Long {
