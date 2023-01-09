@@ -14,6 +14,7 @@ import com.wutsi.platform.core.error.Parameter
 import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.NotFoundException
+import com.wutsi.platform.core.logging.KVLogger
 import com.wutsi.platform.payment.core.Status
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
@@ -28,6 +29,7 @@ class BusinessService(
     private val dao: BusinessRepository,
     private val txDao: TransactionRepository,
     private val ds: DataSource,
+    private val logger: KVLogger,
     @Value("\${wutsi.application.cashout.delay-days}") private val cashoutDelay: Long,
 ) {
     fun create(request: CreateBusinessRequest): BusinessEntity {
@@ -111,6 +113,9 @@ class BusinessService(
             threshold,
         )
         val totalCharges = txs.sumOf { it.net }
+
+        logger.add("balance", business.balance)
+        logger.add("total_changes_${cashoutDelay}d", totalCharges)
         return max(0L, business.balance - totalCharges)
     }
 
