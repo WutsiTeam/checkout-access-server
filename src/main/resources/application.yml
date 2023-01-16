@@ -64,7 +64,7 @@ wutsi:
     name: checkout-access
     jobs:
       compute-yesterday-sales-kpi:
-        cron: "0 10 0 * * *"  # Runs every hour at *:10
+        cron: "0 10 * * * *"  # Runs every hour at *:10
       compute-today-sales-kpi:
         cron: "0 15 * * * *"  # Runs every hour at *:15
     cashout:

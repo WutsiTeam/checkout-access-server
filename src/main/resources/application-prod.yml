@@ -15,7 +15,7 @@ wutsi:
   application:
     jobs:
       compute-yesterday-sales-kpi:
-        cron: "0 10 0 * * *"  # Runs every day at 0:15
+        cron: "0 10 0 * * *"  # Runs every day at 00:10 AM
       compute-today-sales-kpi:
         cron: "0 15 * * * *"  # Runs every hour at *:15
   platform:
