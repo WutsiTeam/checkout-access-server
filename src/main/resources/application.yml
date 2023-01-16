@@ -63,10 +63,10 @@ wutsi:
   application:
     name: checkout-access
     jobs:
+      compute-yesterday-sales-kpi:
+        cron: "0 10 0 * * *"  # Runs every hour at *:10
       compute-today-sales-kpi:
         cron: "0 15 * * * *"  # Runs every hour at *:15
-      compute-yesterday-sales-kpi:
-        cron: "0 15 0 * * *"  # Runs every day at 0:15
     cashout:
       delay-days: 1 # Wait for cashout
     services:

@@ -14,8 +14,10 @@ wutsi:
   client-id: checkout-access
   application:
     jobs:
-      compute-sales-kpi:
-        date-threshold-hours: 2
+      compute-yesterday-sales-kpi:
+        cron: "0 10 0 * * *"  # Runs every day at 0:15
+      compute-today-sales-kpi:
+        cron: "0 15 * * * *"  # Runs every hour at *:15
   platform:
     cache:
       type: memcached
