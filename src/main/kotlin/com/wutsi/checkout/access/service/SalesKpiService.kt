@@ -145,19 +145,21 @@ class SalesKpiService(
         val cnn = ds.connection
         cnn.use {
             val businessId = if (record.size() > 2) record.get(2).toLong() else -1
-            val stmt = cnn.prepareStatement(sql)
+            if (businessId > 0) {
+                val stmt = cnn.prepareStatement(sql)
 
-            // INSERT
-            stmt.setLong(1, record.get(0).toLong())
-            stmt.setLong(2, record.get(1).toLong())
-            stmt.setLong(3, businessId)
-            stmt.setString(4, date.toString())
+                // INSERT
+                stmt.setLong(1, record.get(0).toLong())
+                stmt.setLong(2, record.get(1).toLong())
+                stmt.setLong(3, businessId)
+                stmt.setString(4, date.toString())
 
-            // UPDATE
-            stmt.setLong(5, record.get(1).toLong())
-            stmt.setLong(6, businessId)
-            stmt.use {
-                return stmt.executeUpdate()
+                // UPDATE
+                stmt.setLong(5, record.get(1).toLong())
+                stmt.setLong(6, businessId)
+                stmt.use {
+                    return stmt.executeUpdate()
+                }
             }
         }
     }
