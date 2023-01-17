@@ -46,11 +46,12 @@ internal class ComputeTodaySalesKpiJobTest {
     fun run() {
         // GIVEN
         val csv = """
-            product_id,total_views
-            100,10
-            101,11
-            200,20
-            99999,-1
+            product_id,total_views,business_id
+            100,10,1
+            101,11,1
+            200,20,2
+            201,50,2
+            99999,99,-1
         """.trimIndent()
         val today = LocalDate.now()
         val path = "kpi/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/views.csv"
@@ -63,6 +64,7 @@ internal class ComputeTodaySalesKpiJobTest {
         assertKpi(3, 6, 9000, 10, 1, 100, today)
         assertKpi(1, 1, 500, 11, 1, 101, today)
         assertKpi(1, 1, 1500, 20, 2, 200, today)
+        assertKpi(0, 0, 0, 50, 2, 201, today)
 
         val business1 = businessDao.findById(1).get()
         assertEquals(4, business1.totalOrders)
@@ -72,7 +74,7 @@ internal class ComputeTodaySalesKpiJobTest {
         val business2 = businessDao.findById(2).get()
         assertEquals(1, business2.totalOrders)
         assertEquals(1500, business2.totalSales)
-        assertEquals(20, business2.totalViews)
+        assertEquals(70, business2.totalViews)
 
         val input =
             FileInputStream(File("$storageDirectory/kpi/" + today.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "/sales.csv"))

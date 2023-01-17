@@ -110,6 +110,7 @@ class SalesKpiService(
      * The CSV file has the following columns:
      *   - product_id
      *   - total_views
+     *   - business_id
      */
     private fun importViews(file: File, date: LocalDate): Long {
         var result = 0L
@@ -119,7 +120,8 @@ class SalesKpiService(
             CSVFormat.Builder.create()
                 .setSkipHeaderRecord(true)
                 .setDelimiter(",")
-                .setHeader("product_id", "total_views")
+                .setHeader("product_id", "total_views", "business_id")
+                .setAllowMissingColumnNames(true)
                 .build(),
         )
         parser.use {
@@ -135,13 +137,25 @@ class SalesKpiService(
     }
 
     private fun updateViews(record: CSVRecord, date: LocalDate): Int {
-        val sql = "UPDATE T_KPI_SALES K SET K.total_views=? WHERE K.product_id=? AND K.date=?"
+        val sql = """
+            INSERT INTO T_KPI_SALES(product_id, total_views, business_fk, date)
+                VALUES(?,?,?,?)
+                ON DUPLICATE KEY UPDATE total_views=?, business_fk=?
+        """.trimIndent()
         val cnn = ds.connection
         cnn.use {
+            val businessId = if (record.size() > 2) record.get(2).toLong() else -1
             val stmt = cnn.prepareStatement(sql)
-            stmt.setLong(1, record.get(1).toLong())
-            stmt.setLong(2, record.get(0).toLong())
-            stmt.setString(3, date.toString())
+
+            // INSERT
+            stmt.setLong(1, record.get(0).toLong())
+            stmt.setLong(2, record.get(1).toLong())
+            stmt.setLong(3, businessId)
+            stmt.setString(4, date.toString())
+
+            // UPDATE
+            stmt.setLong(5, record.get(1).toLong())
+            stmt.setLong(6, businessId)
             stmt.use {
                 return stmt.executeUpdate()
             }

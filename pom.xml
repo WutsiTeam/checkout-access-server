@@ -35,7 +35,7 @@
     <mysql.version>8.0.31</mysql.version>
     <flyway.version>9.3.0</flyway.version>
 
-    <wutsi-platform-core.version>0.0.196</wutsi-platform-core.version>
+    <wutsi-platform-core.version>0.0.202</wutsi-platform-core.version>
     <wutsi-platform-payment.version>0.0.109</wutsi-platform-payment.version>
     <wutsi-enums.version>1.0.26</wutsi-enums.version>
   </properties>
