@@ -160,6 +160,8 @@ class SalesKpiService(
                 stmt.use {
                     return stmt.executeUpdate()
                 }
+            } else {
+                return 0
             }
         }
     }
