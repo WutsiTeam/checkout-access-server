@@ -62,7 +62,7 @@ class CreateBusinessControllerTest {
         val business = dao.findById(id)
         assertTrue(business.isPresent)
         assertEquals(request.accountId, business.get().accountId)
-        assertEquals(BusinessStatus.UNDER_REVIEW, business.get().status)
+        assertEquals(BusinessStatus.ACTIVE, business.get().status)
     }
 
     private fun url() = "http://localhost:$port/v1/businesses"

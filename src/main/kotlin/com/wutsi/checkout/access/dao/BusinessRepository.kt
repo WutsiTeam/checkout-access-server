@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface BusinessRepository : CrudRepository<BusinessEntity, Long> {
-    fun findByAccountIdAndStatusNot(accountId: Long, status: BusinessStatus): List<BusinessEntity>
+    fun findByAccountIdAndStatus(accountId: Long, status: BusinessStatus): List<BusinessEntity>
 }

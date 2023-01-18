@@ -33,7 +33,7 @@ class BusinessService(
     @Value("\${wutsi.application.cashout.delay-days}") private val cashoutDelay: Long,
 ) {
     fun create(request: CreateBusinessRequest): BusinessEntity {
-        val businesses = dao.findByAccountIdAndStatusNot(request.accountId, BusinessStatus.INACTIVE)
+        val businesses = dao.findByAccountIdAndStatus(request.accountId, BusinessStatus.ACTIVE)
         if (businesses.isNotEmpty()) {
             return businesses[0]
         }
