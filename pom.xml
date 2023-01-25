@@ -15,7 +15,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.4</version>
+    <version>2.7.7</version>
   </parent>
 
   <properties>
@@ -35,7 +35,7 @@
     <mysql.version>8.0.31</mysql.version>
     <flyway.version>9.3.0</flyway.version>
 
-    <wutsi-platform-core.version>0.0.204</wutsi-platform-core.version>
+    <wutsi-platform-core.version>0.0.206</wutsi-platform-core.version>
     <wutsi-platform-payment.version>0.0.109</wutsi-platform-payment.version>
     <wutsi-enums.version>1.0.26</wutsi-enums.version>
   </properties>
