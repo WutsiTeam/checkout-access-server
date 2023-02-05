@@ -58,7 +58,7 @@ class OrderService(
                 customerAccountId = request.customerAccountId,
                 customerEmail = request.customerEmail.lowercase(),
                 customerName = request.customerName,
-                status = OrderStatus.OPENED,
+                status = if (totalPrice <= 0) OrderStatus.OPENED else OrderStatus.PENDING,
                 currency = request.currency,
                 deviceId = tracingContext.deviceId(),
                 deviceType = request.deviceType?.let { DeviceType.valueOf(it.uppercase()) },
