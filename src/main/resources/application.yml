@@ -72,17 +72,22 @@ wutsi:
     services:
       fees-calculator:
         transaction-fees:
-          - country: CM  # 10% on charges with Mobile Money
+          - country: CM  # 10% on charges with Mobile account
             transaction-type: CHARGE
             payment-method-type: MOBILE_MONEY
             percent: 10
             amount: 0
-          - country: CM  # Free cash-out to Mobile Money account
+          - country: CM  # 20% on donations with Mobile account
+            transaction-type: DONATION
+            payment-method-type: MOBILE_MONEY
+            percent: 20
+            amount: 0
+          - country: CM  # Free cash-out to Mobile account
             transaction-type: CASHOUT
             payment-method-type: MOBILE_MONEY
             percent: 0
             amount: 0
-          - country: CM  # 3500 on cash-out to Bank account
+          - country: CM  # 3500F cash-out to Bank account
             transaction-type: CASHOUT
             payment-method-type: BANK
             percent: 0

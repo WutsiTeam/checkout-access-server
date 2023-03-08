@@ -28,6 +28,12 @@ internal class FeesCalculatorTest {
     }
 
     @Test
+    fun mobileDonation() {
+        val result = calculator.compute(TransactionType.DONATION, PaymentMethodType.MOBILE_MONEY, "CM", 1500)
+        assertEquals(300, result)
+    }
+
+    @Test
     fun bankCharge() {
         val ex = assertThrows<TransactionException> {
             calculator.compute(TransactionType.CHARGE, PaymentMethodType.BANK, "CM", 1500)
@@ -39,6 +45,14 @@ internal class FeesCalculatorTest {
     fun bankCashout() {
         val result = calculator.compute(TransactionType.CASHOUT, PaymentMethodType.BANK, "CM", 1500)
         assertEquals(3500, result)
+    }
+
+    @Test
+    fun bankDonation() {
+        val ex = assertThrows<TransactionException> {
+            calculator.compute(TransactionType.DONATION, PaymentMethodType.BANK, "CM", 1500)
+        }
+        assertEquals(ErrorURN.FEES_NOT_FOUND.urn, ex.error.code)
     }
 
     @Test

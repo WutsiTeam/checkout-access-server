@@ -3,6 +3,7 @@ package com.wutsi.checkout.access.service
 import com.wutsi.checkout.access.dao.TransactionRepository
 import com.wutsi.checkout.access.dto.CreateCashoutRequest
 import com.wutsi.checkout.access.dto.CreateChargeRequest
+import com.wutsi.checkout.access.dto.CreateDonationRequest
 import com.wutsi.checkout.access.dto.SearchTransactionRequest
 import com.wutsi.checkout.access.entity.BusinessEntity
 import com.wutsi.checkout.access.entity.PaymentMethodEntity
@@ -18,6 +19,7 @@ import com.wutsi.platform.core.error.ParameterType
 import com.wutsi.platform.core.error.exception.BadRequestException
 import com.wutsi.platform.core.error.exception.NotFoundException
 import com.wutsi.platform.core.tracing.TracingContext
+import com.wutsi.platform.payment.Gateway
 import com.wutsi.platform.payment.PaymentException
 import com.wutsi.platform.payment.core.ErrorCode
 import com.wutsi.platform.payment.core.Money
@@ -46,6 +48,76 @@ class TransactionService(
     private val em: EntityManager,
     private val tracingContext: TracingContext,
 ) {
+    fun donate(request: CreateDonationRequest): TransactionEntity =
+        findByIdempotencyKey(request.idempotencyKey)
+            .orElseGet {
+                doDonate(request)
+            }
+
+    fun doDonate(request: CreateDonationRequest): TransactionEntity {
+        validate(request)
+
+        val business = businessService.findById(request.businessId)
+        val paymentMethod = request.paymentMethodToken?.let {
+            paymentMethodService.findByToken(it)
+        }
+
+        val gateway = gatewayProvider.get(
+            paymentMethod?.type ?: PaymentMethodType.valueOf(request.paymentMethodType!!),
+        )
+        val paymentMethodNumber = paymentMethod?.number ?: request.paymenMethodNumber!!
+        val paymentMethodType = paymentMethod?.type ?: PaymentMethodType.valueOf(request.paymentMethodType!!)
+        val tx = dao.save(
+            TransactionEntity(
+                id = UUID.randomUUID().toString(),
+                business = business,
+                paymentMethod = paymentMethod,
+                type = TransactionType.DONATION,
+                currency = business.currency,
+                description = request.description,
+                idempotencyKey = request.idempotencyKey,
+                customerAccountId = paymentMethod?.accountId,
+                status = Status.UNKNOWN,
+                gatewayType = gateway.getType(),
+                amount = request.amount,
+                fees = 0,
+                net = request.amount,
+
+                paymentMethodNumber = paymentMethodNumber,
+                paymentMethodCountry = paymentMethod?.country,
+                paymentMethodType = paymentMethodType,
+                paymentMethodOwnerName = paymentMethod?.ownerName ?: request.paymentMethodOwnerName!!,
+                paymentProvider = paymentMethod?.provider
+                    ?: paymentProviderService.findById(request.paymentProviderId!!),
+                email = request.email,
+            ),
+        )
+
+        // Donate to business
+        createPayment(tx, gateway)
+        return tx
+    }
+
+    private fun validate(request: CreateDonationRequest) {
+        if (request.paymentMethodToken == null) {
+            if (request.paymentMethodOwnerName.isNullOrEmpty()) {
+                throw badRequest(ErrorURN.PAYMENT_METHOD_OWNER_NAME_MISSING)
+            }
+            if (request.paymentMethodType.isNullOrEmpty()) {
+                throw badRequest(ErrorURN.PAYMENT_METHOD_TYPE_MISSING)
+            } else {
+                try {
+                    PaymentMethodType.valueOf(request.paymentMethodType)
+                } catch (ex: Exception) {
+                    throw badRequest(ErrorURN.PAYMENT_METHOD_TYPE_INVALID)
+                }
+            }
+            if (request.paymenMethodNumber.isNullOrEmpty()) {
+                throw badRequest(ErrorURN.PAYMENT_METHOD_NUMBER_MISSING)
+            }
+        }
+    }
+
     fun charge(request: CreateChargeRequest): TransactionEntity =
         findByIdempotencyKey(request.idempotencyKey)
             .orElseGet {
@@ -94,18 +166,23 @@ class TransactionService(
         )
 
         // Charge the customer
+        createPayment(tx, gateway)
+        return tx
+    }
+
+    private fun createPayment(tx: TransactionEntity, gateway: Gateway) {
         try {
             val response = gateway.createPayment(
                 request = CreatePaymentRequest(
                     payer = Party(
                         fullName = tx.paymentMethodOwnerName,
                         phoneNumber = tx.paymentMethodNumber,
-                        email = request.email,
+                        email = tx.email,
                         country = tx.paymentMethodCountry,
                     ),
                     amount = Money(tx.amount.toDouble(), tx.currency),
                     externalId = tx.id!!,
-                    description = request.description ?: "",
+                    description = tx.description ?: "",
                     deviceId = tracingContext.deviceId(),
                     payerMessage = "",
                 ),
@@ -127,8 +204,6 @@ class TransactionService(
                 ),
             )
         }
-
-        return tx
     }
 
     private fun validate(request: CreateChargeRequest) {
@@ -272,15 +347,15 @@ class TransactionService(
         val tx = findById(id)
         if (tx.status == Status.PENDING) {
             when (tx.type) {
-                TransactionType.CHARGE -> return syncChargeStatus(tx)
-                TransactionType.CASHOUT -> return syncCashoutStatus(tx)
+                TransactionType.CHARGE, TransactionType.DONATION -> return syncPaymentStatus(tx)
+                TransactionType.CASHOUT -> return syncTransferStatus(tx)
                 else -> {}
             }
         }
         return tx.status
     }
 
-    private fun syncChargeStatus(tx: TransactionEntity): Status {
+    private fun syncPaymentStatus(tx: TransactionEntity): Status {
         tx.gatewayTransactionId ?: return tx.status
         try {
             val response = gatewayProvider.get(tx.paymentMethodType).getPayment(tx.gatewayTransactionId!!)
@@ -310,7 +385,7 @@ class TransactionService(
         }
     }
 
-    private fun syncCashoutStatus(tx: TransactionEntity): Status {
+    private fun syncTransferStatus(tx: TransactionEntity): Status {
         tx.gatewayTransactionId ?: return tx.status
         try {
             val response = gatewayProvider.get(tx.paymentMethodType).getTransfer(tx.gatewayTransactionId!!)
